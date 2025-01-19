@@ -1,3 +1,5 @@
+import java.net.URI
+
 description = "対戦型領土取得戦略ゲームプラグイン"
 group = "jp.trap"
 version = "1.0.0"
@@ -37,4 +39,22 @@ tasks.processResources {
 
 tasks.jar {
     archiveFileName.set("conQest.jar")
+}
+
+tasks.register("createServer") {
+    description = "Task for debugging"
+    dependsOn(tasks.build)
+
+    doLast {
+        File(rootDir, "server/plugins").mkdirs()
+        URI("https://api.papermc.io/v2/projects/paper/versions/1.21.4/builds/118/downloads/paper-1.21.4-118.jar")
+            .toURL().openStream().use { input ->
+                File("server/paper.jar").outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+        File(rootDir, "build/libs/conQest.jar")
+            .copyTo(File(rootDir, "server/plugins/conQest.jar"), overwrite = true)
+        File("server/eula.txt").writeText("eula=true")
+    }
 }

@@ -6,3 +6,11 @@
  */
 
 rootProject.name = "h24w_15"
+
+buildCache {
+    local {
+        directory = File(rootDir, "build-cache")
+    }
+}
+
+logging.captureStandardOutput(LogLevel.INFO)

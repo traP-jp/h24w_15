@@ -5,3 +5,5 @@
 build
 /gradle/wrapper/gradle-wrapper.jar
 /.idea/
+/build-cache/
+/server/
