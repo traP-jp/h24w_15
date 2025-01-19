@@ -1,0 +1,6 @@
+[versions]
+kotlin = "2.1.0"
+apiVersion = "1.21.4"
+
+[libraries]
+paperApi = { group = "io.papermc.paper", name = "paper-api", version = "1.21.4-R0.1-SNAPSHOT" }

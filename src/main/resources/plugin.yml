@@ -1,0 +1,6 @@
+name: conQest
+version: ${version}
+main: ${mainClass}
+description: ${description}
+author: ${author}
+api-version: ${apiVersion}
