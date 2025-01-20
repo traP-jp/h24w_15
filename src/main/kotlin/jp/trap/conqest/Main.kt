@@ -1,6 +1,8 @@
 package jp.trap.conqest
 
+import jp.trap.conqest.listeners.Listeners
 import jp.trap.conqest.util.FlowHandler
+import jp.trap.conqest.util.FlowTask
 import org.bukkit.plugin.java.JavaPlugin
 
 const val figlet = """
@@ -11,14 +13,25 @@ const val figlet = """
 \___/\____/_/ /_/\___\_\___/____/\__/ conQest (c) 2025 traP
     """
 
-class Main: JavaPlugin() {
+class Main : JavaPlugin() {
     private lateinit var flowHandler: FlowHandler
+    private lateinit var listeners: Listeners
 
     override fun onLoad() {
         logger.info(figlet)
         flowHandler = FlowHandler(
             logger,
-            listOf()
+            listOf(
+                FlowTask(
+                    {
+                        listeners = Listeners(this)
+                        listeners.init()
+                    },
+                    {
+                        Result.success(Unit)
+                    },
+                )
+            )
         )
     }
 
