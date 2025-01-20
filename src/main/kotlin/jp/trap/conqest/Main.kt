@@ -1,5 +1,6 @@
 package jp.trap.conqest
 
+import jp.trap.conqest.commands.Commands
 import jp.trap.conqest.listeners.Listeners
 import jp.trap.conqest.util.FlowHandler
 import jp.trap.conqest.util.FlowTask
@@ -16,6 +17,7 @@ const val figlet = """
 class Main : JavaPlugin() {
     private lateinit var flowHandler: FlowHandler
     private lateinit var listeners: Listeners
+    private lateinit var commands: Commands
 
     override fun onLoad() {
         logger.info(figlet)
@@ -30,6 +32,15 @@ class Main : JavaPlugin() {
                     {
                         Result.success(Unit)
                     },
+                ),
+                FlowTask(
+                    {
+                        commands = Commands(this)
+                        commands.init()
+                    },
+                    {
+                        Result.success(Unit)
+                    }
                 )
             )
         )
