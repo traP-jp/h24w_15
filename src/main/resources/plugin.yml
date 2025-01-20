@@ -4,3 +4,5 @@ main: ${mainClass}
 description: ${description}
 author: ${author}
 api-version: ${apiVersion}
+libraries:
+  - org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}

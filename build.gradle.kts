@@ -32,7 +32,8 @@ tasks.processResources {
             "mainClass" to mainClass,
             "description" to project.description,
             "author" to author,
-            "apiVersion" to libs.versions.apiVersion.get()
+            "apiVersion" to libs.versions.apiVersion.get(),
+            "kotlinVersion" to libs.versions.kotlin.get()
         )
     )
 }
