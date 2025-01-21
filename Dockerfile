@@ -4,23 +4,19 @@ WORKDIR /usr/src/app
 
 COPY . /usr/src/app
 
-RUN ./gradlew build --build-cache
+RUN rm -rf server
+RUN gradle createServer --build-cache
 
 FROM openjdk:21-slim AS production
-ARG PAPER_URL
-ARG PAPER_JAR_NAME
 ENV EULA true
 
 WORKDIR /usr/src/app
 
 RUN useradd -m -u 1000 -o -s /bin/bash -d /usr/src/app paper
-RUN chown 1000 /usr/src/app
+RUN chown -R 1000 /usr/src/app
 USER 1000
 
-COPY --chown=1000 --chmod=774 --from=build /usr/src/app/build/libs/conQest.jar /usr/src/app/plugins/conQest.jar
-ADD --chown=1000 --chmod=774 $PAPER_URL /usr/src/app/
-RUN mv $PAPER_JAR_NAME paper.jar
-RUN echo eula=true > eula.txt
-
+COPY --chown=1000 --chmod=774 --from=build /usr/src/app/server /usr/src/app
+RUN rm -rf cache
 
 CMD ["java", "-Xms4G", "-Xmx4G", "-jar", "paper.jar", "--nogui"]
