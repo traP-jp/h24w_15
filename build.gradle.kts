@@ -19,10 +19,15 @@ repositories {
 
 dependencies {
     compileOnly(libs.paperApi)
+    testImplementation(kotlin("test"))
 }
 
 kotlin {
     jvmToolchain(21)
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 tasks.processResources {
