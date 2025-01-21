@@ -6,11 +6,16 @@ import kotlin.math.sin
 import kotlin.random.Random
 
 class Partition(val fieldSize: Pair<Double, Double>, val districts: List<District> = emptyList()) {
+
     class District(val center: Pair<Double, Double>, val size: Double) {
+
         fun distanceTo(target: Pair<Double, Double>): Double {
             return hypot(target.first - center.first, target.second - center.second)
         }
+
     }
+
+    private val grid: List<List<Int?>>
 
     init {
         if (fieldSize.first <= 0 || fieldSize.second <= 0) {
@@ -18,6 +23,15 @@ class Partition(val fieldSize: Pair<Double, Double>, val districts: List<Distric
         }
         if (districts.any { it.size <= 0 }) {
             throw IllegalArgumentException("districtSize must be positive")
+        }
+
+        // construct a grid where each cell is assigned to the nearest district (normalized by district size)
+        grid = List(fieldSize.first.toInt() * 2 + 1) { i ->
+            List(fieldSize.second.toInt() * 2 + 1) { j ->
+                districts.withIndex().minByOrNull {
+                    it.value.distanceTo(i.toDouble() / 2 to j.toDouble() / 2) / it.value.size
+                }?.index
+            }
         }
     }
 
@@ -35,7 +49,7 @@ class Partition(val fieldSize: Pair<Double, Double>, val districts: List<Distric
 
         val generatingDistricts = districts.toMutableList()
         if (generatingDistricts.isEmpty()) {
-            val root = Pair(Random.nextDouble(fieldSize.first), Random.nextDouble(fieldSize.second))
+            val root = Random.nextDouble(fieldSize.first) to Random.nextDouble(fieldSize.second)
             generatingDistricts.add(District(root, districtSize))
         }
 
@@ -49,9 +63,8 @@ class Partition(val fieldSize: Pair<Double, Double>, val districts: List<Distric
                 val angle = Random.nextDouble(2 * Math.PI)
                 val distance = Random.nextDouble(districtSize, 2 * districtSize)
                 val next = District(
-                    Pair(
-                        candidate.center.first + distance * cos(angle), candidate.center.second + distance * sin(angle)
-                    ), districtSize
+                    candidate.center.first + distance * cos(angle) to candidate.center.second + distance * sin(angle),
+                    districtSize
                 )
 
                 if (next.center.first < 0 || next.center.first >= fieldSize.first) continue
@@ -117,4 +130,39 @@ class Partition(val fieldSize: Pair<Double, Double>, val districts: List<Distric
 
         return Result.failure(IllegalStateException("Failed to generate a partition with $districtCount districts"))
     }
+
+    /**
+     * Get the district index at a grid position.
+     * @param position the position to get the district index
+     * @return the district index at the position
+     */
+    fun getDistrictIndex(position: Pair<Int, Int>): Int? = grid.getOrNull(position.first * 2 + 1)?.getOrNull(
+        position.second * 2 + 1
+    )
+
+    /**
+     * Determine the border level at of a grid position.
+     * @param position the position to get the border level
+     * @return the border level at the position (0: inside, 1: bold, 2: thin)
+     */
+    fun getBorderLevel(position: Pair<Int, Int>): Int {
+        val districtIndex = getDistrictIndex(position) ?: return 0
+
+        val i = position.first * 2 + 1
+        val j = position.second * 2 + 1
+        // check four adjacent cells
+        listOf(0 to 1, 1 to 0, 0 to -1, -1 to 0).forEach { (di, dj) ->
+            grid.getOrNull(i + di)?.getOrNull(j + dj)?.let {
+                if (it != districtIndex) return 2
+            }
+        }
+        // check four diagonal cells
+        listOf(1 to 1, 1 to -1, -1 to 1, -1 to -1).forEach { (di, dj) ->
+            grid.getOrNull(i + di)?.getOrNull(j + dj)?.let {
+                if (it != districtIndex) return 1
+            }
+        }
+        return 0
+    }
+
 }
