@@ -6,3 +6,7 @@ author: ${author}
 api-version: ${apiVersion}
 libraries:
   - org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}
+commands:
+  getchancecard:
+    description: コマンドを使用したプレイヤーがチャンスカードを取得します。
+    usage: /getchancecard

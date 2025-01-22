@@ -1,9 +1,14 @@
 package jp.trap.conqest
 
 import jp.trap.conqest.commands.Commands
+import jp.trap.conqest.game.ChanceCard.Companion.createChanceCard
 import jp.trap.conqest.listeners.Listeners
 import jp.trap.conqest.util.FlowHandler
 import jp.trap.conqest.util.FlowTask
+import org.bukkit.command.Command
+import org.bukkit.command.CommandSender
+import org.bukkit.command.ConsoleCommandSender
+import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
 const val figlet = """
@@ -53,5 +58,17 @@ class Main : JavaPlugin() {
     override fun onDisable() {
         flowHandler.down()
         logger.info("bye bye.")
+    }
+
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
+        if (command.name.equals("getchancecard", ignoreCase = true)) {
+            if (sender is Player) {
+                sender.inventory.addItem(createChanceCard())
+            } else if (sender is ConsoleCommandSender) {
+                sender.sendMessage("このコマンドはプレイヤーのみ使用できます")
+            }
+            return true
+        }
+        return false
     }
 }
