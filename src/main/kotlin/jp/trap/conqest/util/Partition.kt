@@ -16,6 +16,127 @@ class Partition(val fieldSize: Pair<Int, Int>, val districts: List<District> = e
 
     }
 
+    companion object {
+
+        /**
+         * Generate a new partition with the given field size and district size.
+         * @param fieldSize the size of the field
+         * @param districtSize the size of each district
+         * @param init the initial districts
+         * @return the generated partition
+         */
+        fun generate(
+            fieldSize: Pair<Int, Int>, districtSize: Double, init: List<District> = emptyList()
+        ): Result<Partition> {
+            if (fieldSize.first <= 0 || fieldSize.second <= 0) {
+                return Result.failure(IllegalArgumentException("fieldSize must be positive"))
+            }
+            if (districtSize <= 0) {
+                return Result.failure(IllegalArgumentException("districtSize must be positive"))
+            }
+            if (init.any { it.size <= 0 }) {
+                return Result.failure(IllegalArgumentException("districtSize must be positive"))
+            }
+
+            // Poisson Disk Sampling
+
+            val districts = init.toMutableList()
+            if (districts.isEmpty()) {
+                val root =
+                    Random.nextDouble(fieldSize.first.toDouble()) to Random.nextDouble(fieldSize.second.toDouble())
+                districts.add(District(root, districtSize))
+            }
+
+            val candidates = districts.toMutableSet()
+            sampling@ while (candidates.isNotEmpty()) {
+                // randomly select a candidate and generate a new candidate around it
+                val candidate = candidates.random()
+
+                // attempt to generate a new candidate 30 times
+                for (i in 0 until 30) {
+                    val angle = Random.nextDouble(2 * Math.PI)
+                    val distance = Random.nextDouble(districtSize, 2 * districtSize)
+                    val next = District(
+                        candidate.center.first + distance * cos(angle) to candidate.center.second + distance * sin(angle),
+                        districtSize
+                    )
+
+                    if (next.center.first < 0 || next.center.first >= fieldSize.first) continue
+                    if (next.center.second < 0 || next.center.second >= fieldSize.second) continue
+                    if (districts.any { it.distanceTo(next.center) * 2 < it.size + next.size }) continue
+
+                    // on success
+                    districts.add(next)
+                    candidates.add(next)
+                    continue@sampling
+                }
+
+                // on failure
+                candidates.remove(candidate)
+            }
+
+            return Result.success(Partition(fieldSize, districts))
+        }
+
+        /**
+         * Generate a new partition with the given field size and district count.
+         * @param fieldSize the size of the field
+         * @param districtCount the count of districts
+         * @param init the initial districts
+         * @return the generated partition (may fail to match the count)
+         */
+        fun generateWithCount(
+            fieldSize: Pair<Int, Int>, districtCount: Int, init: List<District> = emptyList()
+        ): Result<Partition> {
+            if (fieldSize.first <= 0 || fieldSize.second <= 0) {
+                return Result.failure(IllegalArgumentException("fieldSize must be positive"))
+            }
+            if (districtCount < init.size) {
+                return Result.failure(IllegalArgumentException("districtCount must be greater than or equal to the current count"))
+            }
+            if (init.any { it.size <= 0 }) {
+                return Result.failure(IllegalArgumentException("districtSize must be positive"))
+            }
+
+            // Binary Search but widen the range a little each time
+            var sizeLeft = 1
+            var sizeRight = hypot(fieldSize.first.toDouble(), fieldSize.second.toDouble()).toInt()
+            for (i in 0 until (districtCount + 64)) {
+                val sizeMid = (sizeLeft + sizeRight) / 2
+                generate(fieldSize, sizeMid.toDouble(), init).onSuccess {
+                    if (it.districts.size == districtCount) {
+                        return Result.success(it)
+                    }
+                    if (it.districts.size >= districtCount) {
+                        sizeLeft = sizeMid
+                        sizeRight += 1
+                    } else {
+                        sizeLeft = maxOf(1, sizeLeft - 1)
+                        sizeRight = sizeMid
+                    }
+                }.onFailure {
+                    return Result.failure(it)
+                }
+            }
+
+            // fallback for the case where the Binary Search fails to find the exact count
+            for (size in sizeLeft until (sizeLeft + 64)) {
+                generate(fieldSize, size.toDouble(), init).onSuccess {
+                    val generatingDistricts = it.districts.toMutableList()
+                    while (generatingDistricts.size > districtCount) {
+                        generatingDistricts.removeLast()
+                    }
+                    if (generatingDistricts.size == districtCount) {
+                        return Result.success(Partition(fieldSize, generatingDistricts))
+                    }
+                }
+            }
+
+            return Result.failure(IllegalStateException("Failed to generate a partition with $districtCount districts"))
+        }
+
+    }
+
     val graph: List<Set<Int>>
 
     private val grid: List<List<Int?>>
@@ -78,102 +199,6 @@ class Partition(val fieldSize: Pair<Int, Int>, val districts: List<District> = e
                 }
             }
         }
-    }
-
-    /**
-     * Generate a new partition with the given district size.
-     * @param districtSize the size of each district
-     * @return the generated partition
-     */
-    fun generate(districtSize: Double): Result<Partition> {
-        if (districtSize <= 0) {
-            return Result.failure(IllegalArgumentException("districtSize must be positive"))
-        }
-
-        // Poisson Disk Sampling
-
-        val generatingDistricts = districts.toMutableList()
-        if (generatingDistricts.isEmpty()) {
-            val root = Random.nextDouble(fieldSize.first.toDouble()) to Random.nextDouble(fieldSize.second.toDouble())
-            generatingDistricts.add(District(root, districtSize))
-        }
-
-        val candidates = generatingDistricts.toMutableSet()
-        sampling@ while (candidates.isNotEmpty()) {
-            // randomly select a candidate and generate a new candidate around it
-            val candidate = candidates.random()
-
-            // attempt to generate a new candidate 30 times
-            for (i in 0 until 30) {
-                val angle = Random.nextDouble(2 * Math.PI)
-                val distance = Random.nextDouble(districtSize, 2 * districtSize)
-                val next = District(
-                    candidate.center.first + distance * cos(angle) to candidate.center.second + distance * sin(angle),
-                    districtSize
-                )
-
-                if (next.center.first < 0 || next.center.first >= fieldSize.first) continue
-                if (next.center.second < 0 || next.center.second >= fieldSize.second) continue
-                if (generatingDistricts.any { it.distanceTo(next.center) * 2 < it.size + next.size }) continue
-
-                // on success
-                generatingDistricts.add(next)
-                candidates.add(next)
-                continue@sampling
-            }
-
-            // on failure
-            candidates.remove(candidate)
-        }
-
-        return Result.success(Partition(fieldSize, generatingDistricts))
-    }
-
-    /**
-     * Generate a new partition with the given district count.
-     * @param districtCount the count of districts
-     * @return the generated partition (may fail to match the count)
-     */
-    fun generateWithCount(districtCount: Int): Result<Partition> {
-        if (districtCount < districts.size) {
-            return Result.failure(IllegalArgumentException("districtCount must be greater than or equal to the current count"))
-        }
-
-        // Binary Search but widen the range a little each time
-        var sizeLeft = 1
-        var sizeRight = hypot(fieldSize.first.toDouble(), fieldSize.second.toDouble()).toInt()
-        for (i in 0 until (districtCount + 64)) {
-            val sizeMid = (sizeLeft + sizeRight) / 2
-            generate(sizeMid.toDouble()).onSuccess {
-                if (it.districts.size == districtCount) {
-                    return Result.success(it)
-                }
-                if (it.districts.size >= districtCount) {
-                    sizeLeft = sizeMid
-                    sizeRight += 1
-                } else {
-                    sizeLeft = maxOf(1, sizeLeft - 1)
-                    sizeRight = sizeMid
-                }
-            }.onFailure {
-                return Result.failure(it)
-            }
-        }
-
-        // fallback for the case where the Binary Search fails to find the exact count
-        for (size in sizeLeft until (sizeLeft + 64)) {
-            generate(size.toDouble()).onSuccess {
-                val generatingDistricts = it.districts.toMutableList()
-                while (generatingDistricts.size > districtCount) {
-                    generatingDistricts.removeLast()
-                }
-                if (generatingDistricts.size == districtCount) {
-                    return Result.success(Partition(fieldSize, generatingDistricts))
-                }
-            }
-        }
-
-        return Result.failure(IllegalStateException("Failed to generate a partition with $districtCount districts"))
     }
 
     /**
