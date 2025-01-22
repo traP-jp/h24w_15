@@ -8,7 +8,7 @@ import kotlin.random.Random
 
 class Partition(val fieldSize: Pair<Int, Int>, val districts: List<District> = emptyList()) {
 
-    class District(val center: Pair<Double, Double>, val size: Double) {
+    data class District(val center: Pair<Double, Double>, val size: Double) {
 
         fun distanceTo(target: Pair<Double, Double>): Double {
             return hypot(target.first - center.first, target.second - center.second)
