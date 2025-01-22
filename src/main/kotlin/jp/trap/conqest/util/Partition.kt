@@ -5,7 +5,7 @@ import kotlin.math.hypot
 import kotlin.math.sin
 import kotlin.random.Random
 
-class Partition(val fieldSize: Pair<Double, Double>, val districts: List<District> = emptyList()) {
+class Partition(val fieldSize: Pair<Int, Int>, val districts: List<District> = emptyList()) {
 
     class District(val center: Pair<Double, Double>, val size: Double) {
 
@@ -26,8 +26,8 @@ class Partition(val fieldSize: Pair<Double, Double>, val districts: List<Distric
         }
 
         // construct a grid where each cell is assigned to the nearest district (normalized by district size)
-        grid = List(fieldSize.first.toInt() * 2 + 1) { i ->
-            List(fieldSize.second.toInt() * 2 + 1) { j ->
+        grid = List(fieldSize.first * 2 + 1) { i ->
+            List(fieldSize.second * 2 + 1) { j ->
                 districts.withIndex().minByOrNull {
                     it.value.distanceTo(i.toDouble() / 2 to j.toDouble() / 2) / it.value.size
                 }?.index
@@ -49,7 +49,7 @@ class Partition(val fieldSize: Pair<Double, Double>, val districts: List<Distric
 
         val generatingDistricts = districts.toMutableList()
         if (generatingDistricts.isEmpty()) {
-            val root = Random.nextDouble(fieldSize.first) to Random.nextDouble(fieldSize.second)
+            val root = Random.nextDouble(fieldSize.first.toDouble()) to Random.nextDouble(fieldSize.second.toDouble())
             generatingDistricts.add(District(root, districtSize))
         }
 
@@ -96,7 +96,7 @@ class Partition(val fieldSize: Pair<Double, Double>, val districts: List<Distric
 
         // Binary Search but widen the range a little each time
         var sizeLeft = 1
-        var sizeRight = hypot(fieldSize.first, fieldSize.second).toInt()
+        var sizeRight = hypot(fieldSize.first.toDouble(), fieldSize.second.toDouble()).toInt()
         for (i in 0 until (districtCount + 64)) {
             val sizeMid = (sizeLeft + sizeRight) / 2
             generate(sizeMid.toDouble()).onSuccess {
@@ -165,4 +165,31 @@ class Partition(val fieldSize: Pair<Double, Double>, val districts: List<Distric
         return 0
     }
 
+    override fun toString(): String = buildString {
+        append("+-", "-".repeat(4 * fieldSize.second), "-+\n")
+        for (x in 0 until fieldSize.first) {
+            if (x > 0) append("| ", " ".repeat(4 * fieldSize.second), " |\n")
+            append("| ")
+            for (y in 0 until fieldSize.second) {
+                val districtIndex = getDistrictIndex(x to y)
+                val content = districtIndex?.toString()?.padStart(2, '0') ?: "??"
+                if (districtIndex != null) {
+                    val (centerX, centerY) = districts[districtIndex].center
+                    if (centerX.toInt() == x && centerY.toInt() == y) {
+                        append("[$content]")
+                        continue
+                    }
+                }
+                append(
+                    when (getBorderLevel(x to y)) {
+                        2 -> "($content)"
+                        1 -> "<$content>"
+                        else -> " $content "
+                    }
+                )
+            }
+            append(" |\n")
+        }
+        append("+-", "-".repeat(4 * fieldSize.second), "-+\n")
+    }
 }
