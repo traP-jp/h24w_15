@@ -25,10 +25,10 @@ abstract class Nite<T>(location: Location, type: EntityType, name: String, plugi
             entity.registerAttribute(Attribute.ATTACK_DAMAGE)
             entity.getAttribute(Attribute.ATTACK_DAMAGE)?.baseValue = damage
         }
-        plugin.server.scheduler.runTaskLater(plugin, Runnable { update(plugin) }, 1)
+        plugin.server.scheduler.runTaskTimer(plugin, Runnable { update() }, 0, 1)
     }
 
-    private fun update(plugin: Plugin) {
+    private fun update() {
         if (target != null) {
             entity.pathfinder.moveTo(target!!, speed)
             if (attack && entity.location.distance(target!!.location) <= 3) {
@@ -37,7 +37,6 @@ abstract class Nite<T>(location: Location, type: EntityType, name: String, plugi
         } else {
             entity.pathfinder.stopPathfinding()
         }
-        plugin.server.scheduler.runTaskLater(plugin, Runnable { update(plugin) }, 1)
     }
 
 }
