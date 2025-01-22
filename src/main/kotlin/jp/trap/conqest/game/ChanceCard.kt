@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack
 class ChanceCard {
     companion object {
     fun playerUseChanceCard(player: Player, item : ItemStack?, action: Action){
-        if(item == null || item.type != Material.CARROT_ON_A_STICK || !item.hasItemMeta() || (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK)){
+        if(item == null || item.type != Material.POISONOUS_POTATO || !item.hasItemMeta() || (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK)){
             return
         }
         val meta = item.itemMeta
@@ -19,7 +19,7 @@ class ChanceCard {
     }
 
         fun createChanceCard(): ItemStack {
-            val chanceCard = ItemStack(Material.CARROT_ON_A_STICK)
+            val chanceCard = ItemStack(Material.POISONOUS_POTATO)
             val meta = chanceCard.itemMeta
             if (meta != null) {
                 meta.setDisplayName("${ChatColor.GOLD}チャンスカード")
