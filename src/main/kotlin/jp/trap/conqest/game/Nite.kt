@@ -20,7 +20,6 @@ abstract class Nite<T>(location: Location, type: EntityType, name: String, plugi
     private val damage = 1.0
 
     init {
-        target?.sendMessage("aaaa")
         entity.customName(Component.text(name))
         if (entity.getAttribute(Attribute.ATTACK_DAMAGE) == null) {
             entity.registerAttribute(Attribute.ATTACK_DAMAGE)
