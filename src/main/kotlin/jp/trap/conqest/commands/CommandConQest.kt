@@ -4,6 +4,7 @@ import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import jp.trap.conqest.Main
+import jp.trap.conqest.game.GameCommand
 import jp.trap.conqest.game.nite.NormalNite
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.*
@@ -20,7 +21,11 @@ class CommandConQest(val plugin: Main) : Commands.Command {
                     Component.text("conQest ${plugin.pluginMeta.version} (c) 2025 traP")
                 )
                 0
-            }
+            }.then(
+                io.papermc.paper.command.brigadier.Commands.literal("join").executes { ctx ->
+                    plugin.gameManager.executeCommand(GameCommand.JOIN, ctx.source.sender)
+                }
+            )
             .then(
                 io.papermc.paper.command.brigadier.Commands.literal("summon_nite").then(
                     io.papermc.paper.command.brigadier.Commands.argument("name", StringArgumentType.string())
