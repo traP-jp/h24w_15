@@ -185,6 +185,17 @@ class Partition(val fieldSize: Pair<Int, Int>, val districts: List<District> = e
         grid.getOrNull(position.first * 2 + 1)?.getOrNull(position.second * 2 + 1)
 
     /**
+     * Check if a grid position is a center of a district.
+     * @param position the position to check
+     * @return true if the position is a center of a district
+     */
+    fun isCenter(position: Pair<Int, Int>): Boolean {
+        val districtIndex = getDistrictIndex(position) ?: return false
+        val (centerX, centerY) = districts[districtIndex].center
+        return centerX.toInt() == position.first && centerY.toInt() == position.second
+    }
+
+    /**
      * Determine the border level at of a grid position.
      * @param position the position to get the border level
      * @return the border level at the position (0: inside, 1: bold, 2: thin)
@@ -227,15 +238,9 @@ class Partition(val fieldSize: Pair<Int, Int>, val districts: List<District> = e
             for (y in 0 until fieldSize.second) {
                 val districtIndex = getDistrictIndex(x to y)
                 val content = districtIndex?.toString()?.padStart(2, '0') ?: "??"
-                if (districtIndex != null) {
-                    val (centerX, centerY) = districts[districtIndex].center
-                    if (centerX.toInt() == x && centerY.toInt() == y) {
-                        append("[$content]")
-                        continue
-                    }
-                }
                 append(
-                    if (inRoad(x to y, 3.0)) ":$content:"
+                    if (isCenter(x to y)) "[$content]"
+                    else if (inRoad(x to y, 3.0)) ":$content:"
                     else when (getBorderLevel(x to y)) {
                         2 -> "($content)"
                         1 -> "<$content>"
