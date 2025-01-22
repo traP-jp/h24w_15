@@ -3,15 +3,14 @@ package jp.trap.conqest.commands
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.papermc.paper.command.brigadier.CommandSourceStack
-import jp.trap.conqest.Main
 import jp.trap.conqest.game.ChanceCard
 import org.bukkit.entity.Player
 
-class CommandGetChanceCard(val plugin: Main) : Commands.Command {
+class CommandGetChanceCard : Commands.Command {
     override fun literalCommandNode(): LiteralCommandNode<CommandSourceStack> {
         return io.papermc.paper.command.brigadier.Commands
             .literal("getchancecard")
-            .requires { it.sender.hasPermission("conqest.command.getchancecard") }
+            .requires { it.sender.isOp }
             .executes(::executeGetChanceCard)
             .build()
     }

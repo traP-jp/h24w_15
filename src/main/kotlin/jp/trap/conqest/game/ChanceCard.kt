@@ -2,29 +2,27 @@ package jp.trap.conqest.game
 
 import org.bukkit.ChatColor
 import org.bukkit.Material
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.entity.Player
+import org.bukkit.event.block.Action
 import org.bukkit.inventory.ItemStack
 
-class ChanceCard :Listener{
-    @EventHandler
-    fun PlayerUseChanceCard(event: PlayerInteractEvent) {
-        val item = event.item
-        if (item != null && item.type == Material.CARROT_ON_A_STICK && item.hasItemMeta()) {
-            val meta = item.itemMeta
-            if (meta.hasDisplayName() && meta.displayName == ChatColor.GOLD.toString() + "チャンスカード") {
-                event.player.sendMessage(ChatColor.GREEN.toString() + "チャンスカードを使用しました!")
-            }
+class ChanceCard {
+    companion object {
+    fun playerUseChanceCard(player: Player, item : ItemStack?, action: Action){
+        if(item == null || item.type != Material.CARROT_ON_A_STICK || !item.hasItemMeta() || (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK)){
+            return
+        }
+        val meta = item.itemMeta
+        if(meta != null && meta.hasDisplayName() && meta.displayName == "${ChatColor.GOLD}チャンスカード"){
+            player.sendMessage("${ChatColor.GREEN}チャンスカードを使用しました")
         }
     }
 
-    companion object {
         fun createChanceCard(): ItemStack {
             val chanceCard = ItemStack(Material.CARROT_ON_A_STICK)
             val meta = chanceCard.itemMeta
             if (meta != null) {
-                meta.setDisplayName(ChatColor.GOLD.toString() + "チャンスカード")
+                meta.setDisplayName("${ChatColor.GOLD}チャンスカード")
                 chanceCard.setItemMeta(meta)
             }
             return chanceCard

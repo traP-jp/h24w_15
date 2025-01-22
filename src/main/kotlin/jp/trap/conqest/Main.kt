@@ -50,7 +50,7 @@ class Main : JavaPlugin() {
 
     override fun onEnable() {
         flowHandler.up()
-        server.pluginManager.registerEvents(ChanceCard(), this)
+        Listeners(this)
     }
 
     override fun onDisable() {
