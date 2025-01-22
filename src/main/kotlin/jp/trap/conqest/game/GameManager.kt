@@ -1,13 +1,12 @@
 package jp.trap.conqest.game
 
-import jp.trap.conqest.game.gamestate.BeforeGameState
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
 class GameManager(val plugin: Plugin) {
 
-    private var state: GameState = BeforeGameState(this)
+    private var state: GameState = GameState.BeforeGame(this)
     private val players: MutableList<Player> = mutableListOf()
 
     fun setState(state: GameState) {
