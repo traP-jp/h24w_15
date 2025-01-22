@@ -7,9 +7,9 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 
-class ChanceCard : Listener {
+class ChanceCard :Listener{
     @EventHandler
-    fun onPlayerUseChanceCard(event: PlayerInteractEvent) {
+    fun PlayerUseChanceCard(event: PlayerInteractEvent) {
         val item = event.item
         if (item != null && item.type == Material.CARROT_ON_A_STICK && item.hasItemMeta()) {
             val meta = item.itemMeta
