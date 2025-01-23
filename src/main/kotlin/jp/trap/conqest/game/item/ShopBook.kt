@@ -28,8 +28,10 @@ object ShopBook : UsableItem {
     }
 
     class SellingItem(val item: ItemStack, val cost: Int) {
+        val shopItem: ItemStack = item.clone()
+
         init {
-            item.lore(listOf(Component.text("Cost: $cost").color(TextColor.color(0x00AA00))))
+            shopItem.lore(listOf(Component.text("Cost: $cost").color(TextColor.color(0x00AA00))))
         }
     }
 
@@ -42,13 +44,17 @@ object ShopBook : UsableItem {
     val inventory: Inventory = run {
         val inventory = Bukkit.createInventory(null, 27, Component.text("Shop", TextColor.color(0x00AA00)))
         sellingItems.forEach({ sellingItem ->
-            inventory.addItem(sellingItem.item)
+            inventory.addItem(sellingItem.shopItem)
         })
         inventory
     }
 
     val onInventoryClicked = { player: Player, item: ItemStack ->
-        sellingItems.filter { sellingItem -> sellingItem.item.isSimilar(item) }
-            .forEach { sellingItem -> Wallet.pay(player, sellingItem.cost) }
+        sellingItems.filter { sellingItem -> sellingItem.shopItem.isSimilar(item) }
+            .forEach { sellingItem ->
+                if (Wallet.pay(player, sellingItem.cost)) {
+                    player.inventory.addItem(sellingItem.item)
+                }
+            }
     }
 }
