@@ -12,7 +12,7 @@ class Listeners(
     }
     fun init(): Result<Unit> {
         registerListener(ListenerPlayerUseChanceCard())
-        registerListener(ListenerDistrictCore())
+        registerListener(ListenerDistrictCore(plugin.gameManager))
         return Result.success(Unit)
     }
 }
