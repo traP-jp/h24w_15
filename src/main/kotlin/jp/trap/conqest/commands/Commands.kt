@@ -16,6 +16,9 @@ class Commands(
         val lifecycleManager = plugin.lifecycleManager
         lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {
             it.registrar().register(CommandConQest(plugin).literalCommandNode())
+            it.registrar().register(CommandPay().literalCommandNode())
+            it.registrar().register(CommandEarn().literalCommandNode())
+            it.registrar().register(CommandWallet().literalCommandNode())
             it.registrar().register(CommandGetChanceCard().literalCommandNode())
         }
         return Result.success(Unit)
