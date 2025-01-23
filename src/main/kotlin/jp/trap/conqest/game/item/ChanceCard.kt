@@ -1,4 +1,4 @@
-package jp.trap.conqest.game
+package jp.trap.conqest.game.item
 
 import org.bukkit.ChatColor
 import org.bukkit.Material
