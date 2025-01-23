@@ -6,6 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.scoreboard.DisplaySlot
 
 object Wallet {
+    private val OBJECTIVE_NAME = ChatColor.YELLOW.toString() + "Coin"
     fun setupScoreboard(player: Player, startCoin: Int) {
         val manager = Bukkit.getScoreboardManager()
         val scoreboard = manager.newScoreboard
@@ -13,7 +14,7 @@ object Wallet {
         val objective = scoreboard.registerNewObjective("wallet", "dummy", ChatColor.AQUA.toString() + "wallet")
         objective.displaySlot = DisplaySlot.SIDEBAR
 
-        val coin = objective.getScore(ChatColor.YELLOW.toString() + "Coin")
+        val coin = objective.getScore(OBJECTIVE_NAME)
         coin.score = startCoin
 
         player.scoreboard = scoreboard
@@ -27,7 +28,7 @@ object Wallet {
     fun pay(player: Player, use: Int): Boolean {
         val scoreboard = player.scoreboard
         val objective = scoreboard.getObjective("wallet") ?: return false
-        val score = objective.getScore(ChatColor.YELLOW.toString() + "Coin")
+        val score = objective.getScore(OBJECTIVE_NAME)
         val currentCoin = score.score
         if (currentCoin < use) {
             player.sendMessage("コインが足りません")
@@ -40,7 +41,7 @@ object Wallet {
     fun earn(player: Player, get: Int) {
         val scoreboard = player.scoreboard
         val objective = scoreboard.getObjective("wallet") ?: return
-        val score = objective.getScore(ChatColor.YELLOW.toString() + "Coin")
+        val score = objective.getScore(OBJECTIVE_NAME)
         val currentCoin = score.score
         score.score = currentCoin + get
     }
