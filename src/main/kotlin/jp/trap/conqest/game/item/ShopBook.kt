@@ -1,5 +1,6 @@
 package jp.trap.conqest.game.item
 
+import jp.trap.conqest.game.Wallet
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Bukkit
@@ -20,16 +21,24 @@ object ShopBook {
         chanceCard
     }
     val onBookClicked = { event: PlayerInteractEvent ->
-        var player: Player = event.player
+        val player: Player = event.player
+        player.openInventory(inventory)
     }
+    private val itemCosts: Map<ItemStack, Int> = mapOf(
+        ChanceCard.createChanceCard() to 100,
+        ItemStack(Material.IRON_SWORD) to 1000,
+        ItemStack(Material.WOODEN_SWORD) to 1,
+    )
     val inventory: Inventory = run {
         val inventory = Bukkit.createInventory(null, 27, Component.text("Shop", TextColor.color(0x00AA00)))
-        inventory.addItem(ChanceCard.createChanceCard())
+        itemCosts.forEach({ (itemStack, cost) ->
+            itemStack.lore(listOf(Component.text("Cost: $cost").color(TextColor.color(0x00AA00))))
+            inventory.addItem(itemStack)
+        })
         inventory
     }
-    val onInventoryClicked = { item: ItemStack ->
-        if(ChanceCard.createChanceCard().isSimilar(item)) {
-            // TODO: 支払い
-        }
+    val onInventoryClicked = { player: Player, item: ItemStack ->
+        itemCosts.filter { (itemStack, _) -> itemStack.isSimilar(item) }
+            .forEach { (_, amount) -> Wallet.pay(player, amount) }
     }
 }

@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack
 
 class ListenerClickableItem : Listener {
     companion object {
-        val registry: MutableMap<ItemStack, (event: PlayerInteractEvent) -> Unit> =
+        val registry: MutableMap<ItemStack, (event: PlayerInteractEvent) -> Any?> =
             mutableMapOf(ShopBook.itemStack to ShopBook.onBookClicked)
     }
 
