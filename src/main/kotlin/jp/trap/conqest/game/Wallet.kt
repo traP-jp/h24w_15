@@ -6,7 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.scoreboard.DisplaySlot
 
 object Wallet {
-    fun setupScoreboard(player: Player) {
+    fun setupScoreboard(player: Player, startCoin: Int) {
         val manager = Bukkit.getScoreboardManager()
         val scoreboard = manager.newScoreboard
 
@@ -14,7 +14,7 @@ object Wallet {
         objective.displaySlot = DisplaySlot.SIDEBAR
 
         val coin = objective.getScore(ChatColor.YELLOW.toString() + "Coin")
-        coin.score = 0
+        coin.score = startCoin
 
         player.scoreboard = scoreboard
     }

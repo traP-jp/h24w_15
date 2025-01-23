@@ -13,7 +13,7 @@ class CommandWallet : Commands.Command {
                 io.papermc.paper.command.brigadier.Commands.literal("set")
                     .executes{ ctx ->
                         if((ctx.source.sender is Player).not()) return@executes 0
-                        Wallet.setupScoreboard(ctx.source.sender as Player)
+                        Wallet.setupScoreboard(ctx.source.sender as Player, startCoin = 0)
                         0
                     }
             )
