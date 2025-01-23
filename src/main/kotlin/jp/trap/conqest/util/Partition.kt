@@ -138,6 +138,7 @@ class Partition(val fieldSize: Pair<Int, Int>, val districts: List<District> = e
     }
 
     val graph: List<Set<Int>>
+    var printRoadWidth: Double = 3.0
 
     private val grid: List<List<Int?>>
     private val distancesToRoad: List<List<Double>>
@@ -265,7 +266,7 @@ class Partition(val fieldSize: Pair<Int, Int>, val districts: List<District> = e
                 val content = districtIndex?.toString()?.padStart(2, '0') ?: "??"
                 append(
                     if (isCenter(x to y)) "[$content]"
-                    else if (inRoad(x to y, 3.0)) ":$content:"
+                    else if (inRoad(x to y, printRoadWidth)) ":$content:"
                     else when (getBorderLevel(x to y)) {
                         2 -> "($content)"
                         1 -> "<$content>"
