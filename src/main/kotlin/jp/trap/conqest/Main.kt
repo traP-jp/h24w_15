@@ -1,9 +1,11 @@
 package jp.trap.conqest
 
 import jp.trap.conqest.commands.Commands
+import jp.trap.conqest.game.GameManager
 import jp.trap.conqest.listeners.Listeners
 import jp.trap.conqest.util.FlowHandler
 import jp.trap.conqest.util.FlowTask
+
 import org.bukkit.plugin.java.JavaPlugin
 
 const val figlet = """
@@ -18,6 +20,7 @@ class Main : JavaPlugin() {
     private lateinit var flowHandler: FlowHandler
     private lateinit var listeners: Listeners
     private lateinit var commands: Commands
+    lateinit var gameManager: GameManager
 
     override fun onLoad() {
         logger.info(figlet)
@@ -44,6 +47,7 @@ class Main : JavaPlugin() {
                 )
             )
         )
+        gameManager = GameManager(this)
     }
 
     override fun onEnable() {
