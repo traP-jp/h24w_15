@@ -13,6 +13,7 @@ class CommandConQest(val plugin: Main) : Commands.Command {
     override fun literalCommandNode(): LiteralCommandNode<CommandSourceStack> {
         return io.papermc.paper.command.brigadier.Commands
             .literal("conqest")
+            .requires{ it.sender.isOp }
             .executes { ctx ->
                 ctx.source.sender.sendMessage(
                     Component.text("conQest ${plugin.pluginMeta.version} (c) 2025 traP")
