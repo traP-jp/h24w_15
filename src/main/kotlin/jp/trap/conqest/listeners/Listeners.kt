@@ -12,7 +12,6 @@ class Listeners(
     }
     fun init(): Result<Unit> {
         registerListener(this)
-        registerListener(ListenerWallet())
         return Result.success(Unit)
     }
 }

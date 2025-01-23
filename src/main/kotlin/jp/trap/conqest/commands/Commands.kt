@@ -18,6 +18,7 @@ class Commands(
             it.registrar().register(CommandConQest(plugin).literalCommandNode())
             it.registrar().register(CommandPay().literalCommandNode())
             it.registrar().register(CommandEarn().literalCommandNode())
+            it.registrar().register(CommandWallet().literalCommandNode())
         }
         return Result.success(Unit)
     }

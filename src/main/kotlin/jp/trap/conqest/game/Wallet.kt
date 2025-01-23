@@ -19,6 +19,11 @@ object Wallet {
         player.scoreboard = scoreboard
     }
 
+    fun removeScoreboard(player: Player) {
+        val scoreboard = player.scoreboard
+        scoreboard.getObjective("wallet")?.unregister()
+    }
+
     fun pay(player: Player, use: Int) {
         val scoreboard = player.scoreboard
         val objective = scoreboard.getObjective("wallet") ?: return
