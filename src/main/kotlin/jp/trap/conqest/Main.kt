@@ -5,6 +5,7 @@ import jp.trap.conqest.game.GameManager
 import jp.trap.conqest.listeners.Listeners
 import jp.trap.conqest.util.FlowHandler
 import jp.trap.conqest.util.FlowTask
+
 import org.bukkit.plugin.java.JavaPlugin
 
 const val figlet = """
