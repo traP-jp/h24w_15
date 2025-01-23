@@ -1,5 +1,6 @@
 package jp.trap.conqest.listeners
 
+import jp.trap.conqest.game.item.ShopBook
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
@@ -8,7 +9,8 @@ import org.bukkit.inventory.ItemStack
 
 class ListenerClickableItem : Listener {
     companion object {
-        val registry: MutableMap<ItemStack, (event: PlayerInteractEvent) -> Unit> = mutableMapOf()
+        val registry: MutableMap<ItemStack, (event: PlayerInteractEvent) -> Unit> =
+            mutableMapOf(ShopBook.itemStack to ShopBook.onBookClicked)
     }
 
     @EventHandler

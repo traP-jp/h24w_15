@@ -12,6 +12,7 @@ class Listeners(
     }
     fun init(): Result<Unit> {
         registerListener(ListenerClickableItem())
+        registerListener(ListenerShopGUI())
         return Result.success(Unit)
     }
 }
