@@ -2,7 +2,6 @@ package jp.trap.conqest
 
 import jp.trap.conqest.commands.Commands
 import jp.trap.conqest.listeners.Listeners
-import jp.trap.conqest.game.ChanceCard
 import jp.trap.conqest.util.FlowHandler
 import jp.trap.conqest.util.FlowTask
 
@@ -50,7 +49,6 @@ class Main : JavaPlugin() {
 
     override fun onEnable() {
         flowHandler.up()
-        Listeners(this)
     }
 
     override fun onDisable() {

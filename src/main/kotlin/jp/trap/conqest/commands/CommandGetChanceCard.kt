@@ -10,7 +10,6 @@ class CommandGetChanceCard : Commands.Command {
     override fun literalCommandNode(): LiteralCommandNode<CommandSourceStack> {
         return io.papermc.paper.command.brigadier.Commands
             .literal("getchancecard")
-            .requires { it.sender.isOp }
             .executes(::executeGetChanceCard)
             .build()
     }

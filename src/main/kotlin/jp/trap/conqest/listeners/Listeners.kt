@@ -17,11 +17,7 @@ class Listeners(
     }
     fun init(): Result<Unit> {
         registerListener(this)
+        registerListener(ListenerPlayerUseChanceCard())
         return Result.success(Unit)
     }
-    @EventHandler
-    fun onPlayerUseChanceCard(event: PlayerInteractEvent) {
-        ChanceCard.playerUseChanceCard(event.player, event.item, event.action)
-    }
-
 }
