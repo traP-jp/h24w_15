@@ -10,8 +10,9 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-object ShopBook {
-    val itemStack: ItemStack = run {
+object ShopBook : UsableItem {
+
+    override val item: ItemStack = run {
         val chanceCard = ItemStack(Material.BOOK)
         val meta = chanceCard.itemMeta
         if (meta != null) {
@@ -20,25 +21,34 @@ object ShopBook {
         }
         chanceCard
     }
-    val onBookClicked = { event: PlayerInteractEvent ->
+
+    override val onUsed = { event: PlayerInteractEvent ->
         val player: Player = event.player
         player.openInventory(inventory)
     }
-    private val itemCosts: Map<ItemStack, Int> = mapOf(
-        ChanceCard.createChanceCard() to 100,
-        ItemStack(Material.IRON_SWORD) to 1000,
-        ItemStack(Material.WOODEN_SWORD) to 1,
+
+    class SellingItem(val item: ItemStack, val cost: Int) {
+        init {
+            item.lore(listOf(Component.text("Cost: $cost").color(TextColor.color(0x00AA00))))
+        }
+    }
+
+    private val sellingItems: List<SellingItem> = listOf(
+        SellingItem(ChanceCard.item, 100),
+        SellingItem(ItemStack(Material.IRON_SWORD), 1000),
+        SellingItem(ItemStack(Material.WOODEN_SWORD), 1),
     )
+
     val inventory: Inventory = run {
         val inventory = Bukkit.createInventory(null, 27, Component.text("Shop", TextColor.color(0x00AA00)))
-        itemCosts.forEach({ (itemStack, cost) ->
-            itemStack.lore(listOf(Component.text("Cost: $cost").color(TextColor.color(0x00AA00))))
-            inventory.addItem(itemStack)
+        sellingItems.forEach({ sellingItem ->
+            inventory.addItem(sellingItem.item)
         })
         inventory
     }
+
     val onInventoryClicked = { player: Player, item: ItemStack ->
-        itemCosts.filter { (itemStack, _) -> itemStack.isSimilar(item) }
-            .forEach { (_, amount) -> Wallet.pay(player, amount) }
+        sellingItems.filter { sellingItem -> sellingItem.item.isSimilar(item) }
+            .forEach { sellingItem -> Wallet.pay(player, sellingItem.cost) }
     }
 }

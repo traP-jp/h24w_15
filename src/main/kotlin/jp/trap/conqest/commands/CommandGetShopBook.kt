@@ -16,7 +16,7 @@ class CommandGetShopBook : Commands.Command {
         val source = context.source
         if (source.sender is Player) {
             val player = source.sender as Player
-            player.inventory.addItem(ShopBook.itemStack)
+            player.inventory.addItem(ShopBook.item)
         } else {
             source.sender.sendMessage("このコマンドはプレイヤーのみ使用できます")
         }

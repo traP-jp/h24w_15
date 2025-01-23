@@ -1,16 +1,15 @@
 package jp.trap.conqest.listeners
 
 import jp.trap.conqest.game.item.ShopBook
+import jp.trap.conqest.game.item.UsableItem
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.inventory.ItemStack
 
-class ListenerClickableItem : Listener {
+class ListenerUsableItem : Listener {
     companion object {
-        val registry: MutableMap<ItemStack, (event: PlayerInteractEvent) -> Any?> =
-            mutableMapOf(ShopBook.itemStack to ShopBook.onBookClicked)
+        val registry: List<UsableItem> = mutableListOf(ShopBook)
     }
 
     @EventHandler
@@ -21,7 +20,7 @@ class ListenerClickableItem : Listener {
         if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) {
             return
         }
-        registry.keys.filter { itemStack -> item?.isSimilar(itemStack) ?: false }
-            .forEach { itemStack -> registry[itemStack]!!(event) }
+        registry.filter { usableItem -> usableItem.item.isSimilar(item) }
+            .forEach { usableItem -> usableItem.onUsed(event) }
     }
 }

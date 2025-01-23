@@ -11,7 +11,7 @@ class Listeners(
         Bukkit.getPluginManager().registerEvents(listener, plugin)
     }
     fun init(): Result<Unit> {
-        registerListener(ListenerClickableItem())
+        registerListener(ListenerUsableItem())
         registerListener(ListenerShopGUI())
         return Result.success(Unit)
     }
