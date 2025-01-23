@@ -6,12 +6,11 @@ import org.bukkit.event.Listener
 
 class Listeners(
     private val plugin: Main
-) :Listener{
+){
     private fun registerListener(listener: Listener) {
         Bukkit.getPluginManager().registerEvents(listener, plugin)
     }
     fun init(): Result<Unit> {
-        registerListener(this)
         return Result.success(Unit)
     }
 }
