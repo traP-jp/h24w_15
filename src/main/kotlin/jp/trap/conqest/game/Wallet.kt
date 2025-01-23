@@ -24,16 +24,17 @@ object Wallet {
         scoreboard.getObjective("wallet")?.unregister()
     }
 
-    fun pay(player: Player, use: Int) {
+    fun pay(player: Player, use: Int): Boolean {
         val scoreboard = player.scoreboard
-        val objective = scoreboard.getObjective("wallet") ?: return
+        val objective = scoreboard.getObjective("wallet") ?: return false
         val score = objective.getScore(ChatColor.YELLOW.toString() + "Coin")
         val currentCoin = score.score
         if (currentCoin < use) {
             player.sendMessage("コインが足りません")
-            return
+            return false
         }
         score.score = currentCoin - use
+        return true
     }
 
     fun earn(player: Player, get: Int) {
