@@ -12,6 +12,7 @@ class Listeners(
     }
     fun init(): Result<Unit> {
         registerListener(ListenerPlayerUseChanceCard())
+        registerListener(ListenerDistrictCore())
         return Result.success(Unit)
     }
 }
