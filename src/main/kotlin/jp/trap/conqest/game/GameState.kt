@@ -1,5 +1,8 @@
 package jp.trap.conqest.game
 
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
+import net.kyori.adventure.title.Title
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -50,10 +53,9 @@ sealed class GameState(private val gameManager: GameManager) {
 
     class GameReady(private val gameManager: GameManager) : GameState(gameManager) {
         init {
-            for (i in 1..<5)
-                gameManager.plugin.server.scheduler.runTaskLater(gameManager.plugin, Runnable {
-                    gameManager.broadcastMessage("ゲーム開始まで" + (5 - i).toString() + "秒...")
-                }, 20 * i.toLong())
+            for (i in 1 until 5) gameManager.plugin.server.scheduler.runTaskLater(gameManager.plugin, Runnable {
+                gameManager.broadcastMessage("ゲーム開始まで" + (5 - i).toString() + "秒...")
+            }, 20 * i.toLong())
             gameManager.plugin.server.scheduler.runTaskLater(gameManager.plugin, Runnable {
                 gameManager.broadcastMessage("ゲーム開始!!")
                 gameManager.setState(Playing(gameManager))
@@ -62,5 +64,43 @@ sealed class GameState(private val gameManager: GameManager) {
     }
 
     class Playing(private val gameManager: GameManager) : GameState(gameManager) {
+        private val gameTime: Long = 20 // 5 * 60
+
+        init {
+            for (i in 0 until gameTime) gameManager.plugin.server.scheduler.runTaskLater(gameManager.plugin, Runnable {
+                gameManager.broadcastMessage("ゲーム終了まで" + (gameTime - i).toString() + "秒...")
+            }, i * 20)
+            gameManager.plugin.server.scheduler.runTaskLater(gameManager.plugin, Runnable {
+                gameManager.broadcastMessage("ゲーム終了!!")
+                val winner = gameManager.judge() // TODO チーム情報を受け取り、メッセージに反映する
+                gameManager.broadcastMessage(winner.toString() + "の勝利です")
+                gameManager.getPlayers().forEach { player ->
+                    player.showTitle(
+                        Title.title(
+                            Component.text(winner.toString() + "の勝利").color(TextColor.color(0x88FF88)),
+                            Component.text().append(Component.text("Player1").color(TextColor.color(0xFF8888)))
+                                .append(Component.text(": 100  vs  ").color(TextColor.color(0x888888)))
+                                .append(Component.text("Player2").color(TextColor.color(0x8888FF)))
+                                .append(Component.text(": 200").color(TextColor.color(0x888888))).build()
+                        ),
+                    )
+                }
+                gameManager.setState(AfterGame(gameManager))
+            }, gameTime * 20)
+        }
+    }
+
+    class AfterGame(private val gameManager: GameManager) : GameState(gameManager) {
+        init {
+            for (i in 1 until 5) gameManager.plugin.server.scheduler.runTaskLater(gameManager.plugin, Runnable {
+                gameManager.broadcastMessage("ロビー転送まで" + (5 - i).toString() + "秒...")
+            }, 20 * i.toLong())
+            gameManager.plugin.server.scheduler.runTaskLater(gameManager.plugin, Runnable {
+                gameManager.getPlayers().forEach { player ->
+                    player.teleport(gameManager.lobby)
+                }
+                gameManager.setState(BeforeGame(gameManager))
+            }, 20 * 5)
+        }
     }
 }
