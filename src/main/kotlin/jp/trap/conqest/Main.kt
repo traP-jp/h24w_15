@@ -24,6 +24,7 @@ class Main : JavaPlugin() {
 
     override fun onLoad() {
         logger.info(figlet)
+        gameManager = GameManager(this)
         flowHandler = FlowHandler(
             logger,
             listOf(
@@ -47,7 +48,6 @@ class Main : JavaPlugin() {
                 )
             )
         )
-        gameManager = GameManager(this)
     }
 
     override fun onEnable() {

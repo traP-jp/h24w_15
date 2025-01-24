@@ -2,8 +2,8 @@ package jp.trap.conqest.game
 
 import org.bukkit.Location
 
-class District(val gameManager: GameManager, val coreLocation: Location, private var team: Team) {
-    private val core: DistrictCore = DistrictCore(this, coreLocation)
+class District(val gameManager: GameManager, private val coreLocation: Location, private var team: Team) {
+    val core: DistrictCore = DistrictCore(this, coreLocation)
 
     init {
         setTeam(team)

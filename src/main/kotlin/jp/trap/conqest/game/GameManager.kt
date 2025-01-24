@@ -11,15 +11,9 @@ class GameManager(val plugin: Plugin) {
     private var state: GameState = GameState.BeforeGame(this)
 
     private val teams: MutableList<Team> = mutableListOf(Team(TeamColor.GRAY))
+
     // TODO TwoSquirrelsのライブラリを使うように置き換える
-    val field: GameField = GameField(
-        Bukkit.getWorlds()[0],
-        listOf(
-            District(
-                this, Location(Bukkit.getWorlds()[0], 70.0, 70.0, -110.0), teams[0]
-            )
-        )
-    )
+    var field: GameField? = null
 
     fun setState(state: GameState) {
         this.state = state
@@ -33,6 +27,15 @@ class GameManager(val plugin: Plugin) {
         val team = Team(listOf(TeamColor.RED, TeamColor.BLUE)[(teams.size - 1) % 2])
         team.addPlayer(player)
         teams.add(team)
+        if (field == null)
+            field = GameField(
+                player.world,
+                listOf(
+                    District(
+                        this, Location(Bukkit.getWorlds()[0], 70.0, 70.0, -110.0), teams[0]
+                    )
+                )
+            )
     }
 
     private fun getPlayers(): List<Player> {
