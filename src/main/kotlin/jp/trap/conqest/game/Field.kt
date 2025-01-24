@@ -44,7 +44,6 @@ class Field(
 
     fun showPreview(target: Player) {
         hidePreview()
-        blockChanges.clear()
 
         // wall
         forEachGrounds(target) { position, ground ->
@@ -98,14 +97,22 @@ class Field(
         }
 
         target.sendMultiBlockChange(blockChanges)
-        target.sendMessage("Previewing at $center")
+        with(target) {
+            sendMessage(Component.text("-".repeat(40), NamedTextColor.GREEN))
+            sendMessage(Component.text("Previewing at $center"))
+            sendMessage(Component.text("  X: ${bottom()} to ${top()}"))
+            sendMessage(Component.text("  Z: ${left()} to ${right()}"))
+            sendMessage(Component.text("-".repeat(40), NamedTextColor.GREEN))
+        }
     }
 
-    fun hidePreview() = blockChanges.keys.forEach { it.block.state.update(false, false) }
+    fun hidePreview() {
+        blockChanges.keys.forEach { it.block.state.update(false, false) }
+        blockChanges.clear()
+    }
 
     fun generate() {
-        // TODO: generate
-        Bukkit.getEntity(creatorId)?.sendMessage(Component.text("TODO: confirm", NamedTextColor.GOLD))
+        blockChanges.forEach { (loc, data) -> loc.block.blockData = data }
 
         with(plugin.logger) {
             info("-".repeat(40))
@@ -115,7 +122,6 @@ class Field(
             partition.toString().split("\n").forEach { info(it) }
             info("-".repeat(40))
         }
-
     }
 
     private fun checkIsTree(material: Material): Boolean {

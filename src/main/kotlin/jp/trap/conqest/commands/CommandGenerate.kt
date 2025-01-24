@@ -19,18 +19,16 @@ class CommandGenerate(val plugin: Main) : Commands.Command {
 
     private fun setPreview(source: CommandSourceStack, partition: Partition): Int {
         val creatorId = source.executor?.uniqueId ?: UUID(0, 0)
-        val field = Field(plugin, creatorId, source.location, partition)
 
-        previews[creatorId]?.hidePreview()
-        previews[creatorId] = field
-
-        with(source.sender) {
-            sendMessage(Component.text("-".repeat(40), NamedTextColor.GREEN))
-            sendMessage(Component.text("Previewing at ${field.center}"))
-            sendMessage(Component.text("  X: ${field.bottom()} to ${field.top()}"))
-            sendMessage(Component.text("  Z: ${field.left()} to ${field.right()}"))
-            sendMessage(Component.text("-".repeat(40), NamedTextColor.GREEN))
+        if (previews.containsKey(creatorId)) {
+            with(source.sender) {
+                sendMessage(Component.text("You are already previewing!", NamedTextColor.RED))
+                sendMessage(Component.text("If you want to cancel, type /generate cancel", NamedTextColor.GOLD))
+            }
+            return 0
         }
+        previews[creatorId] = Field(plugin, creatorId, source.location, partition)
+
         return Command.SINGLE_SUCCESS
     }
 
@@ -61,20 +59,19 @@ class CommandGenerate(val plugin: Main) : Commands.Command {
         preview.hidePreview()
         previews.remove(creatorId)
 
-        source.sender.sendMessage(Component.text("Preview canceled.", NamedTextColor.DARK_RED))
+        source.sender.sendMessage(Component.text("Preview canceled.", NamedTextColor.DARK_GREEN))
         return Command.SINGLE_SUCCESS
     }
 
     private fun confirm(source: CommandSourceStack): Int {
-        val creatorId = source.executor ?: UUID(0, 0)
+        val creatorId = source.executor?.uniqueId ?: UUID(0, 0)
 
         val field = previews[creatorId] ?: run {
             source.sender.sendMessage(Component.text("Need to preview first!", NamedTextColor.RED))
             return 0
         }
-        previews.remove(creatorId)
-
         field.generate()
+        previews.remove(creatorId)
 
         with(source.sender) {
             sendMessage(Component.text("=".repeat(40), NamedTextColor.GREEN))
