@@ -81,8 +81,7 @@ class Field(
 
         // fence
         forEachGrounds(target) { position, ground ->
-            if (partition.getBorderLevel(position) < 1) return@forEachGrounds
-            if (partition.inRoad(position, roadWidth)) return@forEachGrounds
+            if (partition.getDistrictIndex(position) == null) return@forEachGrounds
             for (x in -2..2) for (z in -2..2) {
                 val pos = position.first + x to position.second + z
                 if (partition.getBorderLevel(pos) < 1) continue
@@ -126,6 +125,7 @@ class Field(
     fun generate() {
         blockChanges.forEach { (loc, data) ->
             loc.block.blockData = data
+            loc.block.state.update(true, false)
             if (data.material == Materials.core) {
                 // TODO: this.cores[partition.getDistrictIndex(loc.blockX to loc.blockZ)] にコアの座標を設定
             }
