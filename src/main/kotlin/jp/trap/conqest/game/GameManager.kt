@@ -11,7 +11,7 @@ class GameManager(val plugin: Plugin) {
     private var state: GameState = GameState.BeforeGame(this)
     private val players: MutableList<Player> = mutableListOf()
     private val nites: MutableMap<UUID, MutableList<Nite<*>>> = mutableMapOf()
-    val lobby: Location = plugin.server.worlds[0].spawnLocation // TODO ロビーの場所へ変更
+    lateinit var lobby: Location
 
     fun setState(state: GameState) {
         this.state = state
@@ -20,6 +20,7 @@ class GameManager(val plugin: Plugin) {
     fun addPlayer(player: Player) {
         player.setResourcePack("https://trap-jp.github.io/h24w_15/conqest_texture.zip")
         players.add(player)
+        lobby = player.location // TODO ロビーの場所へ変更
     }
 
     fun broadcastMessage(msg: String) {
