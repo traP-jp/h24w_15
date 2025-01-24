@@ -13,11 +13,9 @@ class Field(
     init {
         val districtCount = partition.districts.size
         val locations: MutableList<MutableSet<Pair<Int, Int>>> = MutableList(size = districtCount) { mutableSetOf() }
-        val centerList = MutableList(size = districtCount) { 0 to 0 }
         for (x in 0 until partition.fieldSize.first) for (y in 0 until partition.fieldSize.second) {
             val idx = partition.getDistrictIndex(x to y)!!
             locations[idx].add(x to y)
-            if (partition.isCenter(x to y)) centerList[idx] = x to y
         }
         districts = (0 until districtCount).map { i -> District(locations[i], coreLocations[i]) }
     }
