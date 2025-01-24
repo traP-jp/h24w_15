@@ -8,6 +8,7 @@ import org.bukkit.boss.BossBar
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
+import java.util.logging.Logger
 
 class GameTimer(private val plugin: Plugin, private val id:String) {
     private var bossBar: BossBar? = null
@@ -84,7 +85,7 @@ class GameTimer(private val plugin: Plugin, private val id:String) {
                     return
                 }
                 bossBar?.setTitle(ChatColor.YELLOW.toString() + "残り時間" + remainingTime + "秒")
-                bossBar?.progress = (remainingTime / gameTime).toDouble()
+                bossBar?.progress = remainingTime.toDouble() / gameTime.toDouble()
                 remainingTime--
             }
         }
