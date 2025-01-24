@@ -1,5 +1,6 @@
 package jp.trap.conqest.listeners
 
+import jp.trap.conqest.game.item.ShopBook
 import jp.trap.conqest.game.item.UsableItem
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -8,7 +9,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 
 class ListenerUsableItem : Listener {
     companion object {
-        val registry: List<UsableItem> = mutableListOf()
+        val registry: List<UsableItem> = mutableListOf(ShopBook)
     }
 
     @EventHandler
