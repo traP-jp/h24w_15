@@ -1,6 +1,5 @@
 package jp.trap.conqest
 
-import jp.trap.conqest.commands.CommandGenerate
 import jp.trap.conqest.commands.Commands
 import jp.trap.conqest.listeners.Listeners
 import jp.trap.conqest.util.FlowHandler
@@ -24,8 +23,6 @@ class Main : JavaPlugin() {
     private lateinit var tickTask: BukkitTask
 
     private fun update() {
-        // 負荷軽減のため毎フレーム全てのプレビューを表示させるのではなく、ランダムなプレイヤーのみに表示させる
-        Bukkit.getOnlinePlayers().randomOrNull()?.let { CommandGenerate.getPreview(it.uniqueId)?.showPreview(it) }
     }
 
     override fun onLoad() {

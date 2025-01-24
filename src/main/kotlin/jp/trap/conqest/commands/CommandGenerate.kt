@@ -15,16 +15,13 @@ import io.papermc.paper.command.brigadier.Commands as BrigadierCommands
 
 class CommandGenerate(val plugin: Main) : Commands.Command {
 
-    companion object {
-        private val previews = mutableMapOf<UUID, Field>()
-
-        fun getPreview(creatorId: UUID): Field? = previews[creatorId]
-    }
+    private val previews = mutableMapOf<UUID, Field>()
 
     private fun setPreview(source: CommandSourceStack, partition: Partition): Int {
         val creatorId = source.executor?.uniqueId ?: UUID(0, 0)
         val field = Field(plugin, creatorId, source.location, partition)
 
+        previews[creatorId]?.hidePreview()
         previews[creatorId] = field
 
         with(source.sender) {
@@ -43,13 +40,13 @@ class CommandGenerate(val plugin: Main) : Commands.Command {
     }
 
     private fun preview(source: CommandSourceStack): Int {
-        Partition.generate(96 to 96, 16.0).onSuccess { return setPreview(source, it) }
+        Partition.generate(96 to 96, 20.0).onSuccess { return setPreview(source, it) }
             .onFailure { source.sender.sendMessage(Component.text(it.toString(), NamedTextColor.RED)) }
         return 0
     }
 
     private fun previewCount(source: CommandSourceStack): Int {
-        Partition.generateWithCount(96 to 96, 40).onSuccess { return setPreview(source, it) }
+        Partition.generateWithCount(96 to 96, 16).onSuccess { return setPreview(source, it) }
             .onFailure { source.sender.sendMessage(Component.text(it.toString(), NamedTextColor.RED)) }
         return 0
     }

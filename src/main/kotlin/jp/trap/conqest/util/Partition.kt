@@ -137,7 +137,7 @@ class Partition(val fieldSize: Pair<Int, Int>, val districts: List<District> = e
 
     }
 
-    val graph: List<Set<Int>>
+    val graph: List<Map<Int, Int>>
     var printRoadWidth: Double = 3.0
 
     private val grid: List<List<Int?>>
@@ -161,7 +161,7 @@ class Partition(val fieldSize: Pair<Int, Int>, val districts: List<District> = e
         }
 
         // construct a graph where each district is connected to its adjacent districts
-        graph = List(districts.size) { mutableSetOf<Int>() }.apply {
+        graph = List(districts.size) { mutableMapOf<Int, Int>() }.apply {
             for (i in 1 until grid.size step 2) {
                 for (j in 1 until grid[i].size step 2) {
                     val districtIndex = grid[i][j] ?: continue
@@ -169,8 +169,8 @@ class Partition(val fieldSize: Pair<Int, Int>, val districts: List<District> = e
                     listOf(0 to 1, 1 to 0, 0 to -1, -1 to 0).forEach { (di, dj) ->
                         grid.getOrNull(i + di)?.getOrNull(j + dj)?.let {
                             if (it != districtIndex) {
-                                get(districtIndex).add(it)
-                                get(it).add(districtIndex)
+                                get(districtIndex).merge(it, 1, Int::plus)
+                                get(it).merge(districtIndex, 1, Int::plus)
                             }
                         }
                     }
@@ -182,22 +182,23 @@ class Partition(val fieldSize: Pair<Int, Int>, val districts: List<District> = e
         distancesToRoad = List(fieldSize.first) { i ->
             List(fieldSize.second) cell@{ j ->
                 val districtIndex = getDistrictIndex(i to j) ?: return@cell Double.POSITIVE_INFINITY
-                graph[districtIndex].ifEmpty { setOf(districtIndex) }.minOf { neighbor ->
-                    val a = districts[districtIndex].center
-                    val b = districts[neighbor].center
-                    val p = i.toDouble() + 0.5 to j.toDouble() + 0.5
-                    val ab = b.first - a.first to b.second - a.second
-                    val ap = p.first - a.first to p.second - a.second
-                    val bp = p.first - b.first to p.second - b.second
-                    if (ab.first * ap.first + ab.second * ap.second <= 0) {
-                        hypot(ap.first, ap.second)
-                    } else if (-ab.first * bp.first + -ab.second * bp.second <= 0) {
-                        hypot(bp.first, bp.second)
-                    } else {
-                        val cross = abs(ab.first * ap.second - ab.second * ap.first)
-                        cross / hypot(ab.first, ab.second)
+                graph[districtIndex].flatMap { (neighbor, weight) -> if (weight >= 4) listOf(neighbor) else emptyList() }
+                    .ifEmpty { listOf(districtIndex) }.minOf { neighbor ->
+                        val a = districts[districtIndex].center
+                        val b = districts[neighbor].center
+                        val p = i.toDouble() + 0.5 to j.toDouble() + 0.5
+                        val ab = b.first - a.first to b.second - a.second
+                        val ap = p.first - a.first to p.second - a.second
+                        val bp = p.first - b.first to p.second - b.second
+                        if (ab.first * ap.first + ab.second * ap.second <= 0) {
+                            hypot(ap.first, ap.second)
+                        } else if (-ab.first * bp.first + -ab.second * bp.second <= 0) {
+                            hypot(bp.first, bp.second)
+                        } else {
+                            val cross = abs(ab.first * ap.second - ab.second * ap.first)
+                            cross / hypot(ab.first, ab.second)
+                        }
                     }
-                }
             }
         }
     }
