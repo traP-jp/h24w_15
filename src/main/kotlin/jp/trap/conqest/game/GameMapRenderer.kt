@@ -27,7 +27,7 @@ class GameMapRenderer(private val gameManager: GameManager) : MapRenderer(true) 
         while (canvas.cursors.size() > 0) canvas.cursors.removeCursor(canvas.cursors.getCursor(0))
 
         drawCursor(player.location, canvas)
-        gameManager.nites.forEach { nite ->
+        gameManager.getNites().forEach { nite ->
             drawCursor(nite.getLocation(), canvas)
         }
     }

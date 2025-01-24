@@ -30,6 +30,10 @@ class GameManager(val plugin: Plugin) {
         return state.executeCommand(command, sender)
     }
 
+    fun getNites(): List<Nite<*>> {
+        return nites.values.flatten()
+    }
+
     fun getNites(player: Player): List<Nite<*>> {
         return nites.computeIfAbsent(player.uniqueId) { ArrayList() }
     }
