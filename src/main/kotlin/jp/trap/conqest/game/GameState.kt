@@ -6,13 +6,21 @@ import net.kyori.adventure.title.Title
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
+enum class GameStates {
+    BEFORE_GAME, MATCHING, GAME_READY, PLAYING, AFTER_GAME,
+}
+
 sealed class GameState(private val game: Game) {
+
+    abstract val type: GameStates
+
     open fun executeCommand(command: GameCommand, sender: CommandSender): Int {
         sender.sendMessage("このコマンドは現在実行できません。")
         return 1
     }
 
     class BeforeGame(private val game: Game) : GameState(game) {
+        override val type: GameStates = GameStates.BEFORE_GAME
         override fun executeCommand(command: GameCommand, sender: CommandSender): Int {
             if (command != GameCommand.JOIN) {
                 super.executeCommand(command, sender)
@@ -32,6 +40,7 @@ sealed class GameState(private val game: Game) {
     }
 
     class Matching(private val game: Game) : GameState(game) {
+        override val type: GameStates = GameStates.MATCHING
         override fun executeCommand(command: GameCommand, sender: CommandSender): Int {
             if (command != GameCommand.JOIN) {
                 super.executeCommand(command, sender)
@@ -52,6 +61,8 @@ sealed class GameState(private val game: Game) {
     }
 
     class GameReady(private val game: Game) : GameState(game) {
+        override val type: GameStates = GameStates.GAME_READY
+
         init {
             for (i in 1 until 5) game.plugin.server.scheduler.runTaskLater(game.plugin, Runnable {
                 game.broadcastMessage("ゲーム開始まで" + (5 - i).toString() + "秒...")
@@ -64,6 +75,7 @@ sealed class GameState(private val game: Game) {
     }
 
     class Playing(private val game: Game) : GameState(game) {
+        override val type: GameStates = GameStates.PLAYING
         private val gameTime: Long = 20 // 5 * 60
 
         init {
@@ -91,6 +103,8 @@ sealed class GameState(private val game: Game) {
     }
 
     class AfterGame(private val game: Game) : GameState(game) {
+        override val type: GameStates = GameStates.GAME_READY
+
         init {
             for (i in 1 until 5) game.plugin.server.scheduler.runTaskLater(game.plugin, Runnable {
                 game.broadcastMessage("ロビー転送まで" + (5 - i).toString() + "秒...")

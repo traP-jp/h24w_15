@@ -13,7 +13,7 @@ class Listeners(
     fun init(): Result<Unit> {
         registerListener(ListenerUsableItem())
         registerListener(ListenerShopGUI())
-        registerListener(ListenerNiteControl(plugin.game))
+        registerListener(ListenerNiteControl(plugin.gameManager))
         return Result.success(Unit)
     }
 }

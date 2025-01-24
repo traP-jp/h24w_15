@@ -86,7 +86,7 @@ class CommandGenerate(val plugin: Main) : Commands.Command {
             return 0
         }
         field.generate()
-        plugin.game.fields.add(field)
+        plugin.gameManager.addField(field)
         previews.remove(creatorId)
 
         with(source.sender) {

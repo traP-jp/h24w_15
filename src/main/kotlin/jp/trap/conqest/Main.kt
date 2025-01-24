@@ -2,6 +2,7 @@ package jp.trap.conqest
 
 import jp.trap.conqest.commands.Commands
 import jp.trap.conqest.game.Game
+import jp.trap.conqest.game.GameManager
 import jp.trap.conqest.listeners.Listeners
 import jp.trap.conqest.util.FlowHandler
 import jp.trap.conqest.util.FlowTask
@@ -22,7 +23,7 @@ class Main : JavaPlugin() {
     private lateinit var listeners: Listeners
     private lateinit var commands: Commands
     private lateinit var tickTask: BukkitTask
-    lateinit var game: Game
+    var gameManager: GameManager = GameManager(this)
 
     private fun update() {
     }
@@ -55,7 +56,6 @@ class Main : JavaPlugin() {
                 }),
             )
         )
-        game = Game(this)
     }
 
     override fun onEnable() {
