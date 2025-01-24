@@ -39,4 +39,8 @@ abstract class Nite<T>(location: Location, type: EntityType, name: String, plugi
         }
     }
 
+    fun getLocation(): Location {
+        return entity.location
+    }
+
 }

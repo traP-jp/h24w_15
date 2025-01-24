@@ -8,6 +8,7 @@ class GameManager(val plugin: Plugin) {
 
     private var state: GameState = GameState.BeforeGame(this)
     private val players: MutableList<Player> = mutableListOf()
+    val nites: MutableList<Nite<*>> = mutableListOf()
 
     fun setState(state: GameState) {
         this.state = state

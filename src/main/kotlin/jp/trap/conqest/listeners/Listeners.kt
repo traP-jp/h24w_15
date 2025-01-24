@@ -12,6 +12,7 @@ class Listeners(
     }
     fun init(): Result<Unit> {
         registerListener(ListenerPlayerUseChanceCard())
+        registerListener(ListenerCustomMap(plugin.gameManager))
         return Result.success(Unit)
     }
 }
