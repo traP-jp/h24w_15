@@ -138,7 +138,6 @@ class Partition(val fieldSize: Pair<Int, Int>, val districts: List<District> = e
     }
 
     val graph: List<Map<Int, Int>>
-    var printRoadWidth: Double = 3.0
 
     private val grid: List<List<Int?>>
     private val distancesToRoad: List<List<Double>>
@@ -257,7 +256,7 @@ class Partition(val fieldSize: Pair<Int, Int>, val districts: List<District> = e
         (distancesToRoad.getOrNull(position.first)?.getOrNull(position.second)
             ?: Double.POSITIVE_INFINITY) <= roadWidth / 2.0
 
-    override fun toString(): String = buildString {
+    fun toString(roadWidth: Double): String = buildString {
         append("+-", "-".repeat(4 * fieldSize.second), "-+\n")
         for (x in 0 until fieldSize.first) {
             if (x > 0) append("| ", " ".repeat(4 * fieldSize.second), " |\n")
@@ -267,7 +266,7 @@ class Partition(val fieldSize: Pair<Int, Int>, val districts: List<District> = e
                 val content = districtIndex?.toString()?.padStart(2, '0') ?: "??"
                 append(
                     if (isCenter(x to y)) "[$content]"
-                    else if (inRoad(x to y, printRoadWidth)) ":$content:"
+                    else if (inRoad(x to y, roadWidth)) ":$content:"
                     else when (getBorderLevel(x to y)) {
                         2 -> "($content)"
                         1 -> "<$content>"
@@ -279,4 +278,6 @@ class Partition(val fieldSize: Pair<Int, Int>, val districts: List<District> = e
         }
         append("+-", "-".repeat(4 * fieldSize.second), "-+\n")
     }
+
+    override fun toString(): String = toString(3.0)
 }
