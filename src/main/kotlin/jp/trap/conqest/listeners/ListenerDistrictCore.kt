@@ -11,7 +11,6 @@ class ListenerDistrictCore(private val gameManager: GameManager) : Listener {
     @EventHandler
     fun onBlockBreak(event: BlockBreakEvent) {
         val player = event.player
-        player.sendMessage(event.eventName)
         val districts = gameManager.field!!.districts
         val district = districts.firstOrNull { district -> district.core.location == event.block.location }
         val team = gameManager.getTeam(player)
@@ -25,12 +24,9 @@ class ListenerDistrictCore(private val gameManager: GameManager) : Listener {
     fun onBlockBreakProgressChanged(event: BlockBreakProgressUpdateEvent) {
         if (event.entity !is Player) return
         val player: Player = event.entity as Player
-        player.sendMessage(event.eventName)
         val districts = gameManager.field!!.districts
-        districts.forEach{ district -> player.sendMessage(district.core.location.toString())}
+        districts.forEach { district -> player.sendMessage(district.core.location.toString()) }
         val district = districts.firstOrNull { district -> district.core.location == event.block.location }
-        player.sendMessage(district.toString())
-        player.sendMessage(district?.core.toString())
         district?.core?.changeHP(100 - event.progress.toDouble() * 100)
     }
 }

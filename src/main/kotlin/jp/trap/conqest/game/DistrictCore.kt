@@ -16,8 +16,9 @@ class DistrictCore(district: District, val location: Location) {
 
     init {
         block.type = district.getTeam().color.getConcreteMaterial()
-        armorStand =
-            location.world.spawnEntity(location.clone().add(Vector(0.5, -1.0, 0.5)), EntityType.ARMOR_STAND) as ArmorStand
+        armorStand = location.world.spawnEntity(
+            location.clone().add(Vector(0.5, -1.0, 0.5)), EntityType.ARMOR_STAND
+        ) as ArmorStand
         armorStand.setNoPhysics(true)
         armorStand.setGravity(false)
         armorStand.isVisible = false
