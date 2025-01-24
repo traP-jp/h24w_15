@@ -15,7 +15,11 @@ import io.papermc.paper.command.brigadier.Commands as BrigadierCommands
 
 class CommandGenerate(val plugin: Main) : Commands.Command {
 
-    private val previews = mutableMapOf<UUID, Field>()
+    companion object {
+        private val previews = mutableMapOf<UUID, Field>()
+
+        fun getPreview(creatorId: UUID): Field? = previews[creatorId]
+    }
 
     private fun setPreview(source: CommandSourceStack, partition: Partition): Int {
         val creatorId = source.executor?.uniqueId ?: UUID(0, 0)
@@ -51,12 +55,14 @@ class CommandGenerate(val plugin: Main) : Commands.Command {
     }
 
     private fun cancel(source: CommandSourceStack): Int {
-        val creatorId = source.executor ?: UUID(0, 0)
+        val creatorId = source.executor?.uniqueId ?: UUID(0, 0)
 
-        previews.remove(creatorId) ?: run {
+        val preview = previews[creatorId] ?: run {
             source.sender.sendMessage(Component.text("You are not previewing!", NamedTextColor.RED))
             return 0
         }
+        preview.hidePreview()
+        previews.remove(creatorId)
 
         source.sender.sendMessage(Component.text("Preview canceled.", NamedTextColor.DARK_RED))
         return Command.SINGLE_SUCCESS

@@ -6,11 +6,24 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.Material
+import org.bukkit.block.data.BlockData
+import org.bukkit.entity.Player
 import java.util.*
 
 class Field(
     val plugin: Main, val creatorId: UUID, val center: Location, val partition: Partition, val roadWidth: Double = 3.0
 ) {
+
+    object Materials {
+        val wall = Material.BEDROCK
+        val core = Material.BEACON
+        val coreBase = Material.IRON_BLOCK
+        val fence = Material.STONE_BRICK_WALL
+        val road = Material.DIRT_PATH
+    }
+
+    private val previewBlockLocations = mutableSetOf<Location>()
 
     init {
         require(roadWidth > 0.0) { "roadWidth must be positive" }
@@ -26,9 +39,58 @@ class Field(
 
     fun right(): Int = left() + partition.fieldSize.second
 
-    fun preview(radius: Double = Double.POSITIVE_INFINITY) {
-        // TODO: preview
+    fun showPreview(target: Player, radius: Int = 32) {
+        val blockChanges = mutableMapOf<Location, BlockData>()
+
+        val targetX = target.location.blockX - bottom()
+        val targetZ = target.location.blockZ - left()
+
+        // around the target player
+        for (i in maxOf(-1, targetX - radius) until minOf(partition.fieldSize.first + 1, targetX + radius)) {
+            for (j in maxOf(-1, targetZ - radius) until minOf(partition.fieldSize.second + 1, targetZ + radius)) {
+                val ground = target.world.getHighestBlockAt(bottom() + i, left() + j)
+                val groundLoc = ground.location
+
+                val districtIndex = partition.getDistrictIndex(i to j)
+
+                // wall
+                if (districtIndex == null) {
+                    for (k in -32 until 32) {
+                        val loc = groundLoc.clone().add(0.0, k.toDouble(), 0.0)
+                        if (loc.blockY < loc.world.minHeight || loc.blockY > loc.world.maxHeight) break
+                        if (previewBlockLocations.contains(loc)) continue
+                        blockChanges[loc] = Materials.wall.createBlockData()
+                    }
+                }
+
+                if (partition.isCenter(i to j)) {
+                    // core
+                    val coreLoc = groundLoc.clone().add(0.0, 1.0, 0.0)
+                    for (x in -1..1) for (z in -1..1) {
+                        blockChanges[coreLoc.clone().add(x.toDouble(), -1.0, z.toDouble())] =
+                            Materials.coreBase.createBlockData()
+                    }
+                    blockChanges[coreLoc] = Materials.core.createBlockData()
+                } else if (partition.inRoad(i to j, roadWidth)) {
+                    // road
+                    if (!previewBlockLocations.contains(groundLoc)) {
+                        blockChanges[groundLoc] = Materials.road.createBlockData()
+                    }
+                } else if (partition.getBorderLevel(i to j) >= 1) {
+                    // fence
+                    val loc = groundLoc.clone().add(0.0, 1.0, 0.0)
+                    if (!previewBlockLocations.contains(loc)) {
+                        blockChanges[loc] = Materials.fence.createBlockData()
+                    }
+                }
+            }
+        }
+
+        target.sendMultiBlockChange(blockChanges)
+        previewBlockLocations.addAll(blockChanges.keys)
     }
+
+    fun hidePreview() = previewBlockLocations.forEach { it.block.state.update(false, false) }
 
     fun generate() {
         // TODO: generate
