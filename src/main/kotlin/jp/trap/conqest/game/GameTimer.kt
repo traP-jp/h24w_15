@@ -10,7 +10,7 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.logging.Logger
 
-class GameTimer(private val plugin: Plugin, private val id:String) {
+class GameTimer(private val plugin: Plugin, private val id: String) {
     private var bossBar: BossBar? = null
     private var remainingTime: Int = 0
     private var countDownTask: BukkitRunnable? = null
@@ -25,11 +25,11 @@ class GameTimer(private val plugin: Plugin, private val id:String) {
         )
     }
 
-    fun addPlayer(player: Player){
+    fun addPlayer(player: Player) {
         bossBar?.addPlayer(player)
     }
 
-    fun removePlayer(player: Player){
+    fun removePlayer(player: Player) {
         bossBar?.removePlayer(player)
     }
 
@@ -43,8 +43,8 @@ class GameTimer(private val plugin: Plugin, private val id:String) {
         runTimer()
     }
 
-    fun pauseTimer(){
-        if(isPaused || countDownTask == null) {
+    fun pauseTimer() {
+        if (isPaused || countDownTask == null) {
             return
         }
         countDownTask?.cancel()
@@ -53,8 +53,8 @@ class GameTimer(private val plugin: Plugin, private val id:String) {
         bossBar?.setTitle(ChatColor.RED.toString() + "ゲーム停止中:" + remainingTime + "秒")
     }
 
-    fun restartTimer(){
-        if(!isPaused || remainingTime <= 0){
+    fun restartTimer() {
+        if (!isPaused || remainingTime <= 0) {
             return
         }
         isPaused = false
@@ -62,7 +62,7 @@ class GameTimer(private val plugin: Plugin, private val id:String) {
         runTimer()
     }
 
-    fun stopTimer(){
+    fun stopTimer() {
         countDownTask?.cancel()
         countDownTask = null
         bossBar?.setTitle(ChatColor.RED.toString() + "ゲーム停止")
@@ -70,15 +70,15 @@ class GameTimer(private val plugin: Plugin, private val id:String) {
         isPaused = false
     }
 
-    fun removeTimer(){
+    fun removeTimer() {
         bossBar?.removeAll()
         bossBar = null
     }
 
-    private fun runTimer(){
-        countDownTask = object :BukkitRunnable(){
-            override fun run(){
-                if(remainingTime <= 0){
+    private fun runTimer() {
+        countDownTask = object : BukkitRunnable() {
+            override fun run() {
+                if (remainingTime <= 0) {
                     bossBar?.setTitle(ChatColor.RED.toString() + "ゲーム終了!!")
                     bossBar?.progress = 0.0
                     this.cancel()

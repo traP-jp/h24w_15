@@ -57,7 +57,6 @@ sealed class GameState(private val gameManager: GameManager) {
             gameManager.plugin.server.scheduler.runTaskLater(gameManager.plugin, Runnable {
                 gameManager.broadcastMessage("ゲーム開始!!")
                 gameManager.setState(Playing(gameManager))
-
             }, 20 * 5)
         }
     }

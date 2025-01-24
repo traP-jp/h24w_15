@@ -146,4 +146,3 @@ class CommandConQest(val plugin: Main) : Commands.Command {
             .build()
     }
 }
-//io.papermc.paper.command.brigadier.Commands.argument("timer-id", StringArgumentType.string())
