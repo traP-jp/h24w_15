@@ -153,12 +153,15 @@ class Field(
         for (i in -1 until partition.fieldSize.first + 1) {
             for (j in -1 until partition.fieldSize.second + 1) {
                 val ground = target.world.getHighestBlockAt(bottom() + i, left() + j).location
+                if (ground.blockY + 1 <= target.world.maxHeight) {
+                    ground.y += 1.0
+                }
                 while (ground.blockY - 1 >= target.world.minHeight) {
                     val material = getChangedBlockData(ground).material
                     if (material.isCollidable && material != Materials.fence) break
                     // TODO: 水に浸かっているいる水でないブロックに対応
                     if (material == Material.WATER || material == Material.LAVA) break
-                    ground.add(0.0, -1.0, 0.0)
+                    ground.y -= 1.0
                 }
                 action(i to j, ground)
             }
