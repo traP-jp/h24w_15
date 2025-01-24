@@ -64,9 +64,12 @@ sealed class GameState(private val gameManager: GameManager) {
     }
 
     class Playing(private val gameManager: GameManager) : GameState(gameManager) {
-        val gameTime: Long = 5 * 60
+        private val gameTime: Long = 20 // 5 * 60
 
         init {
+            for (i in 0 until gameTime) gameManager.plugin.server.scheduler.runTaskLater(gameManager.plugin, Runnable {
+                gameManager.broadcastMessage("ゲーム終了まで" + (gameTime - i).toString() + "秒...")
+            }, i * 20)
             gameManager.plugin.server.scheduler.runTaskLater(gameManager.plugin, Runnable {
                 gameManager.broadcastMessage("ゲーム終了!!")
                 val winner = gameManager.judge() // TODO チーム情報を受け取り、メッセージに反映する
