@@ -17,6 +17,11 @@ class Commands(
         lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {
             it.registrar().register(CommandConQest(plugin).literalCommandNode())
             it.registrar().register(CommandGenerate(plugin).literalCommandNode())
+            it.registrar().register(CommandPay().literalCommandNode())
+            it.registrar().register(CommandEarn().literalCommandNode())
+            it.registrar().register(CommandWallet().literalCommandNode())
+            it.registrar().register(CommandGetChanceCard().literalCommandNode())
+            it.registrar().register(CommandGetShopBook().literalCommandNode())
         }
         return Result.success(Unit)
     }
