@@ -11,7 +11,7 @@ class Listeners(
         Bukkit.getPluginManager().registerEvents(listener, plugin)
     }
     fun init(): Result<Unit> {
-        registerListener(ListenerPlayerUseChanceCard())
+        registerListener(ListenerUsableItem())
         registerListener(ListenerNiteControl(plugin.gameManager))
         return Result.success(Unit)
     }
