@@ -11,7 +11,7 @@ class GameManager(val plugin: Plugin) {
             ?: games.firstOrNull { game -> game.getStateType() == GameStates.BEFORE_GAME }
             ?: run {
                 val newGame = Game(plugin)
-                games.plus(newGame)
+                games.add(newGame)
                 newGame
             }
     }
