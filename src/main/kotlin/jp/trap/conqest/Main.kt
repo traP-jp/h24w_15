@@ -1,7 +1,6 @@
 package jp.trap.conqest
 
 import jp.trap.conqest.commands.Commands
-import jp.trap.conqest.game.Game
 import jp.trap.conqest.game.GameManager
 import jp.trap.conqest.listeners.Listeners
 import jp.trap.conqest.util.FlowHandler

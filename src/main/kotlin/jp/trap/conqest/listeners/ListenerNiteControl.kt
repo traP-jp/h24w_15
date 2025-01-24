@@ -1,7 +1,6 @@
 package jp.trap.conqest.listeners
 
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent
-import jp.trap.conqest.game.Game
 import jp.trap.conqest.game.GameManager
 import jp.trap.conqest.game.NiteState
 import jp.trap.conqest.game.NiteStates

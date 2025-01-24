@@ -103,7 +103,7 @@ sealed class GameState(private val game: Game) {
     }
 
     class AfterGame(private val game: Game) : GameState(game) {
-        override val type: GameStates = GameStates.GAME_READY
+        override val type: GameStates = GameStates.AFTER_GAME
 
         init {
             for (i in 1 until 5) game.plugin.server.scheduler.runTaskLater(game.plugin, Runnable {
