@@ -57,8 +57,11 @@ class Field(
 
         // remove tree
         forEachGrounds(target) { _, ground ->
-            while (ground.blockY - 1 >= target.world.minHeight && checkIsTree(getChangedBlockData(ground).material)) {
-                blockChanges[ground.clone()] = Material.AIR.createBlockData()
+            while (ground.blockY - 1 >= target.world.minHeight) {
+                val material = getChangedBlockData(ground).material
+                if (checkIsTree(material)) {
+                    blockChanges[ground.clone()] = Material.AIR.createBlockData()
+                } else if (material.isCollidable) break
                 ground.y -= 1.0
             }
         }
@@ -82,7 +85,18 @@ class Field(
         forEachGrounds(target) { position, ground ->
             if (partition.getBorderLevel(position) < 1) return@forEachGrounds
             if (partition.inRoad(position, roadWidth)) return@forEachGrounds
-            blockChanges[ground.clone().add(0.0, 1.0, 0.0)] = Materials.fence.createBlockData()
+            for (x in -2..2) for (z in -2..2) {
+                val pos = position.first + x to position.second + z
+                if (partition.getBorderLevel(pos) < 1) continue
+                if (partition.inRoad(pos, roadWidth)) continue
+                val loc = ground.clone().add(x.toDouble(), 1.0, z.toDouble())
+                while (loc.blockY >= target.world.minHeight) {
+                    if (!getChangedBlockData(loc).material.isCollidable) {
+                        blockChanges[loc.clone()] = Materials.fence.createBlockData()
+                    }
+                    loc.y -= 1.0
+                }
+            }
         }
 
         // core
@@ -128,7 +142,7 @@ class Field(
         return Tag.LOGS.isTagged(material) || Tag.LEAVES.isTagged(material) || material == Material.BEE_NEST
     }
 
-    private fun getChangedBlockData(loc: Location): BlockData = blockChanges[loc] ?: loc.block.blockData
+    private fun getChangedBlockData(loc: Location): BlockData = blockChanges[loc.clone()] ?: loc.block.blockData.clone()
 
     private fun forEachGrounds(
         target: Player, action: (position: Pair<Int, Int>, ground: Location) -> Unit
@@ -137,9 +151,10 @@ class Field(
             for (j in -1 until partition.fieldSize.second + 1) {
                 val ground = target.world.getHighestBlockAt(bottom() + i, left() + j).location
                 while (ground.blockY - 1 >= target.world.minHeight) {
-                    val blockData = getChangedBlockData(ground)
-                    if (blockData.material.isCollidable) break
-                    if (blockData.material == Material.WATER || blockData.material == Material.LAVA) break
+                    val material = getChangedBlockData(ground).material
+                    if (material.isCollidable && material != Materials.fence) break
+                    // TODO: 水に浸かっているいる水でないブロックに対応
+                    if (material == Material.WATER || material == Material.LAVA) break
                     ground.add(0.0, -1.0, 0.0)
                 }
                 action(i to j, ground)
