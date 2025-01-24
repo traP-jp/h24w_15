@@ -137,9 +137,6 @@ class FieldPreview(
         blockChanges.forEach { (loc, data) ->
             loc.block.blockData = data
             loc.block.state.update(true, false)
-            if (data.material == Materials.core) {
-                // TODO: this.cores[partition.getDistrictIndex(loc.blockX to loc.blockZ)] にコアの座標を設定
-            }
         }
 
         with(plugin.logger) {
