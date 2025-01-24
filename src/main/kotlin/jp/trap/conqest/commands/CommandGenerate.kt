@@ -6,7 +6,7 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import jp.trap.conqest.Main
-import jp.trap.conqest.game.Field
+import jp.trap.conqest.game.FieldPreview
 import jp.trap.conqest.util.Partition
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -15,7 +15,7 @@ import io.papermc.paper.command.brigadier.Commands as BrigadierCommands
 
 class CommandGenerate(val plugin: Main) : Commands.Command {
 
-    private val previews = mutableMapOf<UUID, Field>()
+    private val previews = mutableMapOf<UUID, FieldPreview>()
 
     private fun setPreview(source: CommandSourceStack, partition: Partition): Int {
         val creatorId = source.executor?.uniqueId ?: UUID(0, 0)
@@ -27,7 +27,7 @@ class CommandGenerate(val plugin: Main) : Commands.Command {
             }
             return 0
         }
-        previews[creatorId] = Field(plugin, creatorId, source.location, partition)
+        previews[creatorId] = FieldPreview(plugin, creatorId, source.location, partition)
 
         with(source.sender) {
             sendMessage(Component.text("If you want to cancel, type /generate cancel", NamedTextColor.DARK_GREEN))
@@ -81,17 +81,17 @@ class CommandGenerate(val plugin: Main) : Commands.Command {
     private fun confirm(source: CommandSourceStack): Int {
         val creatorId = source.executor?.uniqueId ?: UUID(0, 0)
 
-        val field = previews[creatorId] ?: run {
+        val fieldPreview = previews[creatorId] ?: run {
             source.sender.sendMessage(Component.text("Need to preview first!", NamedTextColor.RED))
             return 0
         }
-        field.generate()
-        plugin.gameManager.addField(field)
+        
+        plugin.gameManager.addField(fieldPreview.generate())
         previews.remove(creatorId)
 
         with(source.sender) {
             sendMessage(Component.text("=".repeat(40), NamedTextColor.GREEN))
-            sendMessage(Component.text("The field has been generated at ${field.center}!"))
+            sendMessage(Component.text("The field has been generated at ${fieldPreview.center}!"))
             sendMessage(Component.text("=".repeat(40), NamedTextColor.GREEN))
         }
         return Command.SINGLE_SUCCESS

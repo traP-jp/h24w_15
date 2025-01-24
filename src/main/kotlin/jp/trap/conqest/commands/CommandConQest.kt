@@ -27,7 +27,11 @@ class CommandConQest(val plugin: Main) : Commands.Command {
                 0
             }.then(
                 io.papermc.paper.command.brigadier.Commands.literal("join").executes { ctx ->
-                    plugin.gameManager.requestOpeningGame().executeCommand(GameCommand.JOIN, ctx.source.sender)
+                    plugin.gameManager.requestOpeningGame()?.executeCommand(GameCommand.JOIN, ctx.source.sender)
+                        ?: run {
+                            ctx.source.sender.sendMessage("現在、空いているフィールドがないため、ゲームを開始できません")
+                        }
+                    0
                 }
             )
             .then(
