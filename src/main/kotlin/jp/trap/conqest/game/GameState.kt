@@ -65,8 +65,12 @@ sealed class GameState(private val gameManager: GameManager) {
 
     class Playing(private val gameManager: GameManager) : GameState(gameManager) {
         private val gameTime: Long = 20 // 5 * 60
+        private val initialCoin: Int = 100
 
         init {
+            gameManager.getPlayers().forEach { player: Player ->
+                Wallet.setupScoreboard(player, initialCoin)
+            }
             for (i in 0 until gameTime) gameManager.plugin.server.scheduler.runTaskLater(gameManager.plugin, Runnable {
                 gameManager.broadcastMessage("ゲーム終了まで" + (gameTime - i).toString() + "秒...")
             }, i * 20)
@@ -92,6 +96,9 @@ sealed class GameState(private val gameManager: GameManager) {
 
     class AfterGame(private val gameManager: GameManager) : GameState(gameManager) {
         init {
+            gameManager.getPlayers().forEach { player: Player ->
+                Wallet.removeScoreboard(player)
+            }
             for (i in 1 until 5) gameManager.plugin.server.scheduler.runTaskLater(gameManager.plugin, Runnable {
                 gameManager.broadcastMessage("ロビー転送まで" + (5 - i).toString() + "秒...")
             }, 20 * i.toLong())
