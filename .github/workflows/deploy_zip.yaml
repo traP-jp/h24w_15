@@ -1,0 +1,26 @@
+name: Deploy to GitHub Pages
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - resourcepack
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p /tmp/result/
+      - run: zip -r /tmp/result/conqest_texture.zip ./
+      - uses: actions/upload-pages-artifact@v3
+        id: deployment
+        with:
+          path: /tmp/result/
+  deploy:
+    needs: build
+    permissions:
+      id-token: write
+      pages: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment
