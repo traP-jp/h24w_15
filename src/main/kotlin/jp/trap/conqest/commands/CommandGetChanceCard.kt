@@ -17,9 +17,8 @@ class CommandGetChanceCard : Commands.Command {
         val source = context.source
         if (source.sender is Player) {
             val player = source.sender as Player
-            val itemStack = ChanceCard.item
             ListenerUsableItem.registry.plus(ChanceCard)
-            player.inventory.addItem(itemStack)
+            player.inventory.addItem(ChanceCard.item)
         } else {
             source.sender.sendMessage("このコマンドはプレイヤーのみ使用できます")
         }
