@@ -2,7 +2,9 @@ package jp.trap.conqest.game
 
 import org.bukkit.Location
 
-class District(val gameManager: GameManager, val core: DistrictCore, private var team: Team) {
+class District(val gameManager: GameManager, val coreLocation: Location, private var team: Team) {
+    private val core: DistrictCore = DistrictCore(this, coreLocation)
+
     init {
         setTeam(team)
     }
@@ -11,9 +13,13 @@ class District(val gameManager: GameManager, val core: DistrictCore, private var
         return false
     }
 
+    fun getTeam(): Team {
+        return team
+    }
+
     fun setTeam(team: Team) {
         gameManager.broadcastMessage("team changed to ${team.color}")
         this.team = team
-        core.location.block.type = team.color.getConcreteMaterial()
+        core.onBreak(team)
     }
 }

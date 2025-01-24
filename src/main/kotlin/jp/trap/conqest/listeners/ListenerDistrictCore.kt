@@ -11,10 +11,9 @@ class ListenerDistrictCore(private val gameManager: GameManager) : Listener {
         val player = event.player
         player.sendMessage(event.eventName)
         val districts = gameManager.field.districts
-        val district = districts.firstOrNull { district -> district.core.location == event.block.location }
+        val district = districts.firstOrNull { district -> district.coreLocation == event.block.location }
         val team = gameManager.getTeam(player)
         if (district != null && team != null) {
-            player.sendMessage("Core Destroyed!")
             event.isCancelled = true
             district.setTeam(team)
         }

@@ -11,19 +11,15 @@ class GameManager(val plugin: Plugin) {
     private var state: GameState = GameState.BeforeGame(this)
 
     private val teams: MutableList<Team> = mutableListOf(Team(TeamColor.GRAY))
-    val field: GameField
-
-    init {
-        // TODO TwoSquirrelsのライブラリを使うように置き換える
-        field = GameField(
-            Bukkit.getWorlds()[0],
-            listOf(
-                District(
-                    this, DistrictCore(Location(Bukkit.getWorlds()[0], 70.0, 70.0, -110.0)), teams[0]
-                )
+    // TODO TwoSquirrelsのライブラリを使うように置き換える
+    val field: GameField = GameField(
+        Bukkit.getWorlds()[0],
+        listOf(
+            District(
+                this, Location(Bukkit.getWorlds()[0], 70.0, 70.0, -110.0), teams[0]
             )
         )
-    }
+    )
 
     fun setState(state: GameState) {
         this.state = state
