@@ -29,11 +29,26 @@ class CommandGenerate(val plugin: Main) : Commands.Command {
         }
         previews[creatorId] = Field(plugin, creatorId, source.location, partition)
 
+        with(source.sender) {
+            sendMessage(Component.text("If you want to cancel, type /generate cancel", NamedTextColor.DARK_GREEN))
+            sendMessage(Component.text("If you want to confirm, type /generate confirm", NamedTextColor.DARK_GREEN))
+        }
         return Command.SINGLE_SUCCESS
     }
 
     private fun generate(source: CommandSourceStack): Int {
-        source.sender.sendMessage(Component.text("TODO: show help", NamedTextColor.GOLD))
+        source.sender.sendMessage(
+            Component.text(
+                listOf(
+                    "If you want to generate a field,",
+                    "you first need to create a preview using `/generate [preview|previewcount]`.",
+                    "This will place a set of blocks in a world visible only to you,",
+                    "without affecting the actual world, centered around where you execute the command.",
+                    "You can cancel this by using `/generate cancel` or by relogging,",
+                    "and you can apply the changes with `/generate confirm`."
+                ).joinToString(" "), NamedTextColor.GOLD
+            )
+        )
         return 0
     }
 

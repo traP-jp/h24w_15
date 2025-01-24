@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 package jp.trap.conqest.commands
 
 import com.mojang.brigadier.tree.LiteralCommandNode
@@ -15,6 +17,7 @@ class Commands(
     fun init(): Result<Unit> {
         val lifecycleManager = plugin.lifecycleManager
         lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {
+            // TODO: add help message
             it.registrar().register(CommandConQest(plugin).literalCommandNode())
             it.registrar().register(CommandGenerate(plugin).literalCommandNode())
             it.registrar().register(CommandPay().literalCommandNode())
