@@ -20,6 +20,7 @@ class Commands(
             it.registrar().register(CommandEarn().literalCommandNode())
             it.registrar().register(CommandWallet().literalCommandNode())
             it.registrar().register(CommandGetChanceCard().literalCommandNode())
+            it.registrar().register(CommandGetShopBook().literalCommandNode())
         }
         return Result.success(Unit)
     }
