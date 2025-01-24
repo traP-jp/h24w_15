@@ -3,7 +3,7 @@ package jp.trap.conqest.commands
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.papermc.paper.command.brigadier.CommandSourceStack
-import jp.trap.conqest.game.ChanceCard
+import jp.trap.conqest.game.item.ChanceCard
 import org.bukkit.entity.Player
 
 class CommandGetChanceCard : Commands.Command {
@@ -18,7 +18,7 @@ class CommandGetChanceCard : Commands.Command {
         val source = context.source
         if(source.sender is Player){
             var player = source.sender as Player
-            player.inventory.addItem(ChanceCard.createChanceCard())
+            player.inventory.addItem(ChanceCard.item)
         }else {
             source.sender.sendMessage("このコマンドはプレイヤーのみ使用できます")
         }
