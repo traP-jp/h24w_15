@@ -27,7 +27,7 @@ class CommandConQest(val plugin: Main) : Commands.Command {
                 0
             }.then(
                 io.papermc.paper.command.brigadier.Commands.literal("join").executes { ctx ->
-                    plugin.gameManager.executeCommand(GameCommand.JOIN, ctx.source.sender)
+                    plugin.game.executeCommand(GameCommand.JOIN, ctx.source.sender)
                 }
             )
             .then(
@@ -37,7 +37,7 @@ class CommandConQest(val plugin: Main) : Commands.Command {
                             if ((ctx.source.sender is Player).not()) return@executes 0
                             val player = ctx.source.sender as Player
                             val arg = ctx.getArgument("name", String::class.java)
-                            plugin.gameManager.addNite(NormalNite(player.location, arg, player, plugin), player)
+                            plugin.game.addNite(NormalNite(player.location, arg, player, plugin), player)
                             0
                         }
                 )
