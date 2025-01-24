@@ -16,6 +16,7 @@ class GameManager(val plugin: Plugin) {
     }
 
     fun addPlayer(player: Player) {
+        player.setResourcePack("https://trap-jp.github.io/h24w_15/conqest_texture.zip")
         players.add(player)
     }
 
