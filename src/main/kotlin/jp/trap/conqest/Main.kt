@@ -22,13 +22,14 @@ class Main : JavaPlugin() {
     private lateinit var listeners: Listeners
     private lateinit var commands: Commands
     private lateinit var tickTask: BukkitTask
-    var gameManager: GameManager = GameManager(this)
+    lateinit var gameManager: GameManager
 
     private fun update() {
     }
 
     override fun onLoad() {
         logger.info(figlet)
+        gameManager = GameManager(this)
         flowHandler = FlowHandler(
             logger, listOf(
                 FlowTask(
