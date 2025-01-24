@@ -11,6 +11,7 @@ class GameManager(val plugin: Plugin) {
     private var state: GameState = GameState.BeforeGame(this)
     private val players: MutableList<Player> = mutableListOf()
     private val nites: MutableMap<UUID, MutableList<Nite<*>>> = mutableMapOf()
+    val fields = mutableListOf<Field>()
     lateinit var lobby: Location
 
     fun setState(state: GameState) {
