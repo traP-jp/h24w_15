@@ -13,8 +13,8 @@ import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.inventory.ItemStack
 import java.util.UUID
 
-class ListenerNiteEnchantmentItem : Listener {
-    private val gameManager = GameManager(Main.instance)
+class ListenerNiteEnchantmentItem(plugin: Main) : Listener {
+    private val gameManager = GameManager(plugin)
     private val cooldowns: MutableMap<UUID, Long> = mutableMapOf()
     private val cooldownTime: Long = 10L
     @EventHandler
@@ -32,7 +32,7 @@ class ListenerNiteEnchantmentItem : Listener {
 
         if (itemInHand.isSimilar(NiteEnchantmentItem.item)) {
             val clickedEntity: Entity = event.rightClicked
-            val nite = gameManager.getGames().flatMap { game -> game.getNites() }.singleOrNull { nite -> nite.getUniqueId() == clickedEntity.uniqueId }
+            val nite = gameManager.getGames().flatMap { game -> game.getNites() }.firstOrNull { nite -> nite.getUniqueId() == clickedEntity.uniqueId }
             if (nite != null) {
                 itemInHand.amount--
                 cooldowns[player.uniqueId] = currentTime
