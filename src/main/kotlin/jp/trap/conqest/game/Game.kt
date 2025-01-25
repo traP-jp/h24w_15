@@ -66,8 +66,13 @@ class Game(val plugin: Plugin, val field: Field) {
         // TODO
     }
 
-    fun judge() {
-        // TODO Teamを返すようにする
+    fun judge(): MutableMap<Team, Int> {
+        val accumulator = mutableMapOf<Team, Int>()
+        field.districts.forEach { district ->
+            accumulator[district.getTeam()] = (accumulator[district.getTeam()] ?: 0) + district.locations.size
+        }
+        accumulator.remove(Team.emptyTeam)
+        return accumulator
     }
 
     fun getTeam(player: Player): Team? {
