@@ -8,6 +8,7 @@ import org.bukkit.boss.BossBar
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
+import java.util.UUID
 import java.util.logging.Logger
 
 class GameTimer(private val plugin: Plugin, private val id: String) {
@@ -16,6 +17,7 @@ class GameTimer(private val plugin: Plugin, private val id: String) {
     private var countDownTask: BukkitRunnable? = null
     private var isPaused: Boolean = false
     private var gameTime: Int = 300
+    private val players = mutableSetOf<UUID>()
 
     private fun createTimer() {
         bossBar = Bukkit.createBossBar(
@@ -26,11 +28,19 @@ class GameTimer(private val plugin: Plugin, private val id: String) {
     }
 
     fun addPlayer(player: Player) {
+        players.add(player.uniqueId)
         bossBar?.addPlayer(player)
     }
 
     fun removePlayer(player: Player) {
+        players.remove(player.uniqueId)
         bossBar?.removePlayer(player)
+    }
+
+    fun reAddPlayer(player: Player) {
+        if(players.contains(player.uniqueId)) {
+            bossBar?.addPlayer(player)
+        }
     }
 
     fun startTimer() {

@@ -1,6 +1,9 @@
 package jp.trap.conqest.listeners
 
 import jp.trap.conqest.Main
+import jp.trap.conqest.game.GameTimer
+import jp.trap.conqest.game.GameTimerManager
+import jp.trap.conqest.game.Wallet
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 
@@ -14,6 +17,8 @@ class Listeners(
         registerListener(ListenerUsableItem())
         registerListener(ListenerShopGUI())
         registerListener(ListenerNiteControl(plugin.gameManager))
+        registerListener(GameTimerManager(plugin))
+        registerListener(Wallet)
         return Result.success(Unit)
     }
 }

@@ -1,9 +1,12 @@
 package jp.trap.conqest.game
 
 import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.Plugin
 
-class GameTimerManager(private val plugin: Plugin) {
+class GameTimerManager(private val plugin: Plugin) : Listener{
     private val timers = mutableMapOf<String, GameTimer>()
 
     fun createAndStartTimer(id: String): GameTimer {
@@ -48,5 +51,12 @@ class GameTimerManager(private val plugin: Plugin) {
 
     fun getTimer(id: String): GameTimer? {
         return timers[id]
+    }
+
+    @EventHandler
+    fun onPlayerJoin(event: PlayerJoinEvent) {
+        timers.values.forEach{ timer ->
+            timer.reAddPlayer(event.player)
+        }
     }
 }
