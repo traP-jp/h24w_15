@@ -50,10 +50,10 @@ class District(
         return location in locations
     }
 
-    fun changeHP(hp: Double): Boolean {
+    fun changeHP(hp: Int): Boolean {
         if (coreBreakable.not()) return false
         this.hp = hp
-        coreArmorStand.customName(Component.text(hp.roundToInt().toString() + "%").color(NamedTextColor.WHITE))
+        coreArmorStand.customName(Component.text("$hp%").color(NamedTextColor.WHITE))
         return true
     }
 
