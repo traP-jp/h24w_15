@@ -11,7 +11,7 @@ import kotlin.math.roundToInt
 
 class District(
     val id: Int,
-    private val locations: Set<Pair<Int, Int>>,
+    val locations: Set<Pair<Int, Int>>,
     val coreLocation: Location,
     private var team: Team = Team.emptyTeam
 ) {
