@@ -1,25 +1,13 @@
 package jp.trap.conqest.game
 
 import org.bukkit.Location
+import org.bukkit.scoreboard.Team
 
-class District(val gameManager: GameManager, private val coreLocation: Location, private var team: Team) {
-    val core: DistrictCore = DistrictCore(this, coreLocation)
-
-    init {
-        setTeam(team)
-    }
-
-    fun isContained(location: Location): Boolean {
-        return false
-    }
-
-    fun getTeam(): Team {
-        return team
-    }
-
+class District(private val locations: Set<Pair<Int, Int>>, private val coreLocation: Location, private var team: Team? = null) {
     fun setTeam(team: Team) {
-        gameManager.broadcastMessage("team changed to ${team.color}")
         this.team = team
-        core.onBreak(team)
+    }
+    fun contains(location: Pair<Int, Int>): Boolean {
+        return location in locations
     }
 }

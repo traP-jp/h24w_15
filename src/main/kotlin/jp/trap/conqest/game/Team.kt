@@ -1,8 +1,5 @@
 package jp.trap.conqest.game
 
-import org.bukkit.Material
-import org.bukkit.entity.Player
-
 class Team(val color: TeamColor) {
     private val players = mutableListOf<Player>()
     fun addPlayer(player: Player) {
