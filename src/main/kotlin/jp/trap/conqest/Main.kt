@@ -26,6 +26,11 @@ class Main : JavaPlugin() {
     private lateinit var gameTimerManager: GameTimerManager
     lateinit var gameManager: GameManager
 
+    companion object {
+        lateinit var instance: Main
+            private set
+    }
+
     private fun update() {
     }
 
@@ -63,6 +68,7 @@ class Main : JavaPlugin() {
 
     override fun onEnable() {
         flowHandler.up()
+        instance = this
     }
 
     override fun onDisable() {
