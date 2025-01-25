@@ -5,7 +5,7 @@ import org.bukkit.Location
 import org.bukkit.World
 
 class Field(
-    private val center: Location,
+    val center: Location,
     partition: Partition,
     private val coreLocations: List<Location>
 ) {

@@ -12,18 +12,22 @@ import kotlin.random.Random
 
 class GameMapRenderer(private val game: Game) : MapRenderer(true) {
     // TODO GameManagerから読み込む
-    private val fieldCenter: Pair<Double, Double> = Pair(50.0, -100.0)
-    private val fieldSize: Pair<Double, Double> = Pair(100.0, 100.0)
+    private val fieldCenter: Pair<Double, Double> = game.field.center.x to game.field.center.z
+    private val fieldSize: Pair<Double, Double> = game.field.size.first.toDouble() to game.field.size.second.toDouble()
     private val mapSize: Pair<Int, Int> = Pair(1024, 1024)
 
     private val bgImage: BufferedImage
 
     init {
-        bgImage = BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB)
-        for (x in 0..128) for (y in 0..128) bgImage.setRGB(
-            (x / 128.0 * game.field.size.first).toInt(),
-            (y / 128.0 * game.field.size.second).toInt(),
-            game.field.getDistrict(x to y)?.id?.let { Random(it).nextInt() } ?: 0
+        val width = 128
+        val height = 128
+        bgImage = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
+        for (x in 0 until width) for (y in 0 until height) bgImage.setRGB(
+            x, y, game.field.getDistrict(
+            x * game.field.size.first / width to y * game.field.size.second / height
+        )?.id?.let {
+            Random(it).nextInt()
+        } ?: 0xFFFFFF
 
         )
     }
