@@ -2,7 +2,7 @@ package jp.trap.conqest
 
 import jp.trap.conqest.commands.Commands
 import jp.trap.conqest.game.GameManager
-import jp.trap.conqest.game.InitialSetup
+import jp.trap.conqest.game.Environment
 import jp.trap.conqest.game.GameTimerManager
 import jp.trap.conqest.listeners.Listeners
 import jp.trap.conqest.util.FlowHandler
@@ -28,7 +28,7 @@ class Main : JavaPlugin() {
     lateinit var gameManager: GameManager
 
     private fun update() {
-        InitialSetup.update()
+        Environment.update()
     }
 
     override fun onLoad() {
@@ -65,7 +65,6 @@ class Main : JavaPlugin() {
 
     override fun onEnable() {
         flowHandler.up()
-        InitialSetup.onEnableSetup()
     }
 
     override fun onDisable() {

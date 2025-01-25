@@ -7,7 +7,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object InitialSetup {
+object Environment {
     fun onEnableSetup() {
         for (world in Bukkit.getWorlds()) {
             world.setGameRule(GameRule.DO_MOB_SPAWNING, false)
