@@ -1,7 +1,9 @@
 package jp.trap.conqest
 
 import jp.trap.conqest.commands.Commands
+import jp.trap.conqest.game.GameEffect
 import jp.trap.conqest.game.GameManager
+import jp.trap.conqest.game.InitialSetup
 import jp.trap.conqest.listeners.Listeners
 import jp.trap.conqest.util.FlowHandler
 import jp.trap.conqest.util.FlowTask
@@ -25,6 +27,7 @@ class Main : JavaPlugin() {
     lateinit var gameManager: GameManager
 
     private fun update() {
+        GameEffect.update()
     }
 
     override fun onLoad() {
@@ -60,6 +63,7 @@ class Main : JavaPlugin() {
 
     override fun onEnable() {
         flowHandler.up()
+        InitialSetup.onEnableSetup()
     }
 
     override fun onDisable() {

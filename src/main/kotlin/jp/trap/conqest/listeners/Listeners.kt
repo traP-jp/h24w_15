@@ -10,10 +10,12 @@ class Listeners(
     private fun registerListener(listener: Listener) {
         Bukkit.getPluginManager().registerEvents(listener, plugin)
     }
+
     fun init(): Result<Unit> {
         registerListener(ListenerUsableItem())
         registerListener(ListenerShopGUI())
         registerListener(ListenerNiteControl(plugin.gameManager))
+        registerListener(ListenerCancelEvent())
         return Result.success(Unit)
     }
 }
