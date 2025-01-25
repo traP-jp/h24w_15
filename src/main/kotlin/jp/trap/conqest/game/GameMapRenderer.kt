@@ -14,7 +14,7 @@ class GameMapRenderer(private val game: Game) : MapRenderer(true) {
     // TODO GameManagerから読み込む
     private val fieldCenter: Pair<Double, Double> = game.field.center.x to game.field.center.z
     private val fieldSize: Pair<Double, Double> = game.field.size.first.toDouble() to game.field.size.second.toDouble()
-    private val mapSize: Pair<Int, Int> = Pair(1024, 1024)
+    private val mapSize: Pair<Int, Int> = Pair(256, 256)
 
     private val bgImage: BufferedImage
 
@@ -44,7 +44,7 @@ class GameMapRenderer(private val game: Game) : MapRenderer(true) {
 
     private fun drawCursor(location: Location, canvas: MapCanvas) {
         val uvLocation = getUVLocation(location.x, location.z)
-        canvas.cursors.addCursor(uvLocation.first, uvLocation.second, getDirection(location))
+        canvas.cursors.addCursor(uvLocation.first - 128, uvLocation.second - 128, getDirection(location))
     }
 
     private fun getUVLocation(x: Double, y: Double): Pair<Int, Int> {
