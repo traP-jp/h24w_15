@@ -58,7 +58,7 @@ class Game(val plugin: Plugin, val field: Field) {
     }
 
     fun getTeam(player: Player): Team? {
-        return teams.singleOrNull { team ->
+        return teams.firstOrNull { team ->
             team.getPlayers().contains(player.uniqueId)
         }
     }

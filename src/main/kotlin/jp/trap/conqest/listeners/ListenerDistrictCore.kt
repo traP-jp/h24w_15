@@ -13,7 +13,7 @@ class ListenerDistrictCore(private val gameManager: GameManager) : Listener {
         val player = event.player
         val game = gameManager.getGame(player) ?: return
         val districts = game.field.districts
-        val district = districts.firstOrNull { district -> district.coreLocation == event.block.location }
+        val district = districts.firstOrNull { district -> district.coreLocation.block == event.block.location.block }
         val team = game.getTeam(player)
         if (district != null && team != null) {
             event.isCancelled = true
@@ -27,8 +27,8 @@ class ListenerDistrictCore(private val gameManager: GameManager) : Listener {
         val player: Player = event.entity as Player
         val game = gameManager.getGame(player) ?: return
         val districts = game.field.districts
-        districts.forEach { district -> player.sendMessage(district.coreLocation.toString()) }
         val district = districts.firstOrNull { district -> district.coreLocation.block == event.block.location.block }
+        player.sendMessage(district?.coreLocation.toString())
         district?.changeHP(100 - event.progress.toDouble() * 100)
     }
 }

@@ -26,6 +26,7 @@ class District(
         coreArmorStand.setGravity(false)
         coreArmorStand.isVisible = false
         coreArmorStand.isCustomNameVisible = true
+        coreArmorStand.customName(Component.text(""))
         changeHP(50.0)
         changeHP(20.0)
     }
@@ -35,6 +36,7 @@ class District(
     }
 
     fun setTeam(team: Team) {
+        coreBlock.type = team.color.getConcreteMaterial()
         this.team = team
     }
 
