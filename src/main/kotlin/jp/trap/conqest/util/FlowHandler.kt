@@ -7,7 +7,6 @@ class FlowHandler(private val logger: Logger, private val tasks: Collection<Flow
     fun up(): Result<Unit> {
         tasks.forEachIndexed { index, task ->
             logger.info("Initializing task #${index}")
-            Environment.onEnableSetup()
             task.up().onSuccess {
                 logger.info("Initialized task #${index}")
             }.onFailure {

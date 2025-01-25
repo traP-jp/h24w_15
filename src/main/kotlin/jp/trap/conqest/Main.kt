@@ -53,6 +53,12 @@ class Main : JavaPlugin() {
                     Result.success(Unit)
                 }),
                 FlowTask({
+                    Environment.onEnableSetup()
+                    Result.success(Unit)
+                }, {
+                    Result.success(Unit)
+                }),
+                FlowTask({
                     tickTask = Bukkit.getScheduler().runTaskTimer(this, Runnable { update() }, 0L, 1L)
                     Result.success(Unit)
                 }, {

@@ -13,7 +13,7 @@ object Environment {
             world.setGameRule(GameRule.DO_MOB_SPAWNING, false)
             world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false)
             world.time = 6000
-            world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false)
+            world.setGameRule(GameRule.DO_WEATHER_CYCLE, false)
             world.setStorm(false)
             world.isThundering = false
             world.setGameRule(GameRule.KEEP_INVENTORY, true)
