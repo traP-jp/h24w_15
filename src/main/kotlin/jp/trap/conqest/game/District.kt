@@ -15,7 +15,7 @@ class District(
     private val coreBlock: Block = coreLocation.block
     private val coreArmorStand: ArmorStand
     private var hp: Double = 100.0
-    private var coreBreakable: Boolean = false
+    private var coreBreakable: Boolean = true
 
     init {
         coreBlock.type = team.color.getConcreteMaterial()
