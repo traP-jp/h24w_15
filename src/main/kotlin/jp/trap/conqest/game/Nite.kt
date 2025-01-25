@@ -7,6 +7,7 @@ import org.bukkit.entity.*
 import org.bukkit.plugin.Plugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import java.util.*
 
 abstract class Nite<T>(location: Location, type: EntityType, name: String, val master: Player, val plugin: Plugin)
         where T : Entity, T : Mob {
@@ -41,6 +42,7 @@ abstract class Nite<T>(location: Location, type: EntityType, name: String, val m
         entity.lookAt(target)
         entity.pathfinder.moveTo(target, speed)
     }
+
     fun moveStop() {
         entity.pathfinder.stopPathfinding()
     }
@@ -52,8 +54,13 @@ abstract class Nite<T>(location: Location, type: EntityType, name: String, val m
     fun teleport(location: Location) {
         entity.teleport(location)
     }
+
     fun distance(target: Entity): Double {
         return entity.location.distance(target.location)
+    }
+
+    fun getUniqueId(): UUID {
+        return entity.uniqueId
     }
 
 }

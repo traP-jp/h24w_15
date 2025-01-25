@@ -20,6 +20,10 @@ class GameManager(val plugin: Plugin) {
         return games.firstOrNull { game -> game.getPlayers().contains(player) }
     }
 
+    fun getGames(): List<Game> {
+        return games
+    }
+
     fun addField(field: Field) {
         fields.add(field)
     }
