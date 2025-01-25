@@ -35,7 +35,7 @@ class Game(val plugin: Plugin, val field: Field) {
 
     fun getPlayers(): List<Player> {
         val players: MutableList<Player> = mutableListOf()
-        playersUUID.forEach{
+        playersUUID.forEach {
             players.add(Bukkit.getPlayer(it)!!)
         }
         return players
@@ -43,6 +43,10 @@ class Game(val plugin: Plugin, val field: Field) {
 
     fun executeCommand(command: GameCommand, sender: CommandSender): Int {
         return state.executeCommand(command, sender)
+    }
+
+    fun getNites(): List<Nite<*>> {
+        return getPlayers().flatMap { player -> getNites(player) }
     }
 
     fun getNites(player: Player): List<Nite<*>> {
