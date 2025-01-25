@@ -18,6 +18,5 @@ class ListenerShopGUI : Listener {
         if (event.click != ClickType.LEFT) return
 
         ShopBook.onInventoryClicked.invoke(event.whoClicked as Player, event.currentItem!!)
-        event.whoClicked.sendMessage(event.getClick().toString())
     }
 }
