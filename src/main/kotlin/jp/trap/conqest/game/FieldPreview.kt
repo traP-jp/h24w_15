@@ -112,9 +112,8 @@ class FieldPreview(
         }
         coreLocations.clear()
         (0 until partition.districts.size).forEach { idx ->
-            val district = partition.districts[idx]
             coreLocations.add(coreLocationSet.single { loc ->
-                district.center.first.toInt() == loc.blockX && district.center.second.toInt() == loc.blockY
+                partition.getDistrictIndex(loc.blockX - bottom() to loc.blockZ - left()) == idx
             })
         }
 
