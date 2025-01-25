@@ -30,8 +30,7 @@ class District(
         coreArmorStand.isVisible = false
         coreArmorStand.isCustomNameVisible = true
         coreArmorStand.customName(Component.text(""))
-        changeHP(50.0)
-        changeHP(20.0)
+        changeHP(hp)
     }
 
     fun getTeam(): Team {
