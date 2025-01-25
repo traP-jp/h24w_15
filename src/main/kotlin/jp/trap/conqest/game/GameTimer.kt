@@ -83,6 +83,7 @@ class GameTimer(private val plugin: Plugin, private val id: String) {
     fun removeTimer() {
         bossBar?.removeAll()
         bossBar = null
+        players.clear()
     }
 
     private fun runTimer() {

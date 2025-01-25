@@ -22,6 +22,7 @@ object Wallet : Listener {
         val uuid = player.uniqueId
         if (scoreboardMap.containsKey(uuid)) {
             setupScoreboard(player, scoreboardMap[uuid]!!)
+            scoreboardMap.remove(uuid)
         }
     }
 
@@ -46,6 +47,7 @@ object Wallet : Listener {
     fun removeScoreboard(player: Player) {
         val scoreboard = player.scoreboard
         scoreboard.getObjective("wallet")?.unregister()
+        scoreboardMap.remove(player.uniqueId)
     }
 
     fun pay(player: Player, use: Int): Boolean {
