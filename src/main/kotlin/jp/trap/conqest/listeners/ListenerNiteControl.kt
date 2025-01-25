@@ -17,12 +17,14 @@ import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.inventory.ItemStack
 
 class ListenerNiteControl(private val gameManager: GameManager) : Listener {
-    private val controlItem: ItemStack = run {
-        val item = ItemStack(Material.STICK)
-        val meta = item.itemMeta
-        meta.displayName(Component.text("指示棒").color(TextColor.color(0x00FF00)))
-        item.itemMeta = meta
-        item
+    companion object {
+        val controlItem: ItemStack = run {
+            val item = ItemStack(Material.STICK)
+            val meta = item.itemMeta
+            meta.displayName(Component.text("指示棒").color(TextColor.color(0x00FF00)))
+            item.itemMeta = meta
+            item
+        }
     }
 
     private fun trySetTarget(nite: Nite<*>, target: LivingEntity) {
@@ -47,7 +49,7 @@ class ListenerNiteControl(private val gameManager: GameManager) : Listener {
         val player = event.player
         val target = event.rightClicked
         val nite =
-            gameManager.getGame(player)?.getNites(player)?.filter { it.getUniqueId() == target.uniqueId }?.first()
+            gameManager.getGame(player)?.getNites(player)?.filter { it.getUniqueId() == target.uniqueId }?.firstOrNull()
                 ?: run {
                     onClickEntity(player, target)
                     return
@@ -67,7 +69,7 @@ class ListenerNiteControl(private val gameManager: GameManager) : Listener {
         val player = event.player
         val target = event.attacked
         val nite =
-            gameManager.getGame(player)?.getNites(player)?.filter { it.getUniqueId() == target.uniqueId }?.first()
+            gameManager.getGame(player)?.getNites(player)?.filter { it.getUniqueId() == target.uniqueId }?.firstOrNull()
                 ?: run {
                     onClickEntity(player, target)
                     return

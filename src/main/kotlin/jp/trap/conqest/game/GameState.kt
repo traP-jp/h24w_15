@@ -1,5 +1,6 @@
 package jp.trap.conqest.game
 
+import jp.trap.conqest.listeners.ListenerNiteControl
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.title.Title
@@ -82,6 +83,7 @@ sealed class GameState(private val game: Game) {
         init {
             game.getPlayers().forEach { player: Player ->
                 Wallet.setupScoreboard(player, initialCoin)
+                player.inventory.addItem(ListenerNiteControl.controlItem)
             }
             for (i in 0 until gameTime) game.plugin.server.scheduler.runTaskLater(game.plugin, Runnable {
                 game.broadcastMessage("ゲーム終了まで" + (gameTime - i).toString() + "秒...")
