@@ -10,11 +10,7 @@ import org.bukkit.potion.PotionEffectType
 import java.util.*
 
 abstract class Nite<T>(
-    location: Location,
-    type: EntityType,
-    name: String,
-    val master: Player,
-    val plugin: Plugin
+    location: Location, type: EntityType, name: String, val master: Player, val plugin: Plugin
 ) where T : Entity, T : Mob {
     private var entity: T = location.world.spawnEntity(
         location, type, false
@@ -23,6 +19,7 @@ abstract class Nite<T>(
     protected open val damage = 1.0
     protected open val handLength = 3.0
     protected open val attackSpeed = 1.0
+    open val blockBreakSpeed: Double = 1.0
     var state: NiteState = NiteState.FollowMaster(plugin, this)
     abstract val name: String
 
@@ -83,6 +80,10 @@ abstract class Nite<T>(
 
     fun setAi(value: Boolean) {
         entity.setAI(value)
+    }
+
+    fun getTeam(): Team {
+        TODO()
     }
 
 }
