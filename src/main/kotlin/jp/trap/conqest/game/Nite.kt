@@ -59,4 +59,8 @@ abstract class Nite<T>(location: Location, type: EntityType, name: String, val m
         return entity.location.distance(target.location)
     }
 
+    fun getLocation(): Location {
+        return entity.location
+    }
+
 }

@@ -28,4 +28,5 @@ class GameManager(val plugin: Plugin) {
     fun addField(field: Field) {
         fields.add(field)
     }
+
 }

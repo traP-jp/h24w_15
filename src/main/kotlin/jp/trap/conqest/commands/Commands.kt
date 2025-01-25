@@ -25,6 +25,7 @@ class Commands(
             it.registrar().register(CommandWallet().literalCommandNode())
             it.registrar().register(CommandGetChanceCard().literalCommandNode())
             it.registrar().register(CommandGetShopBook().literalCommandNode())
+            it.registrar().register(CommandGetGameMap(plugin.gameManager).literalCommandNode())
         }
         return Result.success(Unit)
     }
