@@ -16,6 +16,7 @@ abstract class Nite<T>(
     val master: Player,
     val plugin: Plugin
 ) where T : Entity, T : Mob {
+
     private var entity: T = location.world.spawnEntity(
         location, type, false
     ) as T
