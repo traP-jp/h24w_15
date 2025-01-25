@@ -52,8 +52,7 @@ class GameTimerManager(private val plugin: Plugin) {
     fun getTimer(id: String): GameTimer? {
         return timers[id]
     }
-
-    @EventHandler
+    
     fun onPlayerJoin(event: PlayerJoinEvent) {
         timers.values.forEach { timer ->
             timer.addPlayer(event.player)
