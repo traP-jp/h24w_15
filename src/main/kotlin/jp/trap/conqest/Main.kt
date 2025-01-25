@@ -48,18 +48,7 @@ class Main : JavaPlugin() {
         file.mkdirs()
         Database.connect("jdbc:sqlite:$dbPath", "org.sqlite.JDBC")
         transaction {
-            SchemaUtils.create(FieldsTable, DistrictTable, DistrictLocationsTable)/*
-            SchemaUtils.create(Counter)
-            val counts = Counter.selectAll()
-            if (counts.count() > 0) {
-                val value = counts.single()[Counter.count] + 1
-                Counter.update { it[count] = value }
-                logger.info(value.toString())
-            } else {
-                Counter.insert { it[count] = 1 }
-                logger.info(1.toString())
-            }
-             */
+            SchemaUtils.create(FieldsTable, DistrictTable, DistrictLocationsTable)
         }
 
         gameManager = GameManager(this)
