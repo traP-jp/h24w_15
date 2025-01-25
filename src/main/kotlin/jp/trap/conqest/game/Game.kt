@@ -50,7 +50,7 @@ class Game(val plugin: Plugin, val field: Field) {
     }
 
     fun getNites(): List<Nite<*>> {
-        return getPlayers().flatMap { player -> getNites(player) }
+        return getPlayers().flatMap { getNites(it) }
     }
 
     fun getNites(player: Player): List<Nite<*>> {
@@ -59,6 +59,9 @@ class Game(val plugin: Plugin, val field: Field) {
 
     fun addNite(nite: Nite<*>, master: Player) {
         nites.computeIfAbsent(master.uniqueId) { ArrayList() }.add(nite)
+    }
+    fun removeNite(nite: Nite<*>) {
+        // TODO
     }
 
     fun judge() {

@@ -7,9 +7,15 @@ import org.bukkit.entity.*
 import org.bukkit.plugin.Plugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import java.util.*
 
-abstract class Nite<T>(location: Location, type: EntityType, name: String, val master: Player, val plugin: Plugin)
-        where T : Entity, T : Mob {
+abstract class Nite<T>(
+    location: Location,
+    type: EntityType,
+    name: String,
+    val master: Player,
+    val plugin: Plugin
+) where T : Entity, T : Mob {
     private var entity: T = location.world.spawnEntity(
         location, type, false
     ) as T
@@ -47,8 +53,16 @@ abstract class Nite<T>(location: Location, type: EntityType, name: String, val m
         entity.pathfinder.stopPathfinding()
     }
 
-    fun setInvisible(visible: Boolean) {
-        entity.isInvisible = visible
+    fun setVisible(visible: Boolean) {
+        entity.isInvisible = visible.not()
+        entity.setNoPhysics(visible.not())
+        entity.setGravity(visible)
+        entity.isCollidable = visible
+        entity.health = entity.getAttribute(Attribute.MAX_HEALTH)!!.value
+    }
+
+    fun getVisible(): Boolean {
+        return entity.isInvisible.not()
     }
 
     fun teleport(location: Location) {
@@ -61,6 +75,14 @@ abstract class Nite<T>(location: Location, type: EntityType, name: String, val m
 
     fun getLocation(): Location {
         return entity.location
+    }
+
+    fun getUniqueId(): UUID {
+        return entity.uniqueId
+    }
+
+    fun setAi(value: Boolean) {
+        entity.setAI(value)
     }
 
 }
