@@ -7,7 +7,7 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.util.*
 
-class Game(val plugin: Plugin) {
+class Game(val plugin: Plugin, val field: Field) {
     private var state: GameState = GameState.BeforeGame(this)
     private val playersUUID: MutableList<UUID> = mutableListOf()
     private val nites: MutableMap<UUID, MutableList<Nite<*>>> = mutableMapOf()
