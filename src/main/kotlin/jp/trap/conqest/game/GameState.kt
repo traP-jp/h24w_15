@@ -77,8 +77,12 @@ sealed class GameState(private val game: Game) {
     class Playing(private val game: Game) : GameState(game) {
         override val type: GameStates = GameStates.PLAYING
         private val gameTime: Long = 20 // 5 * 60
+        private val initialCoin: Int = 100
 
         init {
+            game.getPlayers().forEach { player: Player ->
+                Wallet.setupScoreboard(player, initialCoin)
+            }
             for (i in 0 until gameTime) game.plugin.server.scheduler.runTaskLater(game.plugin, Runnable {
                 game.broadcastMessage("ゲーム終了まで" + (gameTime - i).toString() + "秒...")
             }, i * 20)
@@ -106,6 +110,9 @@ sealed class GameState(private val game: Game) {
         override val type: GameStates = GameStates.AFTER_GAME
 
         init {
+            game.getPlayers().forEach { player: Player ->
+                Wallet.removeScoreboard(player)
+            }
             for (i in 1 until 5) game.plugin.server.scheduler.runTaskLater(game.plugin, Runnable {
                 game.broadcastMessage("ロビー転送まで" + (5 - i).toString() + "秒...")
             }, 20 * i.toLong())
