@@ -18,6 +18,7 @@ class Listeners(
         registerListener(ListenerGameTimer(plugin))
         registerListener(ListenerWallet())
         registerListener(ListenerNiteEnchantmentItem())
+        registerListener(ListenerDistrictCore(plugin.gameManager))
         return Result.success(Unit)
     }
 }
