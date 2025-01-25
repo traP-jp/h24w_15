@@ -60,8 +60,11 @@ class Game(val plugin: Plugin, val field: Field) {
     fun addNite(nite: Nite<*>, master: Player) {
         nites.computeIfAbsent(master.uniqueId) { ArrayList() }.add(nite)
     }
+
     fun removeNite(nite: Nite<*>) {
-        // TODO
+        nite.exit()
+        val key = nites.filter { it.value.contains(nite) }.keys.first()
+        nites[key]?.remove(nite)
     }
 
     fun judge() {
@@ -74,14 +77,19 @@ class Game(val plugin: Plugin, val field: Field) {
         mapView.centerX = 512
         mapView.centerZ = 512
         mapView.isUnlimitedTracking = true
-        for (renderer in mapView.renderers)
-            mapView.removeRenderer(renderer)
+        for (renderer in mapView.renderers) mapView.removeRenderer(renderer)
         mapView.addRenderer(GameMapRenderer(this))
         val mapItem = ItemStack(Material.FILLED_MAP)
         val meta: MapMeta = mapItem.itemMeta as MapMeta
         meta.mapId = mapView.id
         mapItem.itemMeta = meta
         return mapItem
+    }
+
+    fun reset() {
+        playersUUID.clear()
+        nites.flatMap { it.value }.forEach(::removeNite)
+        nites.clear()
     }
 
 }

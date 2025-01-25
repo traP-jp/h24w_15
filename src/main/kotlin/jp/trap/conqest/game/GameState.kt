@@ -120,6 +120,7 @@ sealed class GameState(private val game: Game) {
                 game.getPlayers().forEach { player ->
                     player.teleport(game.lobby)
                 }
+                game.reset()
                 game.setState(BeforeGame(game))
             }, 20 * 5)
         }
