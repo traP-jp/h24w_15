@@ -16,17 +16,7 @@ abstract class Nite<T>(
     val master: Player,
     val plugin: Plugin
 ) where T : Entity, T : Mob {
-    companion object {
-        private val registeredEntities = mutableSetOf<Entity>()
-        fun isNiteEntity(entity: Entity): Boolean {
-            return registeredEntities.contains(entity)
-        }
 
-        fun removeNite(entity: Entity) {
-            registeredEntities.remove(entity)
-        }
-    }
-    
     private var entity: T = location.world.spawnEntity(
         location, type, false
     ) as T
@@ -40,7 +30,6 @@ abstract class Nite<T>(
     init {
         entity.customName(Component.text(name))
         entity.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, Int.MAX_VALUE, 1))
-        registeredEntities.add(entity)
         if (entity.getAttribute(Attribute.ATTACK_DAMAGE) == null) {
             entity.registerAttribute(Attribute.ATTACK_DAMAGE)
             entity.getAttribute(Attribute.ATTACK_DAMAGE)?.baseValue = damage

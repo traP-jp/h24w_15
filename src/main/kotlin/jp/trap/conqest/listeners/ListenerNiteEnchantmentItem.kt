@@ -1,6 +1,9 @@
 package jp.trap.conqest.listeners
 
+import jp.trap.conqest.Main
+import jp.trap.conqest.game.GameManager
 import jp.trap.conqest.game.Nite
+import jp.trap.conqest.game.item.NiteEnchantmentItem
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Entity
@@ -11,9 +14,9 @@ import org.bukkit.inventory.ItemStack
 import java.util.UUID
 
 class ListenerNiteEnchantmentItem : Listener {
+    private val gameManager = GameManager(Main.instance)
     private val cooldowns: MutableMap<UUID, Long> = mutableMapOf()
     private val cooldownTime: Long = 10L
-
     @EventHandler
     fun onPlayerUse(event: PlayerInteractEntityEvent) {
         val player = event.player
@@ -26,10 +29,11 @@ class ListenerNiteEnchantmentItem : Listener {
                 return
             }
         }
-        val itemMeta = itemInHand.itemMeta
-        if (itemMeta != null && itemMeta.hasDisplayName() && itemMeta.displayName == "${ChatColor.AQUA}ナイト強化アイテム") {
+
+        if (itemInHand.isSimilar(NiteEnchantmentItem.item)) {
             val clickedEntity: Entity = event.rightClicked
-            if (Nite.isNiteEntity(clickedEntity)) {
+            val nite = gameManager.getGames().flatMap { game -> game.getNites() }.singleOrNull { nite -> nite.getUniqueId() == clickedEntity.uniqueId }
+            if (nite != null) {
                 itemInHand.amount--
                 cooldowns[player.uniqueId] = currentTime
                 player.sendMessage("${ChatColor.LIGHT_PURPLE}ナイトを強化しました!")
