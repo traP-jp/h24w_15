@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack
 import java.util.UUID
 
 class ListenerNiteEnchantmentItem(plugin: Main) : Listener {
-    private val gameManager = GameManager(plugin)
+    private val gameManager = plugin.gameManager
     private val cooldowns: MutableMap<UUID, Long> = mutableMapOf()
     private val cooldownTime: Long = 10L
     @EventHandler
