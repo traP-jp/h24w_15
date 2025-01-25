@@ -28,7 +28,6 @@ class ListenerDistrictCore(private val gameManager: GameManager) : Listener {
         val game = gameManager.getGame(player) ?: return
         val districts = game.field.districts
         val district = districts.firstOrNull { district -> district.coreLocation.block == event.block.location.block }
-        player.sendMessage(district?.coreLocation.toString())
         district?.changeHP(100 - event.progress.toDouble() * 100)
     }
 }
