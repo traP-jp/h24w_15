@@ -1,5 +1,6 @@
 package jp.trap.conqest.util
 
+import jp.trap.conqest.game.Environment
 import java.util.logging.Logger
 
 class FlowHandler(private val logger: Logger, private val tasks: Collection<FlowTask>) {

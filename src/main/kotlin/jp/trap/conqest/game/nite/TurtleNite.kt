@@ -4,11 +4,11 @@ import jp.trap.conqest.game.Nite
 import org.bukkit.Location
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
-import org.bukkit.entity.Villager
+import org.bukkit.entity.Turtle
 import org.bukkit.plugin.Plugin
 
-class NormalNite(location: Location, override val name: String = "ノーマル", master: Player, plugin: Plugin) :
-    Nite<Villager>(location, EntityType.VILLAGER, name, master, plugin) {
+class TurtleNite(location: Location, override val name: String = "カメ", master: Player, plugin: Plugin) :
+    Nite<Turtle>(location, EntityType.TURTLE, name, master, plugin) {
     override val speed = 0.5
     override val damage = 1.0
     override val handLength = 3.0

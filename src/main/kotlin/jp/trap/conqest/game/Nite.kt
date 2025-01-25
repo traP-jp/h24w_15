@@ -19,9 +19,10 @@ abstract class Nite<T>(
     private var entity: T = location.world.spawnEntity(
         location, type, false
     ) as T
-    private val speed = 0.5
-    private val damage = 1.0
-    private val handLength = 3.0
+    protected open val speed = 0.5
+    protected open val damage = 1.0
+    protected open val handLength = 3.0
+    protected open val attackSpeed = 1.0
     var state: NiteState = NiteState.FollowMaster(plugin, this)
     abstract val name: String
 
@@ -70,6 +71,10 @@ abstract class Nite<T>(
 
     fun distance(target: Entity): Double {
         return entity.location.distance(target.location)
+    }
+
+    fun getLocation(): Location {
+        return entity.location
     }
 
     fun getUniqueId(): UUID {

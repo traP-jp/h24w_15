@@ -1,6 +1,8 @@
 package jp.trap.conqest.game.item
 
+import jp.trap.conqest.Main
 import jp.trap.conqest.game.Wallet
+import jp.trap.conqest.game.nite.NormalNite
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Bukkit
@@ -27,7 +29,7 @@ object ShopBook : UsableItem {
         player.openInventory(inventory)
     }
 
-    class SellingItem(val item: ItemStack, val cost: Int) {
+    class SellingItem(val item: ItemStack, val cost: Int, val onClick: ((Player) -> Unit)?) {
         val shopItem: ItemStack = item.clone()
 
         init {
@@ -36,9 +38,19 @@ object ShopBook : UsableItem {
     }
 
     private val sellingItems: List<SellingItem> = listOf(
-        SellingItem(ChanceCard.item, 100),
-        SellingItem(ItemStack(Material.IRON_SWORD), 1000),
-        SellingItem(ItemStack(Material.WOODEN_SWORD), 1),
+        SellingItem(ChanceCard.item, 100, null),
+        SellingItem(ItemStack(Material.IRON_SWORD), 1000, null),
+        SellingItem(ItemStack(Material.WOODEN_SWORD), 1, null),
+        SellingItem(ShopItemNite.itemNormalNite, 10) { player ->
+            Main.instance.gameManager.getGame(player)
+                ?.addNite(NormalNite(player.location, "NormalNite", player, Main.instance), player)
+        },
+        SellingItem(ShopItemNite.itemWolfNite, 30) { player -> player.sendMessage("a") },
+        SellingItem(ShopItemNite.itemHorseNite, 30) { player -> player.sendMessage("a") },
+        SellingItem(ShopItemNite.itemIronGolemNite, 30) { player -> player.sendMessage("a") },
+        SellingItem(ShopItemNite.itemTurtleNite, 30) { player -> player.sendMessage("a") },
+        SellingItem(ShopItemNite.itemPhantomNite, 30) { player -> player.sendMessage("a") },
+        SellingItem(ShopItemNite.itemSnowGolemNite, 30) { player -> player.sendMessage("a") },
     )
 
     val inventory: Inventory = run {
@@ -53,7 +65,11 @@ object ShopBook : UsableItem {
         sellingItems.filter { sellingItem -> sellingItem.shopItem.isSimilar(item) }
             .forEach { sellingItem ->
                 if (Wallet.pay(player, sellingItem.cost)) {
-                    player.inventory.addItem(sellingItem.item)
+                    if (sellingItem.onClick == null) {
+                        player.inventory.addItem(sellingItem.item)
+                    } else {
+                        sellingItem.onClick.invoke(player)
+                    }
                 }
             }
     }

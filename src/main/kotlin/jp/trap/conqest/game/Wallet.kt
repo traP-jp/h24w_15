@@ -3,10 +3,35 @@ package jp.trap.conqest.game
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.scoreboard.DisplaySlot
+import org.bukkit.scoreboard.Scoreboard
+import org.bukkit.scoreboard.ScoreboardManager
+import java.util.UUID
 
-object Wallet {
+object Wallet{
     private val OBJECTIVE_NAME = ChatColor.YELLOW.toString() + "Coin"
+    private val scoreboardMap = mutableMapOf<UUID, Int>()
+
+    fun onPlayerJoin(event: PlayerJoinEvent) {
+        val player = event.player
+        val uuid = player.uniqueId
+        scoreboardMap[uuid]?.let {
+            setupScoreboard(player, it)
+            scoreboardMap.remove(uuid)
+        }
+    }
+
+    fun onPlayerQuit(event: PlayerQuitEvent) {
+        event.player.scoreboard.getObjective("wallet")?.let {
+            scoreboardMap[event.player.uniqueId] = it.getScore(OBJECTIVE_NAME).score
+        }
+
+    }
+
     fun setupScoreboard(player: Player, startCoin: Int) {
         val manager = Bukkit.getScoreboardManager()
         val scoreboard = manager.newScoreboard
@@ -23,6 +48,7 @@ object Wallet {
     fun removeScoreboard(player: Player) {
         val scoreboard = player.scoreboard
         scoreboard.getObjective("wallet")?.unregister()
+        scoreboardMap.remove(player.uniqueId)
     }
 
     fun pay(player: Player, use: Int): Boolean {
