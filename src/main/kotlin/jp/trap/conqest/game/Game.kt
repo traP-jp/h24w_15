@@ -2,8 +2,12 @@ package jp.trap.conqest.game
 
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.MapMeta
+import org.bukkit.map.MapView
 import org.bukkit.plugin.Plugin
 import java.util.*
 
@@ -59,6 +63,22 @@ class Game(val plugin: Plugin, val field: Field) {
 
     fun judge() {
         // TODO Teamを返すようにする
+    }
+
+    fun requestNewMap(): ItemStack {
+        val mapView = Bukkit.createMap(field.getWorld())
+        mapView.scale = MapView.Scale.FARTHEST
+        mapView.centerX = 512
+        mapView.centerZ = 512
+        mapView.isUnlimitedTracking = true
+        for (renderer in mapView.renderers)
+            mapView.removeRenderer(renderer)
+        mapView.addRenderer(GameMapRenderer(this))
+        val mapItem = ItemStack(Material.FILLED_MAP)
+        val meta: MapMeta = mapItem.itemMeta as MapMeta
+        meta.mapId = mapView.id
+        mapItem.itemMeta = meta
+        return mapItem
     }
 
 }

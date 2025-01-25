@@ -8,8 +8,9 @@ import org.bukkit.map.MapView
 import org.bukkit.util.Vector
 import java.awt.image.BufferedImage
 import kotlin.math.atan2
+import kotlin.random.Random
 
-class GameMapRenderer(private val gameManager: GameManager) : MapRenderer(true) {
+class GameMapRenderer(private val game: Game) : MapRenderer(true) {
     // TODO GameManagerから読み込む
     private val fieldCenter: Pair<Double, Double> = Pair(50.0, -100.0)
     private val fieldSize: Pair<Double, Double> = Pair(100.0, 100.0)
@@ -19,7 +20,12 @@ class GameMapRenderer(private val gameManager: GameManager) : MapRenderer(true) 
 
     init {
         bgImage = BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB)
-        for (x in 0..10) for (y in 0..20) bgImage.setRGB(x, y, 0x0000FF)
+        for (x in 0..128) for (y in 0..128) bgImage.setRGB(
+            (x / 128.0 * game.field.size.first).toInt(),
+            (y / 128.0 * game.field.size.second).toInt(),
+            game.field.getDistrict(x to y)?.id?.let { Random(it).nextInt() } ?: 0
+
+        )
     }
 
     override fun render(map: MapView, canvas: MapCanvas, player: Player) {
@@ -27,7 +33,7 @@ class GameMapRenderer(private val gameManager: GameManager) : MapRenderer(true) 
         while (canvas.cursors.size() > 0) canvas.cursors.removeCursor(canvas.cursors.getCursor(0))
 
         drawCursor(player.location, canvas)
-        gameManager.getGame(player)?.getNites()?.forEach { nite ->
+        game.getNites().forEach { nite ->
             drawCursor(nite.getLocation(), canvas)
         }
     }
