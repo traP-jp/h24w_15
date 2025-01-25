@@ -6,7 +6,7 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import jp.trap.conqest.Main
-import jp.trap.conqest.game.FieldPreview
+import jp.trap.conqest.game.FieldGenerator
 import jp.trap.conqest.util.Partition
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -15,7 +15,7 @@ import io.papermc.paper.command.brigadier.Commands as BrigadierCommands
 
 class CommandGenerate(val plugin: Main) : Commands.Command {
 
-    private val previews = mutableMapOf<UUID, FieldPreview>()
+    private val previews = mutableMapOf<UUID, FieldGenerator>()
 
     private fun setPreview(source: CommandSourceStack, partition: Partition): Int {
         val creatorId = source.executor?.uniqueId ?: UUID(0, 0)
@@ -27,7 +27,7 @@ class CommandGenerate(val plugin: Main) : Commands.Command {
             }
             return 0
         }
-        previews[creatorId] = FieldPreview(plugin, creatorId, source.location, partition)
+        previews[creatorId] = FieldGenerator(plugin, creatorId, source.location, partition)
 
         with(source.sender) {
             sendMessage(Component.text("If you want to cancel, type /generate cancel", NamedTextColor.DARK_GREEN))

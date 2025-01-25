@@ -12,7 +12,7 @@ import org.bukkit.block.data.BlockData
 import org.bukkit.entity.Player
 import java.util.*
 
-class FieldPreview(
+class FieldGenerator(
     val plugin: Main, val creatorId: UUID, val center: Location, val partition: Partition, val roadWidth: Double = 3.0
 ) {
 
