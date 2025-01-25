@@ -48,8 +48,7 @@ class Main : JavaPlugin() {
         file.mkdirs()
         Database.connect("jdbc:sqlite:$dbPath", "org.sqlite.JDBC")
         transaction {
-            SchemaUtils.create(FieldsTable, CoreLocationsTable, DistrictTable, DistrictLocationsTable)
-            /*
+            SchemaUtils.create(FieldsTable, DistrictTable, DistrictLocationsTable)/*
             SchemaUtils.create(Counter)
             val counts = Counter.selectAll()
             if (counts.count() > 0) {
@@ -102,6 +101,7 @@ class Main : JavaPlugin() {
     override fun onEnable() {
         flowHandler.up()
         instance = this
+        FieldTableUtil.loadFields().toMutableList().forEach { gameManager.addField(it) }
     }
 
     override fun onDisable() {
