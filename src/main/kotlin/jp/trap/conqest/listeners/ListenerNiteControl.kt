@@ -49,7 +49,12 @@ class ListenerNiteControl(private val gameManager: GameManager) : Listener {
         gameManager.getGames().forEach { game ->
             game.getPlayers().flatMap { player -> gameManager.getGame(player)?.getNites(player) ?: emptyList() }
                 .singleOrNull { nite -> nite.getUniqueId() == event.entity.uniqueId }
-                ?.let { nite -> trySetTarget(nite, event.damager as LivingEntity) }
+                ?.let { nite ->
+                    if (nite.getVisible())
+                        trySetTarget(nite, event.damager as LivingEntity)
+                    else
+                        event.isCancelled = true
+                }
         }
     }
 
