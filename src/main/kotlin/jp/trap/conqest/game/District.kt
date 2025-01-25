@@ -34,14 +34,14 @@ class District(
         coreArmorStand.isVisible = false
         coreArmorStand.isCustomNameVisible = true
         coreArmorStand.customName(Component.text(""))
-        changeHP(hp)
+        setHp(hp)
     }
 
     fun getTeam(): Team {
         return team
     }
 
-    fun setTeam(team: Team) {
+    private fun setTeam(team: Team) {
         coreBlock.type = team.color.getConcreteMaterial()
         this.team = team
     }
@@ -50,16 +50,14 @@ class District(
         return location in locations
     }
 
-    fun changeHP(hp: Int): Boolean {
+    fun setHp(hp: Int, by: Team? = Team.emptyTeam): Boolean {
         if (coreBreakable.not()) return false
         this.hp = hp
         coreArmorStand.customName(Component.text("$hp%").color(NamedTextColor.WHITE))
-        return true
-    }
-
-    fun onBreak(attackerTeam: Team): Boolean {
-        if (coreBreakable.not()) return false
-        coreBlock.type = attackerTeam.color.getConcreteMaterial()
+        if (hp <= 0) {
+            setTeam(by ?: Team.emptyTeam)
+            setHp(100)
+        }
         return true
     }
 
@@ -72,14 +70,15 @@ class District(
         return coreLocation.distance(location) <= nearDistance
     }
 
+    // 毎tick実行される
     fun updateHp(game: Game) {
-        val nearEnemyNites = game.getNites().filter { nearCore(it.getLocation()) && it.getTeam() != team }
-        if (nearEnemyNites.isEmpty()) {
-            hp += hpRegenRate
-        } else {
-            val arrackRate: Double = nearEnemyNites.sumOf { nite -> nite.blockBreakSpeed }
-            hp -= arrackRate.roundToInt()
-        }
-        hp = min(maxHp, hp)
+        val nearEnemyNites = game.getNites().filter { nearCore(it.getLocation()) && it.team != team }
+        var hpChange = 0
+        hpChange += hpRegenRate
+        val arrackRate: Double = nearEnemyNites.sumOf { nite -> nite.blockBreakSpeed }
+        hpChange -= arrackRate.roundToInt()
+        if (nearEnemyNites.isNotEmpty()) game.broadcastMessage(hpChange.toString())
+        val brokenTeam = if (nearEnemyNites.isEmpty()) Team.emptyTeam else nearEnemyNites.random().team
+        setHp(min(maxHp, hp + hpChange), brokenTeam)
     }
 }

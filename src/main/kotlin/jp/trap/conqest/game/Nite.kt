@@ -22,6 +22,7 @@ abstract class Nite<T>(
     open val blockBreakSpeed: Double = 1.0
     var state: NiteState = NiteState.FollowMaster(plugin, this)
     abstract val name: String
+    var team: Team = Team.emptyTeam
 
     init {
         entity.customName(Component.text(name))
@@ -81,9 +82,4 @@ abstract class Nite<T>(
     fun setAi(value: Boolean) {
         entity.setAI(value)
     }
-
-    fun getTeam(): Team {
-        TODO()
-    }
-
 }

@@ -58,6 +58,7 @@ class Game(val plugin: Plugin, val field: Field) {
     }
 
     fun addNite(nite: Nite<*>, master: Player) {
+        nite.team = getTeam(master) ?: Team.emptyTeam
         nites.computeIfAbsent(master.uniqueId) { ArrayList() }.add(nite)
     }
 
