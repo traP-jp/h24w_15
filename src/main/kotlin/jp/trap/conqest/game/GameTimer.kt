@@ -28,19 +28,15 @@ class GameTimer(private val plugin: Plugin, private val id: String) {
     }
 
     fun addPlayer(player: Player) {
-        players.add(player.uniqueId)
+        if (!players.contains(player.uniqueId)) {
+            players.add(player.uniqueId)
+        }
         bossBar?.addPlayer(player)
     }
 
     fun removePlayer(player: Player) {
         players.remove(player.uniqueId)
         bossBar?.removePlayer(player)
-    }
-
-    fun reAddPlayer(player: Player) {
-        if(players.contains(player.uniqueId)) {
-            bossBar?.addPlayer(player)
-        }
     }
 
     fun startTimer() {

@@ -6,7 +6,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.Plugin
 
-class GameTimerManager(private val plugin: Plugin) : Listener{
+class GameTimerManager(private val plugin: Plugin) {
     private val timers = mutableMapOf<String, GameTimer>()
 
     fun createAndStartTimer(id: String): GameTimer {
@@ -55,8 +55,8 @@ class GameTimerManager(private val plugin: Plugin) : Listener{
 
     @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) {
-        timers.values.forEach{ timer ->
-            timer.reAddPlayer(event.player)
+        timers.values.forEach { timer ->
+            timer.addPlayer(event.player)
         }
     }
 }

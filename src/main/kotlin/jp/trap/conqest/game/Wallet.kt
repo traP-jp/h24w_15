@@ -12,11 +12,10 @@ import org.bukkit.scoreboard.Scoreboard
 import org.bukkit.scoreboard.ScoreboardManager
 import java.util.UUID
 
-object Wallet : Listener {
+object Wallet{
     private val OBJECTIVE_NAME = ChatColor.YELLOW.toString() + "Coin"
     private val scoreboardMap = mutableMapOf<UUID, Int>()
 
-    @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) {
         val player = event.player
         val uuid = player.uniqueId
@@ -26,7 +25,6 @@ object Wallet : Listener {
         }
     }
 
-    @EventHandler
     fun onPlayerQuit(event: PlayerQuitEvent) {
         scoreboardMap[event.player.uniqueId] = event.player.scoreboard.getObjective("wallet")?.getScore(OBJECTIVE_NAME)!!.score
     }

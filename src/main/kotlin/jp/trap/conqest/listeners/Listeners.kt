@@ -13,12 +13,13 @@ class Listeners(
     private fun registerListener(listener: Listener) {
         Bukkit.getPluginManager().registerEvents(listener, plugin)
     }
+
     fun init(): Result<Unit> {
         registerListener(ListenerUsableItem())
         registerListener(ListenerShopGUI())
         registerListener(ListenerNiteControl(plugin.gameManager))
-        registerListener(GameTimerManager(plugin))
-        registerListener(Wallet)
+        registerListener(ListenerGameTimer(plugin))
+        registerListener(ListenerWallet())
         return Result.success(Unit)
     }
 }
