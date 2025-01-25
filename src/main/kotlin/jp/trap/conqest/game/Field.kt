@@ -37,6 +37,6 @@ class Field(val center: Location, val coreLocations: List<Location>, val size: P
     }
 
     fun getWorld(): World {
-        return center.world;
+        return center.world
     }
 }

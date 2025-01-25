@@ -76,7 +76,7 @@ sealed class GameState(private val game: Game) {
 
     class Playing(private val game: Game) : GameState(game) {
         override val type: GameStates = GameStates.PLAYING
-        private val gameTime: Long = 20 // 5 * 60
+        private val gameTime: Long = 5 * 60
         private val initialCoin: Int = 100
 
         init {
