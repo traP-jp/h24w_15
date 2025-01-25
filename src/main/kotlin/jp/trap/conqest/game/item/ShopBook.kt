@@ -2,7 +2,7 @@ package jp.trap.conqest.game.item
 
 import jp.trap.conqest.Main
 import jp.trap.conqest.game.Wallet
-import jp.trap.conqest.game.nite.NormalNite
+import jp.trap.conqest.game.nite.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Bukkit
@@ -45,12 +45,30 @@ object ShopBook : UsableItem {
             Main.instance.gameManager.getGame(player)
                 ?.addNite(NormalNite(player.location, "NormalNite", player, Main.instance), player)
         },
-        SellingItem(ShopItemNite.itemWolfNite, 30) { player -> player.sendMessage("a") },
-        SellingItem(ShopItemNite.itemHorseNite, 30) { player -> player.sendMessage("a") },
-        SellingItem(ShopItemNite.itemIronGolemNite, 30) { player -> player.sendMessage("a") },
-        SellingItem(ShopItemNite.itemTurtleNite, 30) { player -> player.sendMessage("a") },
-        SellingItem(ShopItemNite.itemPhantomNite, 30) { player -> player.sendMessage("a") },
-        SellingItem(ShopItemNite.itemSnowGolemNite, 30) { player -> player.sendMessage("a") },
+        SellingItem(ShopItemNite.itemWolfNite, 30) { player ->
+            Main.instance.gameManager.getGame(player)
+                ?.addNite(WolfNite(player.location, "WolfNite", player, Main.instance), player)
+        },
+        SellingItem(ShopItemNite.itemHorseNite, 30) { player ->
+            Main.instance.gameManager.getGame(player)
+                ?.addNite(HorseNite(player.location, "HorseNite", player, Main.instance), player)
+        },
+        SellingItem(ShopItemNite.itemIronGolemNite, 30) { player ->
+            Main.instance.gameManager.getGame(player)
+                ?.addNite(IronGolemNite(player.location, "IronGolemNite", player, Main.instance), player)
+        },
+        SellingItem(ShopItemNite.itemTurtleNite, 30) { player ->
+            Main.instance.gameManager.getGame(player)
+                ?.addNite(TurtleNite(player.location, "TurtleNite", player, Main.instance), player)
+        },
+        SellingItem(ShopItemNite.itemPhantomNite, 30) { player ->
+            Main.instance.gameManager.getGame(player)
+                ?.addNite(PhantomNite(player.location, "PhantomNite", player, Main.instance), player)
+        },
+        SellingItem(ShopItemNite.itemSnowGolemNite, 30) { player ->
+            Main.instance.gameManager.getGame(player)
+                ?.addNite(SnowGolemNite(player.location, "SnowGolemNite", player, Main.instance), player)
+        },
     )
 
     val inventory: Inventory = run {
