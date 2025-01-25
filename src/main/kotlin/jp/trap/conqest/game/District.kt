@@ -10,7 +10,10 @@ import org.bukkit.util.Vector
 import kotlin.math.roundToInt
 
 class District(
-    private val locations: Set<Pair<Int, Int>>, val coreLocation: Location, private var team: Team = Team.emptyTeam
+    val id: Int,
+    private val locations: Set<Pair<Int, Int>>,
+    val coreLocation: Location,
+    private var team: Team = Team.emptyTeam
 ) {
     private val coreBlock: Block = coreLocation.block
     private val coreArmorStand: ArmorStand

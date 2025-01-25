@@ -2,6 +2,7 @@ package jp.trap.conqest
 
 import jp.trap.conqest.commands.Commands
 import jp.trap.conqest.game.GameManager
+import jp.trap.conqest.game.Environment
 import jp.trap.conqest.game.GameTimerManager
 import jp.trap.conqest.listeners.Listeners
 import jp.trap.conqest.util.FlowHandler
@@ -26,7 +27,13 @@ class Main : JavaPlugin() {
     private lateinit var gameTimerManager: GameTimerManager
     lateinit var gameManager: GameManager
 
+    companion object {
+        lateinit var instance: Main
+            private set
+    }
+
     private fun update() {
+        Environment.update()
     }
 
     override fun onLoad() {
@@ -51,6 +58,12 @@ class Main : JavaPlugin() {
                     Result.success(Unit)
                 }),
                 FlowTask({
+                    Environment.onEnableSetup()
+                    Result.success(Unit)
+                }, {
+                    Result.success(Unit)
+                }),
+                FlowTask({
                     tickTask = Bukkit.getScheduler().runTaskTimer(this, Runnable { update() }, 0L, 1L)
                     Result.success(Unit)
                 }, {
@@ -63,6 +76,7 @@ class Main : JavaPlugin() {
 
     override fun onEnable() {
         flowHandler.up()
+        instance = this
     }
 
     override fun onDisable() {

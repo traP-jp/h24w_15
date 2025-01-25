@@ -84,10 +84,10 @@ sealed class NiteState(val plugin: Plugin, val nite: Nite<*>) {
         private val respawnDelay: Long = 30
 
         init {
-            nite.setInvisible(true)
+            nite.setVisible(false)
             nite.master.sendMessage(nite.name + "はコイン収集を開始しました")
             plugin.server.scheduler.runTaskLater(plugin, Runnable {
-                nite.setInvisible(false)
+                nite.setVisible(true)
                 nite.teleport(nite.master.location)
                 nite.master.sendMessage(nite.name + "が復活しました")
                 nite.state = FollowMaster(plugin, nite)
@@ -100,9 +100,11 @@ sealed class NiteState(val plugin: Plugin, val nite: Nite<*>) {
         private val respawnDelay: Long = 30
 
         init {
-            nite.setInvisible(true)
+            nite.setVisible(false)
+            nite.setAi(false)
             plugin.server.scheduler.runTaskLater(plugin, Runnable {
-                nite.setInvisible(false)
+                nite.setAi(true)
+                nite.setVisible(true)
                 nite.teleport(nite.master.location)
                 nite.master.sendMessage(nite.name + "が復活しました")
                 nite.state = FollowMaster(plugin, nite)

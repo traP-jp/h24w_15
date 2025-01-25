@@ -19,14 +19,17 @@ object Wallet{
     fun onPlayerJoin(event: PlayerJoinEvent) {
         val player = event.player
         val uuid = player.uniqueId
-        if (scoreboardMap.containsKey(uuid)) {
-            setupScoreboard(player, scoreboardMap[uuid]!!)
+        scoreboardMap[uuid]?.let {
+            setupScoreboard(player, it)
             scoreboardMap.remove(uuid)
         }
     }
 
     fun onPlayerQuit(event: PlayerQuitEvent) {
-        scoreboardMap[event.player.uniqueId] = event.player.scoreboard.getObjective("wallet")?.getScore(OBJECTIVE_NAME)!!.score
+        event.player.scoreboard.getObjective("wallet")?.let {
+            scoreboardMap[event.player.uniqueId] = it.getScore(OBJECTIVE_NAME).score
+        }
+
     }
 
     fun setupScoreboard(player: Player, startCoin: Int) {
