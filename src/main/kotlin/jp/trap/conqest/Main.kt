@@ -2,6 +2,7 @@ package jp.trap.conqest
 
 import jp.trap.conqest.commands.Commands
 import jp.trap.conqest.game.GameManager
+import jp.trap.conqest.game.GameTimerManager
 import jp.trap.conqest.listeners.Listeners
 import jp.trap.conqest.util.FlowHandler
 import jp.trap.conqest.util.FlowTask
@@ -22,6 +23,7 @@ class Main : JavaPlugin() {
     private lateinit var listeners: Listeners
     private lateinit var commands: Commands
     private lateinit var tickTask: BukkitTask
+    private lateinit var gameTimerManager: GameTimerManager
     lateinit var gameManager: GameManager
 
     private fun update() {
@@ -30,6 +32,7 @@ class Main : JavaPlugin() {
     override fun onLoad() {
         logger.info(figlet)
         gameManager = GameManager(this)
+        gameTimerManager = GameTimerManager(this)
         flowHandler = FlowHandler(
             logger, listOf(
                 FlowTask(
@@ -64,6 +67,7 @@ class Main : JavaPlugin() {
 
     override fun onDisable() {
         flowHandler.down()
+        gameTimerManager.removeAllTimer()
         logger.info("bye bye.")
     }
 }

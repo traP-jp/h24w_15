@@ -1,6 +1,9 @@
 package jp.trap.conqest.listeners
 
 import jp.trap.conqest.Main
+import jp.trap.conqest.game.GameTimer
+import jp.trap.conqest.game.GameTimerManager
+import jp.trap.conqest.game.Wallet
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 
@@ -10,10 +13,13 @@ class Listeners(
     private fun registerListener(listener: Listener) {
         Bukkit.getPluginManager().registerEvents(listener, plugin)
     }
+
     fun init(): Result<Unit> {
         registerListener(ListenerUsableItem())
         registerListener(ListenerShopGUI())
         registerListener(ListenerNiteControl(plugin.gameManager))
+        registerListener(ListenerGameTimer(plugin))
+        registerListener(ListenerWallet())
         registerListener(ListenerDistrictCore(plugin.gameManager))
         return Result.success(Unit)
     }

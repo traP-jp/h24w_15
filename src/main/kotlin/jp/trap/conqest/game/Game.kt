@@ -8,7 +8,6 @@ import org.bukkit.plugin.Plugin
 import java.util.*
 
 class Game(val plugin: Plugin, val field: Field) {
-
     private var state: GameState = GameState.BeforeGame(this)
     private val teams: MutableList<Team> = mutableListOf()
     private val nites: MutableMap<UUID, MutableList<Nite<*>>> = mutableMapOf()
