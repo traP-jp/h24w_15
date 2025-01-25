@@ -11,9 +11,10 @@ class ListenerDistrictCore(private val gameManager: GameManager) : Listener {
     @EventHandler
     fun onBlockBreak(event: BlockBreakEvent) {
         val player = event.player
-        val districts = gameManager.field!!.districts
-        val district = districts.firstOrNull { district -> district.core.location == event.block.location }
-        val team = gameManager.getTeam(player)
+        val game = gameManager.getGame(player) ?: return
+        val districts = game.field.districts
+        val district = districts.firstOrNull { district -> district.coreLocation == event.block.location }
+        val team = game.getTeam(player)
         if (district != null && team != null) {
             event.isCancelled = true
             district.setTeam(team)
@@ -24,9 +25,10 @@ class ListenerDistrictCore(private val gameManager: GameManager) : Listener {
     fun onBlockBreakProgressChanged(event: BlockBreakProgressUpdateEvent) {
         if (event.entity !is Player) return
         val player: Player = event.entity as Player
-        val districts = gameManager.field!!.districts
-        districts.forEach { district -> player.sendMessage(district.core.location.toString()) }
-        val district = districts.firstOrNull { district -> district.core.location == event.block.location }
-        district?.core?.changeHP(100 - event.progress.toDouble() * 100)
+        val game = gameManager.getGame(player) ?: return
+        val districts = game.field.districts
+        districts.forEach { district -> player.sendMessage(district.coreLocation.toString()) }
+        val district = districts.firstOrNull { district -> district.coreLocation == event.block.location }
+        district?.changeHP(100 - event.progress.toDouble() * 100)
     }
 }

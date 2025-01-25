@@ -1,5 +1,6 @@
 package jp.trap.conqest.game
 
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -9,7 +10,7 @@ import java.util.*
 class Game(val plugin: Plugin, val field: Field) {
 
     private var state: GameState = GameState.BeforeGame(this)
-    private val players: MutableList<Player> = mutableListOf()
+    private val teams: MutableList<Team> = mutableListOf()
     private val nites: MutableMap<UUID, MutableList<Nite<*>>> = mutableMapOf()
     lateinit var lobby: Location
 
@@ -23,18 +24,22 @@ class Game(val plugin: Plugin, val field: Field) {
 
     fun addPlayer(player: Player) {
         player.setResourcePack("https://trap-jp.github.io/h24w_15/conqest_texture.zip")
-        players.add(player)
+        val team = Team(TeamColor.RED)
+        team.addPlayer(player.uniqueId)
+        teams.add(team)
         lobby = player.location // TODO ロビーの場所へ変更
     }
 
     fun broadcastMessage(msg: String) {
-        players.forEach {
-            it.sendMessage(msg)
+        teams.forEach { team ->
+            team.getPlayers().forEach {
+                Bukkit.getPlayer(it)?.sendMessage(msg)
+            }
         }
     }
 
     fun getPlayers(): List<Player> {
-        return players
+        return teams.flatMap { team -> team.getPlayers() }.mapNotNull { Bukkit.getPlayer(it) }
     }
 
     fun executeCommand(command: GameCommand, sender: CommandSender): Int {
@@ -51,6 +56,12 @@ class Game(val plugin: Plugin, val field: Field) {
 
     fun judge() {
         // TODO Teamを返すようにする
+    }
+
+    fun getTeam(player: Player): Team? {
+        return teams.singleOrNull { team ->
+            team.getPlayers().contains(player.uniqueId)
+        }
     }
 
 }

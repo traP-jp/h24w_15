@@ -1,12 +1,20 @@
 package jp.trap.conqest.game
 
+import org.bukkit.Material
+import java.util.UUID
+
+
 class Team(val color: TeamColor) {
-    private val players = mutableListOf<Player>()
-    fun addPlayer(player: Player) {
+    companion object {
+        val emptyTeam: Team = Team(TeamColor.GRAY)
+    }
+
+    private val players = mutableListOf<UUID>()
+    fun addPlayer(player: UUID) {
         this.players.add(player)
     }
 
-    fun getPlayers(): List<Player> {
+    fun getPlayers(): List<UUID> {
         return players
     }
 }

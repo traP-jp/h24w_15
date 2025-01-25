@@ -8,7 +8,7 @@ class Field(
     partition: Partition,
     private val coreLocations: List<Location>
 ) {
-    private val districts: List<District>
+    val districts: List<District>
 
     init {
         val districtCount = partition.districts.size
