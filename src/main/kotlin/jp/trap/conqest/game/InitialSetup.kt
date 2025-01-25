@@ -3,6 +3,9 @@ package jp.trap.conqest.game
 import org.bukkit.Bukkit
 import org.bukkit.Difficulty
 import org.bukkit.GameRule
+import org.bukkit.entity.LivingEntity
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 
 object InitialSetup {
     fun onEnableSetup() {
@@ -20,6 +23,23 @@ object InitialSetup {
             world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false)
             world.difficulty = Difficulty.EASY
             world.setGameRule(GameRule.FALL_DAMAGE, false)
+            world.setGameRule(GameRule.PROJECTILES_CAN_BREAK_BLOCKS, false)
+
+        }
+    }
+
+    fun update() {
+        for (world in Bukkit.getWorlds()) {
+            for (player in world.players) {
+                player.foodLevel = 20
+                player.saturation = 20f
+                player.addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE, 2, 4, true, false, false))
+            }
+            for (entity in world.entities) {
+                if (entity is LivingEntity) {
+                    entity.addPotionEffect(PotionEffect(PotionEffectType.FIRE_RESISTANCE, 2, 0, true, false, false))
+                }
+            }
         }
     }
 }

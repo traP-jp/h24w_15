@@ -1,7 +1,6 @@
 package jp.trap.conqest
 
 import jp.trap.conqest.commands.Commands
-import jp.trap.conqest.game.GameEffect
 import jp.trap.conqest.game.GameManager
 import jp.trap.conqest.game.InitialSetup
 import jp.trap.conqest.listeners.Listeners
@@ -27,7 +26,7 @@ class Main : JavaPlugin() {
     lateinit var gameManager: GameManager
 
     private fun update() {
-        GameEffect.update()
+        InitialSetup.update()
     }
 
     override fun onLoad() {

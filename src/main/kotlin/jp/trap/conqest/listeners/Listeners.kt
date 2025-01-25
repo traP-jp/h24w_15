@@ -15,7 +15,6 @@ class Listeners(
         registerListener(ListenerUsableItem())
         registerListener(ListenerShopGUI())
         registerListener(ListenerNiteControl(plugin.gameManager))
-        registerListener(ListenerCancelEvent())
         return Result.success(Unit)
     }
 }
