@@ -5,7 +5,7 @@ import jp.trap.conqest.game.Environment
 import jp.trap.conqest.game.GameManager
 import jp.trap.conqest.game.GameTimerManager
 import jp.trap.conqest.listeners.Listeners
-import jp.trap.conqest.models.Counter
+import jp.trap.conqest.models.*
 import jp.trap.conqest.util.FlowHandler
 import jp.trap.conqest.util.FlowTask
 import org.bukkit.Bukkit
@@ -48,6 +48,8 @@ class Main : JavaPlugin() {
         file.mkdirs()
         Database.connect("jdbc:sqlite:$dbPath", "org.sqlite.JDBC")
         transaction {
+            SchemaUtils.create(FieldsTable, CoreLocationsTable, DistrictTable, DistrictLocationsTable)
+            /*
             SchemaUtils.create(Counter)
             val counts = Counter.selectAll()
             if (counts.count() > 0) {
@@ -58,6 +60,7 @@ class Main : JavaPlugin() {
                 Counter.insert { it[count] = 1 }
                 logger.info(1.toString())
             }
+             */
         }
 
         gameManager = GameManager(this)

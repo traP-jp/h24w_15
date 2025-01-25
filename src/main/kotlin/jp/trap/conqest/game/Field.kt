@@ -7,7 +7,7 @@ import org.bukkit.World
 class Field(
     val center: Location,
     partition: Partition,
-    private val coreLocations: List<Location>
+    val coreLocations: List<Location>
 ) {
     val districts: List<District>
     private val x_min: Int = (center.x - partition.fieldSize.first / 2).toInt()
