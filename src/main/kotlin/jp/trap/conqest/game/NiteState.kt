@@ -101,7 +101,9 @@ sealed class NiteState(val plugin: Plugin, val nite: Nite<*>) {
 
         init {
             nite.setInvisible(true)
+            nite.setAi(false)
             plugin.server.scheduler.runTaskLater(plugin, Runnable {
+                nite.setAi(true)
                 nite.setInvisible(false)
                 nite.teleport(nite.master.location)
                 nite.master.sendMessage(nite.name + "が復活しました")

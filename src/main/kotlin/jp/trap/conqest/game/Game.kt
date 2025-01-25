@@ -41,12 +41,19 @@ class Game(val plugin: Plugin) {
         return state.executeCommand(command, sender)
     }
 
+    fun getNites(): List<Nite<*>> {
+        return getPlayers().flatMap { getNites(it) }
+    }
+
     fun getNites(player: Player): List<Nite<*>> {
         return nites.computeIfAbsent(player.uniqueId) { ArrayList() }
     }
 
     fun addNite(nite: Nite<*>, master: Player) {
         nites.computeIfAbsent(master.uniqueId) { ArrayList() }.add(nite)
+    }
+    fun removeNite(nite: Nite<*>) {
+        // TODO
     }
 
     fun judge() {

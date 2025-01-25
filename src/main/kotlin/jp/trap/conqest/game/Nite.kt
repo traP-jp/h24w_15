@@ -63,4 +63,8 @@ abstract class Nite<T>(location: Location, type: EntityType, name: String, val m
         return entity.uniqueId
     }
 
+    fun setAi(value: Boolean) {
+        entity.setAI(value)
+    }
+
 }

@@ -5,12 +5,14 @@ import jp.trap.conqest.game.GameManager
 import jp.trap.conqest.game.Nite
 import jp.trap.conqest.game.NiteState
 import jp.trap.conqest.game.NiteStates
+import org.bukkit.damage.DamageType
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerInteractEntityEvent
 
 class ListenerNiteControl(private val gameManager: GameManager) : Listener {
@@ -49,5 +51,20 @@ class ListenerNiteControl(private val gameManager: GameManager) : Listener {
                 .singleOrNull { nite -> nite.getUniqueId() == event.entity.uniqueId }
                 ?.let { nite -> trySetTarget(nite, event.damager as LivingEntity) }
         }
+    }
+
+    @EventHandler
+    fun onNiteDeath(event: EntityDeathEvent) {
+        val nite = gameManager.getGames().flatMap { game -> game.getNites() }
+            .singleOrNull { nite -> nite.getUniqueId() == event.entity.uniqueId }
+        val game = nite?.master?.let { gameManager.getGame(it) }
+        if (nite == null || game == null) return
+        // killコマンドは受け入れる
+        if (event.damageSource.damageType == DamageType.GENERIC_KILL) {
+            game.removeNite(nite)
+            return
+        }
+        nite.state = NiteState.Dead(gameManager.plugin, nite)
+        event.isCancelled = true
     }
 }
