@@ -2,6 +2,7 @@ package jp.trap.conqest
 
 import jp.trap.conqest.commands.Commands
 import jp.trap.conqest.game.GameManager
+import jp.trap.conqest.game.Environment
 import jp.trap.conqest.game.GameTimerManager
 import jp.trap.conqest.listeners.Listeners
 import jp.trap.conqest.util.FlowHandler
@@ -27,6 +28,7 @@ class Main : JavaPlugin() {
     lateinit var gameManager: GameManager
 
     private fun update() {
+        Environment.update()
     }
 
     override fun onLoad() {
@@ -47,6 +49,12 @@ class Main : JavaPlugin() {
                 FlowTask({
                     commands = Commands(this)
                     commands.init()
+                }, {
+                    Result.success(Unit)
+                }),
+                FlowTask({
+                    Environment.onEnableSetup()
+                    Result.success(Unit)
                 }, {
                     Result.success(Unit)
                 }),
