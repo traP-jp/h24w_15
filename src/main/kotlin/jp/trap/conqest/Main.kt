@@ -1,15 +1,19 @@
 package jp.trap.conqest
 
 import jp.trap.conqest.commands.Commands
-import jp.trap.conqest.game.GameManager
 import jp.trap.conqest.game.Environment
+import jp.trap.conqest.game.GameManager
 import jp.trap.conqest.game.GameTimerManager
 import jp.trap.conqest.listeners.Listeners
+import jp.trap.conqest.models.Counter
 import jp.trap.conqest.util.FlowHandler
 import jp.trap.conqest.util.FlowTask
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitTask
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.transactions.transaction
+import java.io.File
 
 const val figlet = """
                     ____            __
@@ -26,6 +30,7 @@ class Main : JavaPlugin() {
     private lateinit var tickTask: BukkitTask
     private lateinit var gameTimerManager: GameTimerManager
     lateinit var gameManager: GameManager
+    private val dbPath = dataPath.resolve("sqlite.db")
 
     companion object {
         lateinit var instance: Main
@@ -38,6 +43,23 @@ class Main : JavaPlugin() {
 
     override fun onLoad() {
         logger.info(figlet)
+
+        val file = File(dbPath.parent.toString())
+        file.mkdirs()
+        Database.connect("jdbc:sqlite:$dbPath", "org.sqlite.JDBC")
+        transaction {
+            SchemaUtils.create(Counter)
+            val counts = Counter.selectAll()
+            if (counts.count() > 0) {
+                val value = counts.single()[Counter.count] + 1
+                Counter.update { it[count] = value }
+                logger.info(value.toString())
+            } else {
+                Counter.insert { it[count] = 1 }
+                logger.info(1.toString())
+            }
+        }
+
         gameManager = GameManager(this)
         gameTimerManager = GameTimerManager(this)
         flowHandler = FlowHandler(
