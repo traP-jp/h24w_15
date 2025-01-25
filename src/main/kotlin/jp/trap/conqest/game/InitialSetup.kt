@@ -3,9 +3,6 @@ package jp.trap.conqest.game
 import org.bukkit.Bukkit
 import org.bukkit.Difficulty
 import org.bukkit.GameRule
-import org.bukkit.event.entity.EntityExplodeEvent
-import org.bukkit.event.entity.ProjectileHitEvent
-import org.bukkit.event.player.PlayerDropItemEvent
 
 object InitialSetup {
     fun onEnableSetup() {
