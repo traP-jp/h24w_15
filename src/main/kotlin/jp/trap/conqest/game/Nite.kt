@@ -25,6 +25,10 @@ abstract class Nite<T>(
     protected open val attackSpeed = 1.0
     open val blockBreakSpeed: Double = 1.0
     var state: NiteState = NiteState.FollowMaster(plugin, this)
+        set(value) {
+            field.exit()
+            field = value
+        }
     abstract val name: String
     private val updateTask: BukkitTask
     var team: Team = Team.emptyTeam

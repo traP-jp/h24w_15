@@ -5,8 +5,6 @@ import org.bukkit.Location
 import org.bukkit.block.Block
 import org.bukkit.entity.LivingEntity
 import org.bukkit.plugin.Plugin
-import org.bukkit.scheduler.BukkitRunnable
-import org.bukkit.scheduler.BukkitTask
 import org.bukkit.scheduler.BukkitTask
 import kotlin.math.roundToInt
 import kotlin.random.Random
@@ -73,7 +71,10 @@ sealed class NiteState(val plugin: Plugin, val nite: Nite<*>) {
             }, 0, 1)
         }
 
-        // TODO terminate
+        override fun exit() {
+            walkTask?.cancel()
+            checkTask?.cancel()
+        }
     }
 
     class GuardDistrict(
