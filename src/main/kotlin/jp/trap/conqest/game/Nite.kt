@@ -32,19 +32,19 @@ abstract class Nite<T>(
         entity.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, Int.MAX_VALUE, 1))
         if (entity.getAttribute(Attribute.ATTACK_DAMAGE) == null) {
             entity.registerAttribute(Attribute.ATTACK_DAMAGE)
-            entity.getAttribute(Attribute.ATTACK_DAMAGE)?.baseValue = damage
         }
+        entity.getAttribute(Attribute.ATTACK_DAMAGE)?.baseValue = damage
         if(entity.getAttribute(Attribute.MAX_HEALTH) == null) {
             entity.registerAttribute(Attribute.MAX_HEALTH)
-            entity.getAttribute(Attribute.MAX_HEALTH)?.apply {
-                baseValue = health
-            }
+        }
+        entity.getAttribute(Attribute.MAX_HEALTH)?.apply {
+            baseValue = health
         }
         if(entity.getAttribute(Attribute.ATTACK_SPEED) == null) {
             entity.registerAttribute(Attribute.ATTACK_SPEED)
-            entity.getAttribute(Attribute.ATTACK_SPEED)?.apply {
-                baseValue = attackSpeed
-            }
+        }
+        entity.getAttribute(Attribute.ATTACK_SPEED)?.apply {
+            baseValue = attackSpeed
         }
         plugin.server.scheduler.runTaskTimer(plugin, Runnable { state.update() }, 0, 1)
     }
