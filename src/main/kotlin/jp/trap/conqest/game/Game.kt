@@ -63,7 +63,9 @@ class Game(val plugin: Plugin, val field: Field) {
     }
 
     fun removeNite(nite: Nite<*>) {
-        // TODO
+        nite.exit()
+        val key = nites.filter { it.value.contains(nite) }.keys.first()
+        nites[key]?.remove(nite)
     }
 
     fun judge() {
@@ -89,6 +91,12 @@ class Game(val plugin: Plugin, val field: Field) {
         meta.mapId = mapView.id
         mapItem.itemMeta = meta
         return mapItem
+    }
+
+    fun reset() {
+        nites.flatMap { it.value }.forEach(::removeNite)
+        nites.clear()
+        field.reset()
     }
 
 }

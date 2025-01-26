@@ -3,10 +3,13 @@ package jp.trap.conqest.game
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.attribute.Attribute
+import org.bukkit.damage.DamageSource
+import org.bukkit.damage.DamageType
 import org.bukkit.entity.*
 import org.bukkit.plugin.Plugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import org.bukkit.scheduler.BukkitTask
 import java.util.*
 
 abstract class Nite<T>(
@@ -23,6 +26,7 @@ abstract class Nite<T>(
     open val blockBreakSpeed: Double = 1.0
     var state: NiteState = NiteState.FollowMaster(plugin, this)
     abstract val name: String
+    private val updateTask: BukkitTask
     var team: Team = Team.emptyTeam
     private var selected: Boolean = false
 
@@ -33,7 +37,7 @@ abstract class Nite<T>(
             entity.registerAttribute(Attribute.ATTACK_DAMAGE)
             entity.getAttribute(Attribute.ATTACK_DAMAGE)?.baseValue = damage
         }
-        plugin.server.scheduler.runTaskTimer(plugin, Runnable { state.update() }, 0, 1)
+        updateTask = plugin.server.scheduler.runTaskTimer(plugin, Runnable { state.update() }, 0, 1)
     }
 
 
@@ -83,6 +87,13 @@ abstract class Nite<T>(
 
     fun setAi(value: Boolean) {
         entity.setAI(value)
+    }
+
+    fun exit() {
+        // kill entity
+        entity.damage(Double.POSITIVE_INFINITY, DamageSource.builder(DamageType.GENERIC_KILL).build())
+        state.exit()
+        updateTask.cancel()
     }
 
     fun toggleSelected() {
