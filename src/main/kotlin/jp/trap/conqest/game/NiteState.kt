@@ -28,6 +28,10 @@ sealed class NiteState(val plugin: Plugin, val nite: Nite<*>) {
         override fun update() {
             if (nite.distance(nite.master) >= nearDistance) nite.moveTo(nite.master.location)
             else nite.moveStop()
+            Main.instance.gameManager.getGame(nite.master)?.getNites()?.filter { it.team != nite.team }?.forEach {
+                if (it.getLocation().distance(nite.getLocation()) < 2.0) nite.state =
+                    Attack(plugin, nite, it.entity as LivingEntity)
+            }
         }
 
         override fun exit() {}
