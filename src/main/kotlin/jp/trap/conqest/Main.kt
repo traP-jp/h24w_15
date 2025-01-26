@@ -96,6 +96,7 @@ class Main : JavaPlugin() {
     override fun onDisable() {
         flowHandler.down()
         gameTimerManager.removeAllTimer()
+        gameManager.exit()
         logger.info("bye bye.")
     }
 }
