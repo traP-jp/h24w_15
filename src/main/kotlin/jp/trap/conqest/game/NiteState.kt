@@ -46,14 +46,24 @@ sealed class NiteState(val plugin: Plugin, val nite: Nite<*>) {
                 while (district.contains(loc).not()) loc =
                     Random.nextInt() % field.size.first to Random.nextInt() % field.size.second
 
-                nite.moveTo(Location(nite.getLocation().world, loc.first.toDouble(), 0.0, loc.second.toDouble()))
+                nite.moveTo(
+                    Location(
+                        nite.getLocation().world,
+                        field.x_min + loc.first.toDouble(),
+                        0.0,
+                        field.y_min + loc.second.toDouble()
+                    )
+                )
             }, 0, 20 * 10)
             checkTask = plugin.server.scheduler.runTaskTimer(plugin, Runnable {
                 val game = Main.instance.gameManager.getGame(nite.master) ?: return@Runnable
                 if (game.getNites().any { enemyNite ->
-                        district.contains(enemyNite.getLocation().x.roundToInt() to enemyNite.getLocation().y.roundToInt())
-                                && enemyNite.team != nite.team
-                    }) nite.state = GuardDistrict(plugin, nite, district, field)
+                        district.contains(enemyNite.getLocation().x.roundToInt() to enemyNite.getLocation().y.roundToInt()) && enemyNite.team != nite.team
+                    }) {
+                    nite.state = GuardDistrict(plugin, nite, district, field)
+                    walkTask?.cancel()
+                    checkTask?.cancel()
+                }
             }, 0, 1)
         }
 
@@ -72,8 +82,7 @@ sealed class NiteState(val plugin: Plugin, val nite: Nite<*>) {
             checkTask = plugin.server.scheduler.runTaskTimer(plugin, Runnable {
                 val game = Main.instance.gameManager.getGame(nite.master) ?: return@Runnable
                 val enemyNite = game.getNites().firstOrNull { enemyNite ->
-                    district.contains(enemyNite.getLocation().x.roundToInt() to enemyNite.getLocation().y.roundToInt())
-                            && enemyNite.team != nite.team
+                    district.contains(enemyNite.getLocation().x.roundToInt() to enemyNite.getLocation().y.roundToInt()) && enemyNite.team != nite.team
                 } ?: run {
                     nite.state = StationDistrict(plugin, nite, district, field)
                     return@Runnable
