@@ -3,10 +3,11 @@ package jp.trap.conqest.game
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.attribute.Attribute
-import org.bukkit.entity.*
+import org.bukkit.entity.Entity
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.Mob
+import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
 import java.util.*
 
 abstract class Nite<T>(
@@ -28,12 +29,14 @@ abstract class Nite<T>(
 
     init {
         entity.customName(Component.text(name))
-        entity.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, Int.MAX_VALUE, 1))
         if (entity.getAttribute(Attribute.ATTACK_DAMAGE) == null) {
             entity.registerAttribute(Attribute.ATTACK_DAMAGE)
             entity.getAttribute(Attribute.ATTACK_DAMAGE)?.baseValue = damage
         }
-        plugin.server.scheduler.runTaskTimer(plugin, Runnable { state.update() }, 0, 1)
+        plugin.server.scheduler.runTaskTimer(plugin, Runnable {
+            state.update()
+            team.addGlow(entity)
+        }, 0, 1)
     }
 
 
