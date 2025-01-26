@@ -7,10 +7,15 @@ import org.bukkit.entity.Phantom
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
-class PhantomNite(location: Location, override val name: String = "ファントム", master: Player, plugin: Plugin) :
+class PhantomNite(location: Location, override val name: String = "エリック", master: Player, plugin: Plugin) :
     Nite<Phantom>(location, EntityType.PHANTOM, name, master, plugin) {
-    override val speed = 0.5
-    override val damage = 1.0
+    override val speed = 0.9
+    override val damage = 5.0
     override val handLength = 3.0
     override val attackSpeed = 1.0
+    override val health: Double = 12.0
+
+    init {
+        super.setEntity(damage, attackSpeed, health)
+    }
 }

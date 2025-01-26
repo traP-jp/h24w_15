@@ -7,10 +7,15 @@ import org.bukkit.entity.Player
 import org.bukkit.entity.Turtle
 import org.bukkit.plugin.Plugin
 
-class TurtleNite(location: Location, override val name: String = "カメ", master: Player, plugin: Plugin) :
+class TurtleNite(location: Location, override val name: String = "パゴス", master: Player, plugin: Plugin) :
     Nite<Turtle>(location, EntityType.TURTLE, name, master, plugin) {
-    override val speed = 0.5
-    override val damage = 1.0
-    override val handLength = 3.0
-    override val attackSpeed = 1.0
+    override val speed = 0.3
+    override val damage = 2.0
+    override val handLength = 2.0
+    override val attackSpeed = 6.0
+    override val health = 100.0
+
+    init {
+        super.setEntity(damage, attackSpeed, health)
+    }
 }

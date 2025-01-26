@@ -38,37 +38,37 @@ object ShopBook : UsableItem {
     }
 
     private val sellingItems: List<SellingItem> = listOf(
-        SellingItem(ChanceCard.item, 100, null),
-        SellingItem(ItemStack(Material.IRON_SWORD), 1000, null),
-        SellingItem(ItemStack(Material.WOODEN_SWORD), 1, null),
-        SellingItem(NiteEnchantmentItem.item, 30, null),
+        //SellingItem(ChanceCard.item, 100, null),
+        //SellingItem(ItemStack(Material.IRON_SWORD), 1000, null),
+        //SellingItem(ItemStack(Material.WOODEN_SWORD), 1, null),
+        //SellingItem(NiteEnchantmentItem.item, 30, null),
         SellingItem(ShopItemNite.itemNormalNite, 10) { player ->
             Main.instance.gameManager.getGame(player)
-                ?.addNite(NormalNite(player.location, "NormalNite", player, Main.instance), player)
+                ?.addNite(NormalNite(player.location, "カーヴェラス", player, Main.instance), player)
         },
         SellingItem(ShopItemNite.itemWolfNite, 30) { player ->
             Main.instance.gameManager.getGame(player)
-                ?.addNite(WolfNite(player.location, "WolfNite", player, Main.instance), player)
+                ?.addNite(WolfNite(player.location, "デューン", player, Main.instance), player)
         },
-        SellingItem(ShopItemNite.itemHorseNite, 30) { player ->
+        SellingItem(ShopItemNite.itemHorseNite, 100) { player ->
             Main.instance.gameManager.getGame(player)
-                ?.addNite(HorseNite(player.location, "HorseNite", player, Main.instance), player)
+                ?.addNite(HorseNite(player.location, "ディノール", player, Main.instance), player)
         },
-        SellingItem(ShopItemNite.itemIronGolemNite, 30) { player ->
+        SellingItem(ShopItemNite.itemIronGolemNite, 150) { player ->
             Main.instance.gameManager.getGame(player)
-                ?.addNite(IronGolemNite(player.location, "IronGolemNite", player, Main.instance), player)
+                ?.addNite(IronGolemNite(player.location, "ウラノス", player, Main.instance), player)
         },
         SellingItem(ShopItemNite.itemTurtleNite, 30) { player ->
             Main.instance.gameManager.getGame(player)
-                ?.addNite(TurtleNite(player.location, "TurtleNite", player, Main.instance), player)
+                ?.addNite(TurtleNite(player.location, "パゴス", player, Main.instance), player)
         },
-        SellingItem(ShopItemNite.itemPhantomNite, 30) { player ->
+        SellingItem(ShopItemNite.itemPhantomNite, 50) { player ->
             Main.instance.gameManager.getGame(player)
-                ?.addNite(PhantomNite(player.location, "PhantomNite", player, Main.instance), player)
+                ?.addNite(PhantomNite(player.location, "エリック", player, Main.instance), player)
         },
-        SellingItem(ShopItemNite.itemSnowGolemNite, 30) { player ->
+        SellingItem(ShopItemNite.itemSnowGolemNite, 50) { player ->
             Main.instance.gameManager.getGame(player)
-                ?.addNite(SnowGolemNite(player.location, "SnowGolemNite", player, Main.instance), player)
+                ?.addNite(SnowGolemNite(player.location, "一式自走砲", player, Main.instance), player)
         },
     )
 

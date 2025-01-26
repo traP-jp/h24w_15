@@ -23,6 +23,7 @@ abstract class Nite<T>(
     protected open val damage = 1.0
     protected open val handLength = 3.0
     protected open val attackSpeed = 1.0
+    protected open val health: Double = 20.0
     open val blockBreakSpeed: Double = 1.0
     var state: NiteState = NiteState.FollowMaster(plugin, this)
     abstract val name: String
@@ -33,10 +34,6 @@ abstract class Nite<T>(
     init {
         entity.customName(Component.text(name))
         entity.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, Int.MAX_VALUE, 1))
-        if (entity.getAttribute(Attribute.ATTACK_DAMAGE) == null) {
-            entity.registerAttribute(Attribute.ATTACK_DAMAGE)
-            entity.getAttribute(Attribute.ATTACK_DAMAGE)?.baseValue = damage
-        }
         updateTask = plugin.server.scheduler.runTaskTimer(plugin, Runnable { state.update() }, 0, 1)
     }
 
@@ -98,5 +95,26 @@ abstract class Nite<T>(
 
     fun toggleSelected() {
         selected = !selected
+    }
+
+    protected fun setEntity(damage: Double, attackSpeed: Double, health: Double) {
+        if (entity.getAttribute(Attribute.ATTACK_DAMAGE) == null) {
+            entity.registerAttribute(Attribute.ATTACK_DAMAGE)
+        }
+        entity.getAttribute(Attribute.ATTACK_DAMAGE)?.apply {
+            baseValue = damage
+        }
+        if (entity.getAttribute(Attribute.MAX_HEALTH) == null) {
+            entity.registerAttribute(Attribute.MAX_HEALTH)
+        }
+        entity.getAttribute(Attribute.MAX_HEALTH)?.apply {
+            baseValue = health
+        }
+        if (entity.getAttribute(Attribute.ATTACK_SPEED) == null) {
+            entity.registerAttribute(Attribute.ATTACK_SPEED)
+        }
+        entity.getAttribute(Attribute.ATTACK_SPEED)?.apply {
+            baseValue = attackSpeed
+        }
     }
 }
