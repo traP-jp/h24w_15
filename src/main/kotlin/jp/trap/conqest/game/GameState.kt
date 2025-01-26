@@ -84,14 +84,17 @@ sealed class GameState(private val game: Game) {
         override val type: GameStates = GameStates.PLAYING
         private val gameTime: Long = 5 * 60
         private val initialCoin: Int = 100
+        private val gameTimerManager = GameTimerManager(game.plugin, gameTime, game.id)
 
         init {
+            gameTimerManager.createAndStartTimer()
             game.getPlayers().forEach { player: Player ->
                 Wallet.setupScoreboard(player, initialCoin)
                 player.gameMode = GameMode.ADVENTURE
                 player.inventory.clear()
                 player.inventory.addItem(ShopBook.item)
                 player.inventory.addItem(ListenerNiteControl.controlItem)
+                gameTimerManager.addPlayer(player)
             }
             game.teams.forEachIndexed { index, team ->
                 val dx = listOf(1, -1, 1, -1)
@@ -115,16 +118,22 @@ sealed class GameState(private val game: Game) {
             }, i * 20)
             game.plugin.server.scheduler.runTaskLater(game.plugin, Runnable {
                 game.broadcastMessage("ゲーム終了!!")
-                val winner = game.judge() // TODO チーム情報を受け取り、メッセージに反映する
-                game.broadcastMessage(winner.toString() + "の勝利です")
+                val result = game.judge() // TODO チーム情報を受け取り、メッセージに反映する
+                val winner = result.maxBy { (_, v) -> v }.key
+                fun teamToString(team: Team): String {
+                    return team.getPlayers().joinToString(",") { Bukkit.getPlayer(it)!!.name }
+                }
+                game.broadcastMessage(
+                    teamToString(winner) + "の勝利です")
+                val loser = result.maxBy { (k, v) -> if(k == winner) 0 else v }.key
                 game.getPlayers().forEach { player ->
                     player.showTitle(
                         Title.title(
-                            Component.text(winner.toString() + "の勝利").color(TextColor.color(0x88FF88)),
-                            Component.text().append(Component.text("Player1").color(TextColor.color(0xFF8888)))
-                                .append(Component.text(": 100  vs  ").color(TextColor.color(0x888888)))
-                                .append(Component.text("Player2").color(TextColor.color(0x8888FF)))
-                                .append(Component.text(": 200").color(TextColor.color(0x888888))).build()
+                            Component.text(teamToString(winner) + "の勝利").color(TextColor.color(0x88FF88)),
+                            Component.text().append(Component.text(teamToString(winner)).color(TextColor.color(0xFF8888)))
+                                .append(Component.text(": " + result[winner] + "  vs  ").color(TextColor.color(0x888888)))
+                                .append(Component.text(teamToString(loser)).color(TextColor.color(0x8888FF)))
+                                .append(Component.text(": " + result[loser]).color(TextColor.color(0x888888))).build()
                         ),
                     )
                 }
@@ -135,6 +144,7 @@ sealed class GameState(private val game: Game) {
 
     class AfterGame(private val game: Game) : GameState(game) {
         override val type: GameStates = GameStates.AFTER_GAME
+        private val gameTimerManager = GameTimerManager(game.plugin, 0, game.id)
 
         init {
             game.getPlayers().forEach { player: Player ->
@@ -149,6 +159,7 @@ sealed class GameState(private val game: Game) {
                 }
                 game.reset()
                 game.setState(BeforeGame(game))
+                gameTimerManager.removeTimer()
             }, 20 * 5)
         }
     }
