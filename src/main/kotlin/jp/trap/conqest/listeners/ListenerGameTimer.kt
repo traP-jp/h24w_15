@@ -1,6 +1,5 @@
 package jp.trap.conqest.listeners
 
-import jp.trap.conqest.game.GameTimer
 import jp.trap.conqest.game.GameTimerManager
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

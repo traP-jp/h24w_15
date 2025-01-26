@@ -85,6 +85,7 @@ sealed class GameState(private val game: Game) {
         private val gameTime: Long = 5 * 60
         private val initialCoin: Int = 100
         private val gameTimerManager = GameTimerManager(game.plugin, gameTime, game.id)
+
         init {
             gameTimerManager.createAndStartTimer()
             game.getPlayers().forEach { player: Player ->

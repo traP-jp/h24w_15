@@ -3,11 +3,8 @@ package jp.trap.conqest.commands
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.papermc.paper.command.brigadier.CommandSourceStack
-import io.papermc.paper.command.brigadier.argument.ArgumentTypes
-import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver
 import jp.trap.conqest.Main
 import jp.trap.conqest.game.GameCommand
-import jp.trap.conqest.game.GameTimerManager
 import jp.trap.conqest.game.nite.NormalNite
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.*

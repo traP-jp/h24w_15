@@ -9,7 +9,6 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.UUID
-import java.util.logging.Logger
 
 class GameTimer(private val plugin: Plugin, private val gameTime: Long) {
     private var bossBar: BossBar? = null
