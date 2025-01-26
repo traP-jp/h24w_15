@@ -20,6 +20,7 @@ abstract class Nite<T>(
     protected open val damage = 1.0
     protected open val handLength = 3.0
     protected open val attackSpeed = 1.0
+    protected open val health: Double = 20.0
     open val blockBreakSpeed: Double = 1.0
     var state: NiteState = NiteState.FollowMaster(plugin, this)
     abstract val name: String
@@ -32,6 +33,10 @@ abstract class Nite<T>(
         if (entity.getAttribute(Attribute.ATTACK_DAMAGE) == null) {
             entity.registerAttribute(Attribute.ATTACK_DAMAGE)
             entity.getAttribute(Attribute.ATTACK_DAMAGE)?.baseValue = damage
+            entity.getAttribute(Attribute.MAX_HEALTH)?.apply {
+                baseValue = health
+            }
+
         }
         plugin.server.scheduler.runTaskTimer(plugin, Runnable { state.update() }, 0, 1)
     }

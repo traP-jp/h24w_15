@@ -9,8 +9,9 @@ import org.bukkit.plugin.Plugin
 
 class NormalNite(location: Location, override val name: String = "ノーマル", master: Player, plugin: Plugin) :
     Nite<Villager>(location, EntityType.VILLAGER, name, master, plugin) {
-    override val speed = 0.5
-    override val damage = 1.0
+    override val speed = 0.7
+    override val damage = 1000.0
     override val handLength = 3.0
     override val attackSpeed = 1.0
+    override val health: Double = 20.0
 }
