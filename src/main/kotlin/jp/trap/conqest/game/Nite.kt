@@ -15,6 +15,7 @@ import java.util.*
 abstract class Nite<T>(
     location: Location, type: EntityType, name: String, val master: Player, val plugin: Plugin
 ) where T : Entity, T : Mob {
+
     private var entity: T = location.world.spawnEntity(
         location, type, false
     ) as T
@@ -22,9 +23,12 @@ abstract class Nite<T>(
     protected open val damage = 1.0
     protected open val handLength = 3.0
     protected open val attackSpeed = 1.0
+    open val blockBreakSpeed: Double = 1.0
     var state: NiteState = NiteState.FollowMaster(plugin, this)
     abstract val name: String
     private val updateTask: BukkitTask
+    var team: Team = Team.emptyTeam
+    private var selected: Boolean = false
 
     init {
         entity.customName(Component.text(name))
@@ -92,4 +96,7 @@ abstract class Nite<T>(
         updateTask.cancel()
     }
 
+    fun toggleSelected() {
+        selected = !selected
+    }
 }

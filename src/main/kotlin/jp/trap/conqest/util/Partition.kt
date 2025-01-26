@@ -1,6 +1,5 @@
 package jp.trap.conqest.util
 
-import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.sin
@@ -137,7 +136,7 @@ class Partition(val fieldSize: Pair<Int, Int>, val districts: List<District> = e
 
     }
 
-    val graph: List<Map<Int, Int>>
+    val graph: List<Set<Int>>
 
     private val grid: List<List<Int?>>
     private val distancesToRoad: List<List<Double>>
@@ -160,36 +159,32 @@ class Partition(val fieldSize: Pair<Int, Int>, val districts: List<District> = e
         }
 
         // construct a graph where each district is connected to its adjacent districts
-        graph = List(districts.size) { mutableMapOf<Int, Int>() }.apply {
-            for (i in 1 until grid.size step 2) {
-                for (j in 1 until grid[i].size step 2) {
-                    val districtIndex = grid[i][j] ?: continue
-                    // check four adjacent cells
-                    listOf(0 to 1, 1 to 0, 0 to -1, -1 to 0).flatMap { (di, dj) ->
-                        grid.getOrNull(i + di)?.getOrNull(j + dj)?.let { listOf(it) } ?: emptyList()
-                    }.toSet().forEach {
-                        if (it == districtIndex) return@forEach
-                        val distanceToLine = calcDistanceToLineSegment(
-                            i / 2.0 to j / 2.0,
-                            districts[districtIndex].center,
-                            districts[it].center
-                        )
-                        if (distanceToLine <= 4.0) {
-                            get(districtIndex).merge(it, 1, Int::plus)
-                            get(it).merge(districtIndex, 1, Int::plus)
-                        }
+        val scores = List(districts.size) { mutableMapOf<Int, Int>() }
+        for (i in 1 until grid.size step 2) {
+            for (j in 1 until grid[i].size step 2) {
+                val districtIndex = grid[i][j] ?: continue
+                // check four adjacent cells
+                listOf(0 to 1, 1 to 0, 0 to -1, -1 to 0).flatMap { (di, dj) ->
+                    grid.getOrNull(i + di)?.getOrNull(j + dj)?.let { listOf(it) } ?: emptyList()
+                }.toSet().forEach {
+                    if (it == districtIndex) return@forEach
+                    val distanceToLine = calcDistanceToLineSegment(
+                        i / 2.0 to j / 2.0, districts[districtIndex].center, districts[it].center
+                    )
+                    if (distanceToLine <= 4.0) {
+                        scores[districtIndex].merge(it, 1, Int::plus)
+                        scores[it].merge(districtIndex, 1, Int::plus)
                     }
                 }
             }
         }
+        graph = scores.map { it.filterValues { score -> score >= 5 }.keys }
 
         // construct a distance map to the nearest road
         distancesToRoad = List(fieldSize.first) { i ->
             List(fieldSize.second) cell@{ j ->
                 val districtIndex = getDistrictIndex(i to j) ?: return@cell Double.POSITIVE_INFINITY
-                graph[districtIndex].flatMap { (neighbor, weight) ->
-                    if (weight >= 5) listOf(neighbor) else emptyList()
-                }.ifEmpty { listOf(districtIndex) }.minOf { neighbor ->
+                graph[districtIndex].ifEmpty { setOf(districtIndex) }.minOf { neighbor ->
                     calcDistanceToLineSegment(
                         i.toDouble() + 0.5 to j.toDouble() + 0.5,
                         districts[districtIndex].center,
@@ -278,19 +273,4 @@ class Partition(val fieldSize: Pair<Int, Int>, val districts: List<District> = e
     }
 
     override fun toString(): String = toString(3.0)
-
-    private fun calcDistanceToLineSegment(
-        p: Pair<Double, Double>, a: Pair<Double, Double>, b: Pair<Double, Double>
-    ): Double {
-        val ab = b.first - a.first to b.second - a.second
-        val ap = p.first - a.first to p.second - a.second
-        val bp = p.first - b.first to p.second - b.second
-        if (ab.first * ap.first + ab.second * ap.second <= 0) {
-            return hypot(ap.first, ap.second)
-        }
-        if (-ab.first * bp.first + -ab.second * bp.second <= 0) {
-            return hypot(bp.first, bp.second)
-        }
-        return abs(ab.first * ap.second - ab.second * ap.first) / hypot(ab.first, ab.second)
-    }
 }

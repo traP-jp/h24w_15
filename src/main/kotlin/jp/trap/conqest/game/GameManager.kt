@@ -1,5 +1,6 @@
 package jp.trap.conqest.game
 
+import jp.trap.conqest.models.FieldTableUtil
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
@@ -31,6 +32,7 @@ class GameManager(val plugin: Plugin) {
 
     fun addField(field: Field) {
         fields.add(field)
+        FieldTableUtil.saveField(field)
     }
 
 }

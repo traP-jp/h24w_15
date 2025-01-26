@@ -8,6 +8,7 @@ val author = "traP"
 
 plugins {
     kotlin("jvm") version libs.versions.kotlin
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 repositories {
@@ -20,6 +21,9 @@ repositories {
 dependencies {
     compileOnly(libs.paperApi)
     testImplementation(kotlin("test"))
+    implementation("org.jetbrains.exposed:exposed-core:0.58.0")
+    implementation("org.jetbrains.exposed:exposed-dao:0.58.0")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.58.0")
 }
 
 kotlin {
@@ -43,13 +47,13 @@ tasks.processResources {
     )
 }
 
-tasks.jar {
+tasks.shadowJar {
     archiveFileName.set("conQest.jar")
 }
 
 tasks.register("createServer") {
     description = "Task for debugging"
-    dependsOn(tasks.build)
+    dependsOn(tasks.shadowJar)
 
     doLast {
         File(rootDir, "server/plugins").mkdirs()

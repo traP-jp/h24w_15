@@ -41,6 +41,7 @@ object ShopBook : UsableItem {
         SellingItem(ChanceCard.item, 100, null),
         SellingItem(ItemStack(Material.IRON_SWORD), 1000, null),
         SellingItem(ItemStack(Material.WOODEN_SWORD), 1, null),
+        SellingItem(NiteEnchantmentItem.item, 30, null),
         SellingItem(ShopItemNite.itemNormalNite, 10) { player ->
             Main.instance.gameManager.getGame(player)
                 ?.addNite(NormalNite(player.location, "NormalNite", player, Main.instance), player)

@@ -1,5 +1,6 @@
 package jp.trap.conqest.game
 
+import jp.trap.conqest.Main
 import org.bukkit.Bukkit
 import org.bukkit.Difficulty
 import org.bukkit.GameRule
@@ -19,6 +20,7 @@ object Environment {
             world.setGameRule(GameRule.KEEP_INVENTORY, true)
             world.setGameRule(GameRule.MOB_GRIEFING, false)
             world.setGameRule(GameRule.DO_MOB_LOOT, false)
+            world.setGameRule(GameRule.DO_TILE_DROPS, false)
             world.setGameRule(GameRule.DO_FIRE_TICK, false)
             world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false)
             world.difficulty = Difficulty.EASY
@@ -39,6 +41,11 @@ object Environment {
                 if (entity is LivingEntity) {
                     entity.addPotionEffect(PotionEffect(PotionEffectType.FIRE_RESISTANCE, 2, 0, true, false, false))
                 }
+            }
+        }
+        Main.instance.gameManager.getGames().forEach { game ->
+            game.field.districts.forEach { district ->
+                district.updateHp(game)
             }
         }
     }
