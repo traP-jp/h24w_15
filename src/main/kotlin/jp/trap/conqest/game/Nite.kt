@@ -97,20 +97,20 @@ abstract class Nite<T>(
         selected = !selected
     }
 
-    protected fun setEntity(damage: Double, attackSpeed: Double, health: Double){
+    protected fun setEntity(damage: Double, attackSpeed: Double, health: Double) {
         if (entity.getAttribute(Attribute.ATTACK_DAMAGE) == null) {
             entity.registerAttribute(Attribute.ATTACK_DAMAGE)
         }
         entity.getAttribute(Attribute.ATTACK_DAMAGE)?.apply {
             baseValue = damage
         }
-        if(entity.getAttribute(Attribute.MAX_HEALTH) == null) {
+        if (entity.getAttribute(Attribute.MAX_HEALTH) == null) {
             entity.registerAttribute(Attribute.MAX_HEALTH)
         }
         entity.getAttribute(Attribute.MAX_HEALTH)?.apply {
             baseValue = health
         }
-        if(entity.getAttribute(Attribute.ATTACK_SPEED) == null) {
+        if (entity.getAttribute(Attribute.ATTACK_SPEED) == null) {
             entity.registerAttribute(Attribute.ATTACK_SPEED)
         }
         entity.getAttribute(Attribute.ATTACK_SPEED)?.apply {

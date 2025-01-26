@@ -19,6 +19,7 @@ class IronGolemNite(
     override val handLength = 3.0
     override val attackSpeed = 3.0
     override val health: Double = 200.0
+
     init {
         super.setEntity(damage, attackSpeed, health)
     }

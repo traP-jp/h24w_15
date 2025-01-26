@@ -14,6 +14,7 @@ class PhantomNite(location: Location, override val name: String = "エリック"
     override val handLength = 3.0
     override val attackSpeed = 1.0
     override val health: Double = 12.0
+
     init {
         super.setEntity(damage, attackSpeed, health)
     }
