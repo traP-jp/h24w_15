@@ -7,7 +7,9 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.Plugin
 
 class GameTimerManager(private val plugin: Plugin, private val gameTime: Long, private val id: Int) {
-    private val timers = mutableMapOf<Int, GameTimer>()
+    companion object {
+        val timers = mutableMapOf<Int, GameTimer>()
+    }
 
     fun createAndStartTimer(): GameTimer {
         if (timers.containsKey(id)) {
