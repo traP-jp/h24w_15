@@ -24,6 +24,7 @@ abstract class Nite<T>(
     var state: NiteState = NiteState.FollowMaster(plugin, this)
     abstract val name: String
     var team: Team = Team.emptyTeam
+    private var selected: Boolean = false
 
     init {
         entity.customName(Component.text(name))
@@ -82,5 +83,9 @@ abstract class Nite<T>(
 
     fun setAi(value: Boolean) {
         entity.setAI(value)
+    }
+
+    fun toggleSelected() {
+        selected = !selected
     }
 }

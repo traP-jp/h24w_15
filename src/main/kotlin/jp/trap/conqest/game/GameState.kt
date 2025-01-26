@@ -1,8 +1,11 @@
 package jp.trap.conqest.game
 
+import jp.trap.conqest.listeners.ListenerNiteControl
+import jp.trap.conqest.game.item.ShopBook
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.title.Title
+import org.bukkit.GameMode
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -82,6 +85,10 @@ sealed class GameState(private val game: Game) {
         init {
             game.getPlayers().forEach { player: Player ->
                 Wallet.setupScoreboard(player, initialCoin)
+                player.gameMode = GameMode.ADVENTURE
+                player.inventory.clear()
+                player.inventory.addItem(ShopBook.item)
+                player.inventory.addItem(ListenerNiteControl.controlItem)
             }
             for (i in 0 until gameTime) game.plugin.server.scheduler.runTaskLater(game.plugin, Runnable {
                 game.broadcastMessage("ゲーム終了まで" + (gameTime - i).toString() + "秒...")

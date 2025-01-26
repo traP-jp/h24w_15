@@ -23,6 +23,7 @@ class FieldGenerator(
         val wall = Material.BEDROCK
         val core = Material.BEACON
         val coreBase = Material.IRON_BLOCK
+        val coreBeam = Material.GLASS_PANE
         val fence = Material.STONE_BRICK_WALL
         val road = Material.DIRT_PATH
     }
@@ -111,6 +112,10 @@ class FieldGenerator(
                     Materials.coreBase.createBlockData()
             }
             blockChanges[coreLoc] = Materials.core.createBlockData()
+            for (y in 1..16) {
+                if (coreLoc.blockY + y > target.world.maxHeight) break
+                blockChanges[coreLoc.clone().add(0.0, y.toDouble(), 0.0)] = Materials.coreBeam.createBlockData()
+            }
             coreLocationSet.add(coreLoc)
         }
         coreLocations.clear()

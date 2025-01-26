@@ -6,11 +6,12 @@ import org.bukkit.World
 
 class Field(val center: Location, val coreLocations: List<Location>, val size: Pair<Int, Int>) {
     lateinit var districts: List<District>
+    lateinit var graph: List<Set<Int>>
     val x_min: Int = (center.x - size.first / 2).toInt()
     val x_max: Int = (center.x + size.second / 2).toInt()
     val y_min: Int = (center.z - size.first / 2).toInt()
     val y_max: Int = (center.z + size.second / 2).toInt()
-
+    
     constructor(
         center: Location,
         partition: Partition,
@@ -25,6 +26,7 @@ class Field(val center: Location, val coreLocations: List<Location>, val size: P
         districts = (0 until districtCount).map { i ->
             District(i, locations[i], coreLocations[i])
         }
+        graph = partition.graph
     }
 
 

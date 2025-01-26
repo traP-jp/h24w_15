@@ -90,6 +90,7 @@ sealed class NiteState(val plugin: Plugin, val nite: Nite<*>) {
                 nite.setVisible(true)
                 nite.teleport(nite.master.location)
                 nite.master.sendMessage(nite.name + "が復活しました")
+                Wallet.earn(nite.master, 20) // TODO: パラメータ化
                 nite.state = FollowMaster(plugin, nite)
             }, respawnDelay * 20)
         }

@@ -124,11 +124,13 @@ object FieldTableUtil {
                     fieldRaw[FieldsTable.center_y].toDouble(),
                     fieldRaw[FieldsTable.center_z].toDouble()
                 )
-                Field(
+                val field = Field(
                     centerLoc,
                     districts.map { district -> district.coreLocation },
                     fieldRaw[FieldsTable.size_x] to fieldRaw[FieldsTable.size_y]
                 )
+                field.districts = districts
+                field
             }
         }
         return res
