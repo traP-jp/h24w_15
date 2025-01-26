@@ -36,7 +36,6 @@ abstract class Nite<T>(
         if (entity.getAttribute(Attribute.ATTACK_DAMAGE) == null) {
             entity.registerAttribute(Attribute.ATTACK_DAMAGE)
             entity.getAttribute(Attribute.ATTACK_DAMAGE)?.baseValue = damage
-            master.sendMessage(damage.toString())
             master.sendMessage("setDamage to ${entity.getAttribute(Attribute.ATTACK_DAMAGE)?.baseValue}")
         }
         updateTask = plugin.server.scheduler.runTaskTimer(plugin, Runnable { state.update() }, 0, 1)
