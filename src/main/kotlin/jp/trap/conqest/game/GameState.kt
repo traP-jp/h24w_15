@@ -94,6 +94,7 @@ sealed class GameState(private val game: Game) {
                 player.inventory.clear()
                 player.inventory.addItem(ShopBook.item)
                 player.inventory.addItem(ListenerNiteControl.controlItem)
+                player.inventory.addItem(game.requestNewMap())
                 gameTimerManager.addPlayer(player)
             }
             game.teams.forEachIndexed { index, team ->
