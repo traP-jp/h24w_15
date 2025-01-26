@@ -36,6 +36,7 @@ class GameManager(val plugin: Plugin) {
     }
 
     fun exit() {
+        games.forEach { it.reset() }
         fields.forEach { it.exit() }
     }
 }
