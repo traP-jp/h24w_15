@@ -96,9 +96,11 @@ sealed class GameState(private val game: Game) {
             game.teams.forEachIndexed { index, team ->
                 val dx = listOf(1, -1, 1, -1)
                 val dy = listOf(1, -1, -1, 1)
-                val startLocation = game.field.center.add(
+                val startLocation = game.field.center.clone().add(
                     Vector(
-                        dx[index % 4] * game.field.size.first / 2, 0, dy[index % 4] * game.field.size.second / 2
+                        dx[index % 4] * (game.field.size.first / 2 - 10),
+                        0,
+                        dy[index % 4] * (game.field.size.second / 2 - 10)
                     )
                 )
                 team.getPlayers().forEach { player: UUID -> Bukkit.getPlayer(player)?.teleport(startLocation) }
