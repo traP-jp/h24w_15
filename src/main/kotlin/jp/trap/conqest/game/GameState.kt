@@ -5,9 +5,12 @@ import jp.trap.conqest.game.item.ShopBook
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.title.Title
+import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.util.Vector
+import java.util.*
 
 enum class GameStates {
     BEFORE_GAME, MATCHING, GAME_READY, PLAYING, AFTER_GAME,
@@ -92,7 +95,26 @@ sealed class GameState(private val game: Game) {
                 player.inventory.addItem(ListenerNiteControl.controlItem)
                 gameTimerManager.addPlayer(player)
             }
-
+            game.teams.forEachIndexed { index, team ->
+                val dx = listOf(1, -1, 1, -1)
+                val dy = listOf(1, -1, -1, 1)
+                val world = game.field.center.world
+                val startLocation = world.getHighestBlockAt(
+                    game.field.center.clone().add(
+                        Vector(
+                            dx[index % 4] * (game.field.size.first / 2 - 10),
+                            0,
+                            dy[index % 4] * (game.field.size.second / 2 - 10)
+                        )
+                    )
+                ).location.add(Vector(0, 1, 0))
+                team.getPlayers().forEach { player: UUID ->
+                    Bukkit.getPlayer(player)?.teleport(startLocation)
+                }
+            }
+            for (i in 0 until gameTime) game.plugin.server.scheduler.runTaskLater(game.plugin, Runnable {
+                game.broadcastMessage("ゲーム終了まで" + (gameTime - i).toString() + "秒...")
+            }, i * 20)
             game.plugin.server.scheduler.runTaskLater(game.plugin, Runnable {
                 game.broadcastMessage("ゲーム終了!!")
                 val winner = game.judge() // TODO チーム情報を受け取り、メッセージに反映する
