@@ -1,8 +1,10 @@
 package jp.trap.conqest.game
 
+import jp.trap.conqest.game.item.ShopBook
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.title.Title
+import org.bukkit.GameMode
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -76,12 +78,15 @@ sealed class GameState(private val game: Game) {
 
     class Playing(private val game: Game) : GameState(game) {
         override val type: GameStates = GameStates.PLAYING
-        private val gameTime: Long = 20 // 5 * 60
+        private val gameTime: Long = 5 * 60
         private val initialCoin: Int = 100
 
         init {
             game.getPlayers().forEach { player: Player ->
                 Wallet.setupScoreboard(player, initialCoin)
+                player.gameMode = GameMode.ADVENTURE
+                player.inventory.clear()
+                player.inventory.addItem(ShopBook.item)
             }
             for (i in 0 until gameTime) game.plugin.server.scheduler.runTaskLater(game.plugin, Runnable {
                 game.broadcastMessage("ゲーム終了まで" + (gameTime - i).toString() + "秒...")
