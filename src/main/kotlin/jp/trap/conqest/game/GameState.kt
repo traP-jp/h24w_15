@@ -96,14 +96,19 @@ sealed class GameState(private val game: Game) {
             game.teams.forEachIndexed { index, team ->
                 val dx = listOf(1, -1, 1, -1)
                 val dy = listOf(1, -1, -1, 1)
-                val startLocation = game.field.center.clone().add(
-                    Vector(
-                        dx[index % 4] * (game.field.size.first / 2 - 10),
-                        0,
-                        dy[index % 4] * (game.field.size.second / 2 - 10)
+                val world = game.field.center.world
+                val startLocation = world.getHighestBlockAt(
+                    game.field.center.clone().add(
+                        Vector(
+                            dx[index % 4] * (game.field.size.first / 2 - 10),
+                            0,
+                            dy[index % 4] * (game.field.size.second / 2 - 10)
+                        )
                     )
-                )
-                team.getPlayers().forEach { player: UUID -> Bukkit.getPlayer(player)?.teleport(startLocation) }
+                ).location.add(Vector(0, 1, 0))
+                team.getPlayers().forEach { player: UUID ->
+                    Bukkit.getPlayer(player)?.teleport(startLocation)
+                }
             }
             for (i in 0 until gameTime) game.plugin.server.scheduler.runTaskLater(game.plugin, Runnable {
                 game.broadcastMessage("ゲーム終了まで" + (gameTime - i).toString() + "秒...")
