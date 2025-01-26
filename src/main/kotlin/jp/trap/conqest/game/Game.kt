@@ -94,9 +94,9 @@ class Game(val plugin: Plugin, val field: Field) {
     }
 
     fun reset() {
-        playersUUID.clear()
         nites.flatMap { it.value }.forEach(::removeNite)
         nites.clear()
+        field.reset()
     }
 
 }
