@@ -19,10 +19,10 @@ abstract class Nite<T>(
     private var entity: T = location.world.spawnEntity(
         location, type, false
     ) as T
-    val speed = 0.5
-    val damage = 1.0
-    val handLength = 3.0
-    val attackSpeed = 1.0
+    protected open val speed = 0.5
+    protected open val damage = 1.0
+    protected open val handLength = 3.0
+    protected open val attackSpeed = 1.0
     open val blockBreakSpeed: Double = 1.0
     var state: NiteState = NiteState.FollowMaster(plugin, this)
     abstract val name: String
