@@ -11,7 +11,7 @@ import org.bukkit.scheduler.BukkitRunnable
 import java.util.UUID
 import java.util.logging.Logger
 
-class GameTimer(private val plugin: Plugin, private val id: Int, private val gameTime: Long) {
+class GameTimer(private val plugin: Plugin, private val gameTime: Long) {
     private var bossBar: BossBar? = null
     private var remainingTime: Long = 0
     private var countDownTask: BukkitRunnable? = null

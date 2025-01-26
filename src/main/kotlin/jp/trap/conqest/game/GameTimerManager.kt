@@ -13,7 +13,7 @@ class GameTimerManager(private val plugin: Plugin, private val gameTime: Long, p
         if (timers.containsKey(id)) {
             throw IllegalArgumentException("ID '$id' のタイマーは既に存在します。")
         }
-        val timer = GameTimer(plugin, id, gameTime)
+        val timer = GameTimer(plugin, gameTime)
         timer.startTimer()
         timers[id] = timer
         return timer
