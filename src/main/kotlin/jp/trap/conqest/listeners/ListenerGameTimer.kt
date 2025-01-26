@@ -6,8 +6,8 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.Plugin
 
-class ListenerGameTimer(private val plugin: Plugin) : Listener {
-    private var gameTimerManager = GameTimerManager(plugin)
+class ListenerGameTimer(plugin: Plugin) : Listener {
+    private var gameTimerManager = GameTimerManager(plugin, 0, 0)
 
     @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) {
