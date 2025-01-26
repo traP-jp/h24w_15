@@ -3,11 +3,13 @@ package jp.trap.conqest.game
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.attribute.Attribute
-import org.bukkit.entity.Entity
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.Mob
-import org.bukkit.entity.Player
+import org.bukkit.damage.DamageSource
+import org.bukkit.damage.DamageType
+import org.bukkit.entity.*
 import org.bukkit.plugin.Plugin
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
+import org.bukkit.scheduler.BukkitTask
 import java.util.*
 
 abstract class Nite<T>(
@@ -17,13 +19,14 @@ abstract class Nite<T>(
     private var entity: T = location.world.spawnEntity(
         location, type, false
     ) as T
-    protected open val speed = 0.5
-    protected open val damage = 1.0
-    protected open val handLength = 3.0
-    protected open val attackSpeed = 1.0
+    val speed = 0.5
+    val damage = 1.0
+    val handLength = 3.0
+    val attackSpeed = 1.0
     open val blockBreakSpeed: Double = 1.0
     var state: NiteState = NiteState.FollowMaster(plugin, this)
     abstract val name: String
+    private val updateTask: BukkitTask
     var team: Team = Team.emptyTeam
     private var selected: Boolean = false
 
@@ -32,8 +35,10 @@ abstract class Nite<T>(
         if (entity.getAttribute(Attribute.ATTACK_DAMAGE) == null) {
             entity.registerAttribute(Attribute.ATTACK_DAMAGE)
             entity.getAttribute(Attribute.ATTACK_DAMAGE)?.baseValue = damage
+            master.sendMessage(damage.toString())
+            master.sendMessage("setDamage to ${entity.getAttribute(Attribute.ATTACK_DAMAGE)?.baseValue}")
         }
-        plugin.server.scheduler.runTaskTimer(plugin, Runnable {
+        updateTask = plugin.server.scheduler.runTaskTimer(plugin, Runnable {
             state.update()
             team.addGlow(entity)
         }, 0, 1)
@@ -86,6 +91,13 @@ abstract class Nite<T>(
 
     fun setAi(value: Boolean) {
         entity.setAI(value)
+    }
+
+    fun exit() {
+        // kill entity
+        entity.damage(Double.POSITIVE_INFINITY, DamageSource.builder(DamageType.GENERIC_KILL).build())
+        state.exit()
+        updateTask.cancel()
     }
 
     fun toggleSelected() {

@@ -54,7 +54,7 @@ class Main : JavaPlugin() {
         }
 
         gameManager = GameManager(this)
-        gameTimerManager = GameTimerManager(this)
+        gameTimerManager = GameTimerManager(this,0,0)
         flowHandler = FlowHandler(
             logger, listOf(
                 FlowTask(
@@ -105,6 +105,7 @@ class Main : JavaPlugin() {
     override fun onDisable() {
         flowHandler.down()
         gameTimerManager.removeAllTimer()
+        gameManager.exit()
         logger.info("bye bye.")
     }
 }

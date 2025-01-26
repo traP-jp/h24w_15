@@ -82,4 +82,12 @@ class District(
         val brokenTeam = if (nearEnemyNites.isEmpty()) Team.emptyTeam else nearEnemyNites.random().team
         setHp(min(maxHp, hp + hpChange), brokenTeam)
     }
+
+    fun reset() {
+        team = Team.emptyTeam
+    }
+
+    fun exit() {
+        coreArmorStand.remove()
+    }
 }

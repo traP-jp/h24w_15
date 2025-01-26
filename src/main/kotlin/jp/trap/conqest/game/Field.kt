@@ -13,9 +13,7 @@ class Field(val center: Location, val coreLocations: List<Location>, val size: P
     val y_max: Int = (center.z + size.second / 2).toInt()
     
     constructor(
-        center: Location,
-        partition: Partition,
-        coreLocations: List<Location>
+        center: Location, partition: Partition, coreLocations: List<Location>
     ) : this(center, coreLocations, partition.fieldSize) {
         val districtCount = partition.districts.size
         val locations: MutableList<MutableSet<Pair<Int, Int>>> = MutableList(size = districtCount) { mutableSetOf() }
@@ -40,5 +38,13 @@ class Field(val center: Location, val coreLocations: List<Location>, val size: P
 
     fun getWorld(): World {
         return center.world
+    }
+
+    fun reset() {
+        districts.forEach { it.reset() }
+    }
+
+    fun exit() {
+        districts.forEach { it.exit() }
     }
 }
