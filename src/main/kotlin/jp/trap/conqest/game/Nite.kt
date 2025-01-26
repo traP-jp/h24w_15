@@ -33,7 +33,9 @@ abstract class Nite<T>(
         if (entity.getAttribute(Attribute.ATTACK_DAMAGE) == null) {
             entity.registerAttribute(Attribute.ATTACK_DAMAGE)
         }
-        entity.getAttribute(Attribute.ATTACK_DAMAGE)?.baseValue = damage
+        entity.getAttribute(Attribute.ATTACK_DAMAGE)?.apply {
+            baseValue = damage
+        }
         if(entity.getAttribute(Attribute.MAX_HEALTH) == null) {
             entity.registerAttribute(Attribute.MAX_HEALTH)
         }
