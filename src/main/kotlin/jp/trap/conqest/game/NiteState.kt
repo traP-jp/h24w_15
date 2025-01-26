@@ -1,17 +1,16 @@
 package jp.trap.conqest.game
 
+import jp.trap.conqest.Main
+import org.bukkit.Location
 import org.bukkit.block.Block
 import org.bukkit.entity.LivingEntity
 import org.bukkit.plugin.Plugin
+import org.bukkit.scheduler.BukkitTask
+import kotlin.math.roundToInt
+import kotlin.random.Random
 
 enum class NiteStates {
-    FOLLOW_MASTER,
-    STATION_DISTRICT,
-    GUARD_DISTRICT,
-    ATTACK,
-    ATTACK_CORE,
-    EARN_COIN,
-    DEAD,
+    FOLLOW_MASTER, STATION_DISTRICT, GUARD_DISTRICT, ATTACK, ATTACK_CORE, EARN_COIN, DEAD,
 }
 
 sealed class NiteState(val plugin: Plugin, val nite: Nite<*>) {
@@ -25,24 +24,63 @@ sealed class NiteState(val plugin: Plugin, val nite: Nite<*>) {
         private val nearDistance = 5
 
         override fun update() {
-            if (nite.distance(nite.master) >= nearDistance)
-                nite.moveTo(nite.master.location)
-            else
-                nite.moveStop()
+            if (nite.distance(nite.master) >= nearDistance) nite.moveTo(nite.master.location)
+            else nite.moveStop()
         }
     }
 
-    class StationDistrict(plugin: Plugin, nite: Nite<*>, override val type: NiteStates = NiteStates.STATION_DISTRICT) :
-        NiteState(plugin, nite) {
+    class StationDistrict(
+        plugin: Plugin,
+        nite: Nite<*>,
+        private val district: District,
+        private val field: Field,
+        override val type: NiteStates = NiteStates.STATION_DISTRICT
+    ) : NiteState(plugin, nite) {
+        var walkTask: BukkitTask? = null
+        var checkTask: BukkitTask? = null
 
         override fun update() {
-            // TODO 領土内を歩き回る
+            plugin.logger.info("StationDistrict");
+            walkTask = plugin.server.scheduler.runTaskTimer(plugin, Runnable {
+                var loc = -1 to -1
+                while (district.contains(loc).not()) loc =
+                    Random.nextInt() % field.size.first to Random.nextInt() % field.size.second
+
+                nite.moveTo(Location(nite.getLocation().world, loc.first.toDouble(), 0.0, loc.second.toDouble()))
+            }, 0, 20 * 10)
+            checkTask = plugin.server.scheduler.runTaskTimer(plugin, Runnable {
+                val game = Main.instance.gameManager.getGame(nite.master) ?: return@Runnable
+                if (game.getNites().any { enemyNite ->
+                        district.contains(enemyNite.getLocation().x.roundToInt() to enemyNite.getLocation().y.roundToInt())
+                                && enemyNite.team != nite.team
+                    }) nite.state = GuardDistrict(plugin, nite, district, field)
+            }, 0, 1)
         }
+
+        // TODO terminate
     }
 
-    class GuardDistrict(plugin: Plugin, nite: Nite<*>, district: District, override val type: NiteStates = NiteStates.GUARD_DISTRICT) :
-        NiteState(plugin, nite) {
+    class GuardDistrict(
+        plugin: Plugin,
+        nite: Nite<*>,
+        val district: District,
+        private val field: Field,
+        override val type: NiteStates = NiteStates.GUARD_DISTRICT
+    ) : NiteState(plugin, nite) {
+        var checkTask: BukkitTask? = null
         override fun update() {
+            checkTask = plugin.server.scheduler.runTaskTimer(plugin, Runnable {
+                val game = Main.instance.gameManager.getGame(nite.master) ?: return@Runnable
+                val enemyNite = game.getNites().firstOrNull { enemyNite ->
+                    district.contains(enemyNite.getLocation().x.roundToInt() to enemyNite.getLocation().y.roundToInt())
+                            && enemyNite.team != nite.team
+                } ?: run {
+                    nite.state = StationDistrict(plugin, nite, district, field)
+                    return@Runnable
+                }
+                nite.moveTo(enemyNite.getLocation())
+                nite.tryAttack(enemyNite.entity)
+            }, 0, 1)
             // TODO 敵が領土内にいる場合、敵を攻撃 / いなくなったらStationDistrictへ
         }
     }
@@ -52,8 +90,7 @@ sealed class NiteState(val plugin: Plugin, val nite: Nite<*>) {
         nite: Nite<*>,
         private val target: LivingEntity,
         override val type: NiteStates = NiteStates.ATTACK
-    ) :
-        NiteState(plugin, nite) {
+    ) : NiteState(plugin, nite) {
         override fun update() {
             if (target.isDead) {
                 nite.state = FollowMaster(plugin, nite)
@@ -64,12 +101,8 @@ sealed class NiteState(val plugin: Plugin, val nite: Nite<*>) {
     }
 
     class AttackCore(
-        plugin: Plugin,
-        nite: Nite<*>,
-        private val target: Block,
-        override val type: NiteStates = NiteStates.ATTACK_CORE
-    ) :
-        NiteState(plugin, nite) {
+        plugin: Plugin, nite: Nite<*>, private val target: Block, override val type: NiteStates = NiteStates.ATTACK_CORE
+    ) : NiteState(plugin, nite) {
         override fun update() {
             if (target.isEmpty) {
                 nite.state = FollowMaster(plugin, nite)

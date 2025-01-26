@@ -36,14 +36,20 @@ class ListenerDistrictCore(private val gameManager: GameManager) : Listener {
     @EventHandler
     fun onCoreClicked(event: PlayerInteractEvent) {
         val player: Player = event.player
+        player.sendMessage(event.clickedBlock.toString())
         val game = gameManager.getGame(player) ?: return
+        player.sendMessage(event.clickedBlock.toString() + "1")
         val block = event.clickedBlock ?: return
-        val district = game.field.districts.singleOrNull { district -> district.coreLocation.block == block } ?: return
+        player.sendMessage(event.clickedBlock.toString() + "2")
+
+        player.sendMessage(event.clickedBlock.toString() + "3")
+        val district = game.field.districts.firstOrNull { district -> player.sendMessage(district.coreLocation.block.toString()); district.coreLocation.block.location == block.location } ?: return
+        player.sendMessage(event.clickedBlock.toString() + "3")
         val playerTeam = game.getTeam(player)
         if (district.getTeam() == playerTeam) {
             // 自分のチームの場合、守りに行く
-            game.getNites(player).forEach { nite ->
-                nite.state = NiteState.GuardDistrict(game.plugin, nite, district)
+            game.getNites(player).filter { it.getSelected() }.forEach { nite ->
+                nite.state = NiteState.StationDistrict(game.plugin, nite, district, game.field)
                 district.savingNite.add(nite)
             }
 

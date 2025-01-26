@@ -13,7 +13,7 @@ abstract class Nite<T>(
     location: Location, type: EntityType, name: String, val master: Player, val plugin: Plugin
 ) where T : Entity, T : Mob {
 
-    private var entity: T = location.world.spawnEntity(
+    var entity: T = location.world.spawnEntity(
         location, type, false
     ) as T
     protected open val speed = 0.5
@@ -87,5 +87,9 @@ abstract class Nite<T>(
 
     fun toggleSelected() {
         selected = !selected
+    }
+
+    fun getSelected(): Boolean {
+        return selected
     }
 }
