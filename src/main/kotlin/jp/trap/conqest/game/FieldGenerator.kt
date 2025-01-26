@@ -10,8 +10,7 @@ import org.bukkit.Material
 import org.bukkit.Tag
 import org.bukkit.World
 import org.bukkit.block.data.BlockData
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import java.util.*
 
@@ -153,7 +152,7 @@ class FieldGenerator(
         val field = Field(center, partition, coreLocations)
 
         for (entity in useField(field).entities) {
-            if (entity is LivingEntity && entity.type != EntityType.PLAYER) {
+            if (entity is Mob) {
                 val loc = entity.location
                 if (loc.x.toInt() in field.x_min - 5..field.x_max + 5 && loc.z.toInt() in field.y_min - 5..field.y_max + 5) {
                     entity.remove()
