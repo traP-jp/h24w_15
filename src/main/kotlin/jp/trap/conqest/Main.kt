@@ -48,7 +48,7 @@ class Main : JavaPlugin() {
         file.mkdirs()
         Database.connect("jdbc:sqlite:$dbPath", "org.sqlite.JDBC")
         transaction {
-            SchemaUtils.create(FieldsTable, DistrictTable, DistrictLocationsTable)
+            SchemaUtils.create(FieldsTable, GraphTable, DistrictTable, DistrictLocationsTable)
         }
 
         gameManager = GameManager(this)
