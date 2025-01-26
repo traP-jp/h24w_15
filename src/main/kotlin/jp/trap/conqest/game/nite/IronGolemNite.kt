@@ -14,11 +14,11 @@ class IronGolemNite(
     plugin: Plugin
 ) :
     Nite<IronGolem>(location, EntityType.IRON_GOLEM, name, master, plugin) {
-    override val speed = 0.3
-    override val damage = 1.0
+    override val speed = 0.5
+    override val damage = 10.0
     override val handLength = 3.0
-    override val attackSpeed = 6.0
-    override val health: Double = 100.0
+    override val attackSpeed = 3.0
+    override val health: Double = 200.0
     init {
         super.setEntity(damage, attackSpeed, health)
     }
