@@ -13,7 +13,7 @@ import java.util.*
 
 class Game(val plugin: Plugin, val field: Field) {
     private var state: GameState = GameState.BeforeGame(this)
-    private val teams: MutableList<Team> = mutableListOf()
+    val teams: MutableList<Team> = mutableListOf()
     private val nites: MutableMap<UUID, MutableList<Nite<*>>> = mutableMapOf()
     lateinit var lobby: Location
 
@@ -63,7 +63,9 @@ class Game(val plugin: Plugin, val field: Field) {
     }
 
     fun removeNite(nite: Nite<*>) {
-        // TODO
+        nite.exit()
+        val key = nites.filter { it.value.contains(nite) }.keys.first()
+        nites[key]?.remove(nite)
     }
 
     fun judge(): MutableMap<Team, Int> {
@@ -94,6 +96,12 @@ class Game(val plugin: Plugin, val field: Field) {
         meta.mapId = mapView.id
         mapItem.itemMeta = meta
         return mapItem
+    }
+
+    fun reset() {
+        nites.flatMap { it.value }.forEach(::removeNite)
+        nites.clear()
+        field.reset()
     }
 
 }

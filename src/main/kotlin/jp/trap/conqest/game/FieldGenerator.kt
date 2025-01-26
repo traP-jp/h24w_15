@@ -8,7 +8,9 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Tag
+import org.bukkit.World
 import org.bukkit.block.data.BlockData
+import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import java.util.*
 
@@ -20,6 +22,7 @@ class FieldGenerator(
         val wall = Material.BEDROCK
         val core = Material.BEACON
         val coreBase = Material.IRON_BLOCK
+        val coreBeam = Material.GLASS_PANE
         val fence = Material.STONE_BRICK_WALL
         val road = Material.DIRT_PATH
     }
@@ -108,6 +111,10 @@ class FieldGenerator(
                     Materials.coreBase.createBlockData()
             }
             blockChanges[coreLoc] = Materials.core.createBlockData()
+            for (y in 1..16) {
+                if (coreLoc.blockY + y > target.world.maxHeight) break
+                blockChanges[coreLoc.clone().add(0.0, y.toDouble(), 0.0)] = Materials.coreBeam.createBlockData()
+            }
             coreLocationSet.add(coreLoc)
         }
         coreLocations.clear()
@@ -132,10 +139,25 @@ class FieldGenerator(
         blockChanges.clear()
     }
 
+    fun useField(field: Field): World {
+        return field.getWorld()
+    }
+
     fun generate(): Field {
         blockChanges.forEach { (loc, data) ->
             loc.block.blockData = data
             loc.block.state.update(true, false)
+        }
+
+        val field = Field(center, partition, coreLocations)
+
+        for (entity in useField(field).entities) {
+            if (entity is Mob) {
+                val loc = entity.location
+                if (loc.x.toInt() in field.x_min - 5..field.x_max + 5 && loc.z.toInt() in field.y_min - 5..field.y_max + 5) {
+                    entity.remove()
+                }
+            }
         }
 
         with(plugin.logger) {
@@ -147,7 +169,7 @@ class FieldGenerator(
             info("-".repeat(40))
         }
 
-        return Field(center, partition, coreLocations)
+        return field
     }
 
     private fun checkIsTree(material: Material): Boolean {

@@ -21,6 +21,12 @@ object FieldsTable : Table() {
     override val primaryKey = PrimaryKey(id)
 }
 
+object GraphTable : Table() {
+    val field_id = integer("field_id").index().references(FieldsTable.id)
+    val from = integer("from")
+    val to = integer("to")
+}
+
 object DistrictTable : Table() {
     val id = integer("id").index().autoIncrement()
     val field_id = integer("field_id").index().references(FieldsTable.id)
@@ -58,6 +64,15 @@ object FieldTableUtil {
                 it[size_y] = field.size.second
             }
             val fieldId = FieldsTable.selectAll().where { fieldEquals(field) }.single()[FieldsTable.id]
+            field.graph.forEachIndexed { fromIndex, graph ->
+                graph.forEach { toIndex ->
+                    GraphTable.insert {
+                        it[field_id] = fieldId
+                        it[from] = fromIndex
+                        it[to] = toIndex
+                    }
+                }
+            }
             field.districts.forEach { district ->
                 DistrictTable.insert {
                     it[field_id] = fieldId
@@ -86,6 +101,7 @@ object FieldTableUtil {
         transaction {
             val fieldId = FieldsTable.selectAll().single()[FieldsTable.id]
             FieldsTable.deleteWhere { id eq fieldId }
+            GraphTable.deleteWhere { field_id eq fieldId }
             val districts = DistrictTable.selectAll().where { DistrictTable.field_id eq fieldId }
             DistrictTable.deleteWhere { field_id eq fieldId }
             for (district in districts) {
@@ -118,6 +134,11 @@ object FieldTableUtil {
                     )
                     District(districtRaw[DistrictTable.district_index], districtLocations, coreLocation)
                 }
+                val graph: MutableList<MutableSet<Int>> = mutableListOf()
+                GraphTable.selectAll().where { GraphTable.field_id eq fieldId }.orderBy(GraphTable.from).forEach {
+                    while (graph.size <= it[GraphTable.from]) graph.add(mutableSetOf())
+                    graph[it[GraphTable.from]].add(it[GraphTable.to])
+                }
                 val centerLoc = Location(
                     Bukkit.getWorld(fieldRaw[FieldsTable.center_world]),
                     fieldRaw[FieldsTable.center_x].toDouble(),
@@ -130,6 +151,7 @@ object FieldTableUtil {
                     fieldRaw[FieldsTable.size_x] to fieldRaw[FieldsTable.size_y]
                 )
                 field.districts = districts
+                field.graph = graph
                 field
             }
         }

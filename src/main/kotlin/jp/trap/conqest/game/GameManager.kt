@@ -35,4 +35,8 @@ class GameManager(val plugin: Plugin) {
         FieldTableUtil.saveField(field)
     }
 
+    fun exit() {
+        games.forEach { it.reset() }
+        fields.forEach { it.exit() }
+    }
 }
