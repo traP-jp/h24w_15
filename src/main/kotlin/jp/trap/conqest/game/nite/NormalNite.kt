@@ -7,7 +7,7 @@ import org.bukkit.entity.Player
 import org.bukkit.entity.Villager
 import org.bukkit.plugin.Plugin
 
-class NormalNite(location: Location, override val name: String = "ノーマル", master: Player, plugin: Plugin) :
+class NormalNite(location: Location, override val name: String = "カーヴェラス", master: Player, plugin: Plugin) :
     Nite<Villager>(location, EntityType.VILLAGER, name, master, plugin) {
     override val speed = 0.7
     override val damage = 1.0

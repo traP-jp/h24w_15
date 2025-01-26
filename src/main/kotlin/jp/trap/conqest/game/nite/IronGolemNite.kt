@@ -9,7 +9,7 @@ import org.bukkit.plugin.Plugin
 
 class IronGolemNite(
     location: Location,
-    override val name: String = "アイアンゴーレム",
+    override val name: String = "ウラノス",
     master: Player,
     plugin: Plugin
 ) :
@@ -17,6 +17,6 @@ class IronGolemNite(
     override val speed = 0.3
     override val damage = 1.0
     override val handLength = 3.0
-    override val attackSpeed = 0.3
+    override val attackSpeed = 6.0
     override val health: Double = 100.0
 }

@@ -7,7 +7,7 @@ import org.bukkit.entity.Player
 import org.bukkit.entity.Snowman
 import org.bukkit.plugin.Plugin
 
-class SnowGolemNite(location: Location, override val name: String = "スノーゴーレム", master: Player, plugin: Plugin) :
+class SnowGolemNite(location: Location, override val name: String = "一式自走砲", master: Player, plugin: Plugin) :
     Nite<Snowman>(location, EntityType.SNOW_GOLEM, name, master, plugin) {
     override val speed = 0.5
     override val damage = 1.0
