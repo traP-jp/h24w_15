@@ -13,4 +13,8 @@ class TurtleNite(location: Location, override val name: String = "パゴス", ma
     override val damage = 1.0
     override val handLength = 3.0
     override val attackSpeed = 1.0
+    override val health = 50.0
+    init {
+        super.setEntity(damage, attackSpeed, health)
+    }
 }

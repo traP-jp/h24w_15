@@ -14,4 +14,7 @@ class NormalNite(location: Location, override val name: String = "カーヴェ�
     override val handLength = 3.0
     override val attackSpeed = 1.0
     override val health: Double = 20.0
+    init {
+        super.setEntity(damage, attackSpeed, health)
+    }
 }

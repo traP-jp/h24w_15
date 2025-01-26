@@ -13,4 +13,7 @@ class SnowGolemNite(location: Location, override val name: String = "一式自�
     override val damage = 1.0
     override val handLength = 3.0
     override val attackSpeed = 1.0
+    init {
+        super.setEntity(damage, attackSpeed, health)
+    }
 }
