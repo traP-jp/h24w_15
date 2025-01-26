@@ -1,10 +1,10 @@
 package jp.trap.conqest.listeners
 
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent
-import jp.trap.conqest.game.GameManager
-import jp.trap.conqest.game.Nite
-import jp.trap.conqest.game.NiteState
-import jp.trap.conqest.game.NiteStates
+import jp.trap.conqest.game.*
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
+import org.bukkit.Material
 import org.bukkit.damage.DamageType
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
@@ -14,8 +14,19 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerInteractEntityEvent
+import org.bukkit.inventory.ItemStack
 
 class ListenerNiteControl(private val gameManager: GameManager) : Listener {
+    companion object {
+        val controlItem: ItemStack = run {
+            val item = ItemStack(Material.STICK)
+            val meta = item.itemMeta
+            meta.displayName(Component.text("指示棒").color(TextColor.color(0x00FF00)))
+            item.itemMeta = meta
+            item
+        }
+    }
+
     private fun trySetTarget(nite: Nite<*>, target: LivingEntity) {
         // プレイヤーには攻撃しない
         if (target is Player) return
@@ -35,12 +46,42 @@ class ListenerNiteControl(private val gameManager: GameManager) : Listener {
 
     @EventHandler
     fun onRightClick(event: PlayerInteractEntityEvent) {
-        onClickEntity(event.player, event.rightClicked)
+        val player = event.player
+        val target = event.rightClicked
+        val nite =
+            gameManager.getGame(player)?.getNites(player)?.filter { it.getUniqueId() == target.uniqueId }?.firstOrNull()
+                ?: run {
+                    onClickEntity(player, target)
+                    return
+                }
+        event.isCancelled = true
+        if (player.inventory.itemInMainHand.isSimilar(controlItem)) {
+            // アイテムを持って右クリックしたら、コイン収集
+            nite.state = NiteState.EarnCoin(gameManager.plugin, nite)
+        } else {
+            // 素手で右クリックしたら、選択の切り替え
+            nite.toggleSelected()
+        }
     }
 
     @EventHandler
     fun onLeftClick(event: PrePlayerAttackEntityEvent) {
-        onClickEntity(event.player, event.attacked)
+        val player = event.player
+        val target = event.attacked
+        val nite =
+            gameManager.getGame(player)?.getNites(player)?.filter { it.getUniqueId() == target.uniqueId }?.firstOrNull()
+                ?: run {
+                    onClickEntity(player, target)
+                    return
+                }
+        event.isCancelled = true
+        if (player.inventory.itemInMainHand.isSimilar(controlItem)) {
+            // アイテムを持って左クリックしたら、コイン収集
+            nite.state = NiteState.EarnCoin(gameManager.plugin, nite)
+        } else {
+            // 素手で左クリックしたら、自分に追従
+            nite.state = NiteState.FollowMaster(gameManager.plugin, nite)
+        }
     }
 
     @EventHandler
@@ -48,12 +89,9 @@ class ListenerNiteControl(private val gameManager: GameManager) : Listener {
         if (event.damager !is LivingEntity) return
         gameManager.getGames().forEach { game ->
             game.getPlayers().flatMap { player -> gameManager.getGame(player)?.getNites(player) ?: emptyList() }
-                .singleOrNull { nite -> nite.getUniqueId() == event.entity.uniqueId }
-                ?.let { nite ->
-                    if (nite.getVisible())
-                        trySetTarget(nite, event.damager as LivingEntity)
-                    else
-                        event.isCancelled = true
+                .singleOrNull { nite -> nite.getUniqueId() == event.entity.uniqueId }?.let { nite ->
+                    if (nite.getVisible()) trySetTarget(nite, event.damager as LivingEntity)
+                    else event.isCancelled = true
                 }
         }
     }

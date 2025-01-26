@@ -16,7 +16,8 @@ class District(
     val coreLocation: Location,
     private var team: Team = Team.emptyTeam
 ) {
-    private val coreBlock: Block = coreLocation.block
+    //private val coreBlock: Block = coreLocation.block
+    private val coreGlass: Block = coreLocation.clone().add(0.0, 1.0, 0.0).block
     private val coreArmorStand: ArmorStand
     private var coreBreakable: Boolean = true
     private val maxHp: Int = 100
@@ -25,7 +26,7 @@ class District(
     val savingNite: Nite<*>? = null // TODO
 
     init {
-        coreBlock.type = team.color.getConcreteMaterial()
+        coreGlass.type = team.color.getGlassMaterial()
         coreArmorStand = coreLocation.world.spawnEntity(
             coreLocation.clone().add(Vector(0.5, -1.0, 0.5)), EntityType.ARMOR_STAND
         ) as ArmorStand
@@ -42,7 +43,7 @@ class District(
     }
 
     private fun setTeam(team: Team) {
-        coreBlock.type = team.color.getConcreteMaterial()
+        coreGlass.type = team.color.getGlassMaterial()
         this.team = team
     }
 
