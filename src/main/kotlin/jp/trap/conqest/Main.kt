@@ -52,7 +52,7 @@ class Main : JavaPlugin() {
         }
 
         gameManager = GameManager(this)
-        gameTimerManager = GameTimerManager(this)
+        gameTimerManager = GameTimerManager(this,0,0)
         flowHandler = FlowHandler(
             logger, listOf(
                 FlowTask(

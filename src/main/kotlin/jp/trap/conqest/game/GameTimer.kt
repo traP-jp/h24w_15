@@ -11,12 +11,11 @@ import org.bukkit.scheduler.BukkitRunnable
 import java.util.UUID
 import java.util.logging.Logger
 
-class GameTimer(private val plugin: Plugin, private val id: String) {
+class GameTimer(private val plugin: Plugin, private val id: Int, private val gameTime: Long) {
     private var bossBar: BossBar? = null
-    private var remainingTime: Int = 0
+    private var remainingTime: Long = 0
     private var countDownTask: BukkitRunnable? = null
     private var isPaused: Boolean = false
-    private var gameTime: Int = 300
     private val players = mutableSetOf<UUID>()
 
     private fun createTimer() {

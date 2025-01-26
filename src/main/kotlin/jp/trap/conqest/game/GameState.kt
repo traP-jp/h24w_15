@@ -81,18 +81,18 @@ sealed class GameState(private val game: Game) {
         override val type: GameStates = GameStates.PLAYING
         private val gameTime: Long = 5 * 60
         private val initialCoin: Int = 100
-
+        private val gameTimerManager = GameTimerManager(game.plugin, gameTime, game.id)
         init {
+            gameTimerManager.createAndStartTimer()
             game.getPlayers().forEach { player: Player ->
                 Wallet.setupScoreboard(player, initialCoin)
                 player.gameMode = GameMode.ADVENTURE
                 player.inventory.clear()
                 player.inventory.addItem(ShopBook.item)
                 player.inventory.addItem(ListenerNiteControl.controlItem)
+                gameTimerManager.addPlayer(player)
             }
-            for (i in 0 until gameTime) game.plugin.server.scheduler.runTaskLater(game.plugin, Runnable {
-                game.broadcastMessage("ゲーム終了まで" + (gameTime - i).toString() + "秒...")
-            }, i * 20)
+
             game.plugin.server.scheduler.runTaskLater(game.plugin, Runnable {
                 game.broadcastMessage("ゲーム終了!!")
                 val winner = game.judge() // TODO チーム情報を受け取り、メッセージに反映する
@@ -115,6 +115,7 @@ sealed class GameState(private val game: Game) {
 
     class AfterGame(private val game: Game) : GameState(game) {
         override val type: GameStates = GameStates.AFTER_GAME
+        private val gameTimerManager = GameTimerManager(game.plugin, 0, game.id)
 
         init {
             game.getPlayers().forEach { player: Player ->
@@ -128,6 +129,7 @@ sealed class GameState(private val game: Game) {
                     player.teleport(game.lobby)
                 }
                 game.setState(BeforeGame(game))
+                gameTimerManager.removeTimer()
             }, 20 * 5)
         }
     }

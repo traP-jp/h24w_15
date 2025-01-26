@@ -6,40 +6,40 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.Plugin
 
-class GameTimerManager(private val plugin: Plugin) {
-    private val timers = mutableMapOf<String, GameTimer>()
+class GameTimerManager(private val plugin: Plugin, private val gameTime: Long, private val id: Int) {
+    private val timers = mutableMapOf<Int, GameTimer>()
 
-    fun createAndStartTimer(id: String): GameTimer {
+    fun createAndStartTimer(): GameTimer {
         if (timers.containsKey(id)) {
             throw IllegalArgumentException("ID '$id' のタイマーは既に存在します。")
         }
-        val timer = GameTimer(plugin, id)
+        val timer = GameTimer(plugin, id, gameTime)
         timer.startTimer()
         timers[id] = timer
         return timer
     }
 
-    fun addPlayer(id: String, player: Player) {
+    fun addPlayer(player: Player) {
         timers[id]?.addPlayer(player)
     }
 
-    fun removePlayer(id: String, player: Player) {
+    fun removePlayer(player: Player) {
         timers[id]?.removePlayer(player)
     }
 
-    fun pauseTimer(id: String) {
+    fun pauseTimer() {
         timers[id]?.pauseTimer()
     }
 
-    fun restartTimer(id: String) {
+    fun restartTimer() {
         timers[id]?.restartTimer()
     }
 
-    fun stopTimer(id: String) {
+    fun stopTimer() {
         timers[id]?.stopTimer()
     }
 
-    fun removeTimer(id: String) {
+    fun removeTimer() {
         timers[id]?.removeTimer()
         timers.remove(id)
     }
@@ -49,10 +49,10 @@ class GameTimerManager(private val plugin: Plugin) {
         timers.clear()
     }
 
-    fun getTimer(id: String): GameTimer? {
+    fun getTimer(): GameTimer? {
         return timers[id]
     }
-    
+
     fun onPlayerJoin(event: PlayerJoinEvent) {
         timers.values.forEach { timer ->
             timer.addPlayer(event.player)

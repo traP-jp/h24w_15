@@ -11,7 +11,7 @@ class GameManager(val plugin: Plugin) {
         return games.firstOrNull { game -> game.getStateType() == GameStates.MATCHING }
             ?: games.firstOrNull { game -> game.getStateType() == GameStates.BEFORE_GAME } ?: run {
                 requestOpeningField()?.let { field ->
-                    val newGame = Game(plugin, field)
+                    val newGame = Game(plugin, field, games.size)
                     games += newGame
                     newGame
                 }
