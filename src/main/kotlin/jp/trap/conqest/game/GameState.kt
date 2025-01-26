@@ -4,9 +4,12 @@ import jp.trap.conqest.game.item.ShopBook
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.title.Title
+import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.util.Vector
+import java.util.*
 
 enum class GameStates {
     BEFORE_GAME, MATCHING, GAME_READY, PLAYING, AFTER_GAME,
@@ -87,6 +90,16 @@ sealed class GameState(private val game: Game) {
                 player.gameMode = GameMode.ADVENTURE
                 player.inventory.clear()
                 player.inventory.addItem(ShopBook.item)
+            }
+            game.teams.forEachIndexed { index, team ->
+                val dx = listOf(1, -1, 1, -1)
+                val dy = listOf(1, -1, -1, 1)
+                val startLocation = game.field.center.add(
+                    Vector(
+                        dx[index % 4] * game.field.size.first / 2, 0, dy[index % 4] * game.field.size.second / 2
+                    )
+                )
+                team.getPlayers().forEach { player: UUID -> Bukkit.getPlayer(player)?.teleport(startLocation) }
             }
             for (i in 0 until gameTime) game.plugin.server.scheduler.runTaskLater(game.plugin, Runnable {
                 game.broadcastMessage("ゲーム終了まで" + (gameTime - i).toString() + "秒...")
