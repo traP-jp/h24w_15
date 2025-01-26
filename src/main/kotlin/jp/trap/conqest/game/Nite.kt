@@ -32,12 +32,14 @@ abstract class Nite<T>(
 
     init {
         entity.customName(Component.text(name))
-        entity.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, Int.MAX_VALUE, 1))
         if (entity.getAttribute(Attribute.ATTACK_DAMAGE) == null) {
             entity.registerAttribute(Attribute.ATTACK_DAMAGE)
             entity.getAttribute(Attribute.ATTACK_DAMAGE)?.baseValue = damage
         }
-        updateTask = plugin.server.scheduler.runTaskTimer(plugin, Runnable { state.update() }, 0, 1)
+        updateTask = plugin.server.scheduler.runTaskTimer(plugin, Runnable {
+            state.update()
+            team.addGlow(entity)
+        }, 0, 1)
     }
 
 
