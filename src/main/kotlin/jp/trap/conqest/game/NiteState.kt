@@ -40,7 +40,7 @@ sealed class NiteState(val plugin: Plugin, val nite: Nite<*>) {
         }
     }
 
-    class GuardDistrict(plugin: Plugin, nite: Nite<*>, override val type: NiteStates = NiteStates.GUARD_DISTRICT) :
+    class GuardDistrict(plugin: Plugin, nite: Nite<*>, district: District, override val type: NiteStates = NiteStates.GUARD_DISTRICT) :
         NiteState(plugin, nite) {
         override fun update() {
             // TODO 敵が領土内にいる場合、敵を攻撃 / いなくなったらStationDistrictへ

@@ -23,7 +23,7 @@ class District(
     private val maxHp: Int = 100
     private var hp: Int = maxHp
     private val hpRegenRate: Int = 1
-    val savingNite: Nite<*>? = null // TODO
+    val savingNite: MutableList<Nite<*>> = mutableListOf()
 
     init {
         coreGlass.type = team.color.getGlassMaterial()
