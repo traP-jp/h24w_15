@@ -15,7 +15,6 @@ import io.papermc.paper.command.brigadier.Commands as BrigadierCommands
 
 class CommandGenerate(val plugin: Main) : Commands.Command {
 
-    private val gameManager = plugin.gameManager
     private val previews = mutableMapOf<UUID, FieldGenerator>()
 
     private fun setPreview(source: CommandSourceStack, partition: Partition): Int {

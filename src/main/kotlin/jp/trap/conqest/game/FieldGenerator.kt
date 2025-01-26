@@ -8,7 +8,10 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Tag
+import org.bukkit.World
 import org.bukkit.block.data.BlockData
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import java.util.*
 
@@ -132,10 +135,25 @@ class FieldGenerator(
         blockChanges.clear()
     }
 
+    fun useField(field: Field): World {
+        return field.getWorld()
+    }
+
     fun generate(): Field {
         blockChanges.forEach { (loc, data) ->
             loc.block.blockData = data
             loc.block.state.update(true, false)
+        }
+
+        val field = Field(center, partition, coreLocations)
+
+        for (entity in useField(field).entities) {
+            if (entity is LivingEntity && entity.type != EntityType.PLAYER) {
+                val loc = entity.location
+                if (loc.x.toInt() in field.x_min - 5..field.x_max + 5 && loc.z.toInt() in field.y_min - 5..field.y_max + 5) {
+                    entity.remove()
+                }
+            }
         }
 
         with(plugin.logger) {
@@ -147,7 +165,7 @@ class FieldGenerator(
             info("-".repeat(40))
         }
 
-        return Field(center, partition, coreLocations)
+        return field
     }
 
     private fun checkIsTree(material: Material): Boolean {
