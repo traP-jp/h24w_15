@@ -1,5 +1,6 @@
 package jp.trap.conqest
 
+import fr.skytasul.glowingentities.GlowingEntities
 import jp.trap.conqest.commands.Commands
 import jp.trap.conqest.game.Environment
 import jp.trap.conqest.game.GameManager
@@ -30,6 +31,7 @@ class Main : JavaPlugin() {
     private lateinit var tickTask: BukkitTask
     private lateinit var gameTimerManager: GameTimerManager
     lateinit var gameManager: GameManager
+    lateinit var glowingEntities: GlowingEntities
     private val dbPath = dataPath.resolve("sqlite.db")
 
     companion object {
@@ -83,6 +85,13 @@ class Main : JavaPlugin() {
                     tickTask.cancel()
                     Result.success(Unit)
                 }),
+                FlowTask({
+                    glowingEntities = GlowingEntities(this)
+                    Result.success(Unit)
+                }, {
+                    glowingEntities.disable()
+                    Result.success(Unit)
+                })
             )
         )
     }

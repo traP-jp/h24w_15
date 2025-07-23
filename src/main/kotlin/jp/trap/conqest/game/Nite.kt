@@ -7,8 +7,6 @@ import org.bukkit.damage.DamageSource
 import org.bukkit.damage.DamageType
 import org.bukkit.entity.*
 import org.bukkit.plugin.Plugin
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitTask
 import java.util.*
 
@@ -32,7 +30,6 @@ abstract class Nite<T>(
 
     init {
         entity.customName(Component.text(name))
-        entity.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, Int.MAX_VALUE, 1))
         if (entity.getAttribute(Attribute.ATTACK_DAMAGE) == null) {
             entity.registerAttribute(Attribute.ATTACK_DAMAGE)
             entity.getAttribute(Attribute.ATTACK_DAMAGE)?.baseValue = damage

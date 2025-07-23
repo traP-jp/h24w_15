@@ -6,3 +6,4 @@ author: ${author}
 api-version: ${apiVersion}
 libraries:
   - org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}
+  - fr.skytasul:glowingentities:1.4.3

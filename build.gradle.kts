@@ -24,6 +24,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:0.58.0")
     implementation("org.jetbrains.exposed:exposed-dao:0.58.0")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.58.0")
+    implementation("fr.skytasul:glowingentities:1.4.3")
 }
 
 kotlin {
@@ -57,14 +58,13 @@ tasks.register("createServer") {
 
     doLast {
         File(rootDir, "server/plugins").mkdirs()
-        URI("https://api.papermc.io/v2/projects/paper/versions/1.21.4/builds/118/downloads/paper-1.21.4-118.jar")
-            .toURL().openStream().use { input ->
+        URI("https://api.papermc.io/v2/projects/paper/versions/1.21.4/builds/118/downloads/paper-1.21.4-118.jar").toURL()
+            .openStream().use { input ->
                 File("server/paper.jar").outputStream().use { output ->
                     input.copyTo(output)
                 }
             }
-        File(rootDir, "build/libs/conQest.jar")
-            .copyTo(File(rootDir, "server/plugins/conQest.jar"), overwrite = true)
+        File(rootDir, "build/libs/conQest.jar").copyTo(File(rootDir, "server/plugins/conQest.jar"), overwrite = true)
         File("server/eula.txt").writeText("eula=true")
     }
 }
