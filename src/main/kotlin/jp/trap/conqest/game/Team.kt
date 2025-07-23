@@ -5,6 +5,7 @@ import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Entity
+import org.bukkit.entity.Player
 import java.util.*
 
 class Team(val color: TeamColor) {
@@ -22,9 +23,9 @@ class Team(val color: TeamColor) {
         return players
     }
 
-    fun addGlow(entity: Entity) {
-        players.forEach {
-            Main.instance.glowingEntities.setGlowing(entity, Bukkit.getPlayer(it), color.getChatColor())
+    fun glow(entity: Entity, targets: List<Player>) {
+        targets.forEach {
+            Main.instance.glowingEntities.setGlowing(entity, it, color.getChatColor())
         }
     }
 }
